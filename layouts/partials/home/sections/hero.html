@@ -73,7 +73,7 @@
       </div>
       <div class="home-cover__footer-copy">
         <span>{{ $hero.eyebrow }}</span>
-        <strong>{{ $hero.intro }}</strong>
+        <strong>{{ .Site.Params.Description | default .Site.Params.description }}</strong>
       </div>
       <div class="home-cover__footer-copy">
         <span>{{ $homepage.sections.postsEyebrow }}</span>

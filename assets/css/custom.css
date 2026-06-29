@@ -283,11 +283,36 @@ body,
   z-index: 3;
 }
 
+.homepage-shell ~ footer,
+.homepage-shell + footer {
+  display: none;
+}
+
+.main-menu nav {
+  gap: 1.15rem;
+}
+
 .main-menu a,
 .main-menu button,
 .main-menu .bf-icon-color-hover,
 .main-menu .translation button span:last-child {
   color: var(--cover-text) !important;
+}
+
+.main-menu a {
+  opacity: 0.82;
+}
+
+.main-menu a:hover,
+.main-menu button:hover,
+.main-menu .bf-icon-color-hover:hover {
+  opacity: 1;
+}
+
+.main-menu nav > a:not([href^="http"]) span {
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  font-weight: 500;
 }
 
 .main-menu .translation button {
@@ -297,6 +322,17 @@ body,
 .main-menu .translation .menuhide a span,
 .main-menu .translation .menuhide {
   color: #172033 !important;
+}
+
+body:has(.home-cover) header,
+body:has(.home-cover) .main-menu {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body:has(.home-cover) .max-w-7xl > header,
+body:has(.home-cover) header {
+  border-bottom: 0 !important;
 }
 
 @media (max-width: 900px) {
