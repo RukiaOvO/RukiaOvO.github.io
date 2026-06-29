@@ -1,0 +1,28 @@
+theme = "blowfish"
+baseURL = "https://rukiaovo.github.io/"
+defaultContentLanguage = "zh-cn"
+hasCJKLanguage = true
+enableRobotsTXT = true
+enableEmoji = true
+summaryLength = 80
+buildDrafts = false
+buildFuture = false
+
+[pagination]
+  pagerSize = 6
+
+[caches]
+  [caches.images]
+    dir = ":cacheDir/images"
+
+[imaging]
+  anchor = "Center"
+
+[taxonomies]
+  tag = "tags"
+  category = "categories"
+  author = "authors"
+  series = "series"
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
