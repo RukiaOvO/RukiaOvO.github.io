@@ -1,44 +1,80 @@
 [hero]
-  eyebrow = "Personal Hub"
-  title = "Build with patience. Grow with direction."
-  intro = "A personal homepage centered on software architecture, web development, and the ongoing path into Agent / AI4SE."
-  primaryCtaLabel = "View Projects"
+  eyebrow = "个人主页"
+  title = "耐心构建，持续成长。"
+  intro = "一个围绕软件架构、Web 开发与 Agent / AI4SE 持续探索而展开的个人主页。"
+  bio = "我是复旦大学的一名研究生，主要使用 Java / Go，持续关注软件架构、Web 开发以及 Agent / AI4SE。"
+  primaryCtaLabel = "查看项目"
   primaryCtaLink = "/projects/"
-  secondaryCtaLabel = "Read Posts"
+  secondaryCtaLabel = "阅读文章"
   secondaryCtaLink = "/posts/"
 
-[[focus]]
-  title = "Java / Go Engineering"
-  description = "Building backend skills with attention to maintainability, interface boundaries, and long-term evolution."
-  badge = "Engineering"
+ [identity]
+  roleLabel = "身份"
+  roleValue = "研究生"
+  focusLabel = "关注"
+  focusValue = "架构 / Web"
+
+[[microfacts]]
+  label = "Java / Go"
+
+[[microfacts]]
+  label = "软件架构"
+
+[[microfacts]]
+  label = "Agent / AI4SE"
 
 [[focus]]
-  title = "Software Architecture"
-  description = "Learning how systems stay understandable as they grow: modularity, trade-offs, and practical abstractions."
-  badge = "Architecture"
+  title = "Java / Go 工程实践"
+  description = "持续打磨后端开发能力，关注可维护性、边界清晰度以及系统随时间演进时的稳定性。"
+  badge = "工程"
 
 [[focus]]
-  title = "Web Development"
-  description = "Treating the web as a product surface where structure, usability, and implementation details should reinforce each other."
+  title = "软件架构"
+  description = "关注系统在复杂度上升后的可理解性，持续学习模块划分、权衡取舍与抽象设计。"
+  badge = "架构"
+
+[[focus]]
+  title = "Web 开发"
+  description = "把 Web 视为产品表达的一部分，重视结构、体验与实现细节之间的协同。"
   badge = "Web"
 
 [[focus]]
   title = "Agent / AI4SE"
-  description = "Exploring how agents can support software engineering workflows, iteration speed, and developer reasoning."
-  badge = "Research"
+  description = "持续探索 Agent 如何真正服务于软件工程流程、开发效率与开发者推理过程。"
+  badge = "研究"
 
 [[highlights]]
-  label = "Current Identity"
-  value = "Fudan University postgraduate student"
+  label = "当前身份"
+  value = "复旦大学研究生"
 
 [[highlights]]
-  label = "Primary Stack"
+  label = "主要技术栈"
   value = "Java / Go"
 
 [[highlights]]
-  label = "Research Interests"
-  value = "Software Architecture / Web Development"
+  label = "主要兴趣"
+  value = "软件架构 / Web 开发"
 
 [[highlights]]
-  label = "Now Learning"
+  label = "当前学习"
   value = "Agent / AI4SE"
+
+[sections]
+  highlightsEyebrow = "概览"
+  highlightsTitle = "这个站点关注什么"
+  focusEyebrow = "方向"
+  focusTitle = "我正在持续投入的核心主题"
+  focusIntro = "首页围绕少量稳定主题展开，这样后续无论继续加项目、文章还是研究记录，都不需要频繁重写整体结构。"
+  projectsEyebrow = "项目"
+  projectsTitle = "阶段性项目与实践尝试"
+  projectsIntro = "这里展示的是值得长期保留的代表性项目，每个条目后续都可以独立扩展，而不需要重新设计首页。"
+  projectsLink = "全部项目"
+  postsEyebrow = "文章"
+  postsTitle = "最近的学习记录"
+  postsIntro = "文章和项目分离，方便我持续记录学习过程，同时保持内容结构清晰。"
+  postsLink = "全部文章"
+  aboutEyebrow = "关于"
+  aboutTitle = "一个可以持续演进的个人主页"
+  aboutIntro = "这一版主页更重视信息层次、视觉节奏和后续扩展性。新的内容和新的改动都可以逐块演进，而不用频繁推翻重来。"
+  aboutPrimaryCta = "更多关于我"
+  aboutSecondaryCta = "联系我"

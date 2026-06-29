@@ -1,9 +1,10 @@
-{{ $items := hugo.Data.homepage.focus }}
+{{ $homepage := index hugo.Data (default "zh-cn" .Site.Language.Lang) | default hugo.Data.homepage }}
+{{ $items := $homepage.focus }}
 <section class="home-section">
   <div class="home-section-heading">
-    <p class="home-eyebrow">Focus</p>
-    <h2>Core areas I am building through</h2>
-    <p>The homepage is organized around a small number of durable themes so future changes can extend sections instead of rewriting them.</p>
+    <p class="home-eyebrow">{{ $homepage.sections.focusEyebrow }}</p>
+    <h2>{{ $homepage.sections.focusTitle }}</h2>
+    <p>{{ $homepage.sections.focusIntro }}</p>
   </div>
   <div class="home-focus-grid">
     {{ range $items }}

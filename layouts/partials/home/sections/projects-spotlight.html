@@ -1,12 +1,13 @@
+{{ $homepage := index hugo.Data (default "zh-cn" .Site.Language.Lang) | default hugo.Data.homepage }}
 {{ $projects := first 2 (where site.RegularPages "Section" "projects") }}
 <section class="home-section">
   <div class="home-section-heading home-section-heading--with-link">
     <div>
-      <p class="home-eyebrow">Projects</p>
-      <h2>Selected work and structured experiments</h2>
-      <p>These entries are meant to be replaceable modules: each project can expand independently without forcing a homepage redesign.</p>
+      <p class="home-eyebrow">{{ $homepage.sections.projectsEyebrow }}</p>
+      <h2>{{ $homepage.sections.projectsTitle }}</h2>
+      <p>{{ $homepage.sections.projectsIntro }}</p>
     </div>
-    <a class="home-text-link" href="/projects/">All projects</a>
+    <a class="home-text-link" href="/projects/">{{ $homepage.sections.projectsLink }}</a>
   </div>
   <div class="home-article-grid">
     {{ range $projects }}

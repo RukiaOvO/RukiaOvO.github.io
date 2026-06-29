@@ -1,0 +1,26 @@
+disabled = false
+locale = "en"
+label = "English"
+direction = "ltr"
+weight = 2
+title = "RukiaOvO"
+
+[params]
+  displayName = "EN"
+  isoCode = "en"
+  rtl = false
+  dateFormat = "2006-01-02"
+  description = "Where the winds ceases, there rests the soul."
+  copyright = "Copyright © 2026 RukiaOvO"
+
+[params.author]
+  name = "Rukia"
+  image = "img/avatar.jpg"
+  headline = "love Takagi3"
+  bio = ""
+  links = [
+    { github = "https://github.com/RukiaOvO" },
+    { x-twitter = "https://x.com/Ruk1aOvO" },
+    { link = "https://space.bilibili.com/102770566" },
+    { email = "mailto:1403555427@qq.com" }
+  ]

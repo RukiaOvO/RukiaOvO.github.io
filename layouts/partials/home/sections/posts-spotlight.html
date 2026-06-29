@@ -1,12 +1,13 @@
+{{ $homepage := index hugo.Data (default "zh-cn" .Site.Language.Lang) | default hugo.Data.homepage }}
 {{ $posts := first 3 (where site.RegularPages "Section" "posts") }}
 <section class="home-section">
   <div class="home-section-heading home-section-heading--with-link">
     <div>
-      <p class="home-eyebrow">Writing</p>
-      <h2>Recent notes from the learning process</h2>
-      <p>Posts stay separate from project pages so content can grow under a stable information architecture.</p>
+      <p class="home-eyebrow">{{ $homepage.sections.postsEyebrow }}</p>
+      <h2>{{ $homepage.sections.postsTitle }}</h2>
+      <p>{{ $homepage.sections.postsIntro }}</p>
     </div>
-    <a class="home-text-link" href="/posts/">All posts</a>
+    <a class="home-text-link" href="/posts/">{{ $homepage.sections.postsLink }}</a>
   </div>
   <div class="home-article-list">
     {{ range $posts }}

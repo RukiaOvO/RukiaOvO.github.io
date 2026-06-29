@@ -1,6 +1,7 @@
 theme = "blowfish"
 baseURL = "https://rukiaovo.github.io/"
 defaultContentLanguage = "zh-cn"
+defaultContentLanguageInSubdir = false
 hasCJKLanguage = true
 enableRobotsTXT = true
 enableEmoji = true

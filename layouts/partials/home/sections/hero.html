@@ -1,4 +1,6 @@
-{{ $hero := hugo.Data.homepage.hero }}
+{{ $homepage := index hugo.Data (default "zh-cn" .Site.Language.Lang) | default hugo.Data.homepage }}
+{{ $hero := $homepage.hero }}
+{{ $identity := $homepage.identity }}
 <section class="home-section home-hero">
   <div class="home-hero__backdrop"></div>
   <div class="home-hero__content">
@@ -11,12 +13,12 @@
         {{ $hero.intro }}
       </p>
       <p class="home-hero__lead home-hero__lead--bio">
-        {{ .Site.Params.author.name }} is a postgraduate student at Fudan University, working across Java, Go, software architecture, web development, and Agent / AI4SE.
+        {{ $hero.bio }}
       </p>
       <div class="home-hero__microfacts">
-        <span class="home-pill home-pill--muted">Java / Go</span>
-        <span class="home-pill home-pill--muted">Software Architecture</span>
-        <span class="home-pill home-pill--muted">Agent / AI4SE</span>
+        {{ range $homepage.microfacts }}
+          <span class="home-pill home-pill--muted">{{ .label }}</span>
+        {{ end }}
       </div>
       <div class="home-hero__actions">
         <a class="home-button home-button--primary" href="{{ $hero.primaryCtaLink }}">{{ $hero.primaryCtaLabel }}</a>
@@ -42,12 +44,12 @@
         <p class="home-hero__headline">{{ .Site.Params.Author.headline }}</p>
         <div class="home-hero__stats">
           <div>
-            <span>Role</span>
-            <strong>Postgraduate</strong>
+            <span>{{ $identity.roleLabel }}</span>
+            <strong>{{ $identity.roleValue }}</strong>
           </div>
           <div>
-            <span>Focus</span>
-            <strong>Architecture / Web</strong>
+            <span>{{ $identity.focusLabel }}</span>
+            <strong>{{ $identity.focusValue }}</strong>
           </div>
         </div>
         <div class="home-hero__links">{{ partialCached "author-links.html" . }}</div>

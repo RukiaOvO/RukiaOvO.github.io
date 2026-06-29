@@ -1,0 +1,80 @@
+[hero]
+  eyebrow = "Personal Hub"
+  title = "Build with patience. Grow with direction."
+  intro = "A personal homepage centered on software architecture, web development, and the ongoing path into Agent / AI4SE."
+  bio = "I am a postgraduate student at Fudan University, working across Java, Go, software architecture, web development, and Agent / AI4SE."
+  primaryCtaLabel = "View Projects"
+  primaryCtaLink = "/projects/"
+  secondaryCtaLabel = "Read Posts"
+  secondaryCtaLink = "/posts/"
+
+[identity]
+  roleLabel = "Role"
+  roleValue = "Postgraduate"
+  focusLabel = "Focus"
+  focusValue = "Architecture / Web"
+
+[[microfacts]]
+  label = "Java / Go"
+
+[[microfacts]]
+  label = "Software Architecture"
+
+[[microfacts]]
+  label = "Agent / AI4SE"
+
+[[focus]]
+  title = "Java / Go Engineering"
+  description = "Building backend skills with attention to maintainability, interface boundaries, and long-term evolution."
+  badge = "Engineering"
+
+[[focus]]
+  title = "Software Architecture"
+  description = "Learning how systems stay understandable as they grow: modularity, trade-offs, and practical abstractions."
+  badge = "Architecture"
+
+[[focus]]
+  title = "Web Development"
+  description = "Treating the web as a product surface where structure, usability, and implementation details should reinforce each other."
+  badge = "Web"
+
+[[focus]]
+  title = "Agent / AI4SE"
+  description = "Exploring how agents can support software engineering workflows, iteration speed, and developer reasoning."
+  badge = "Research"
+
+[[highlights]]
+  label = "Current Identity"
+  value = "Fudan University postgraduate student"
+
+[[highlights]]
+  label = "Primary Stack"
+  value = "Java / Go"
+
+[[highlights]]
+  label = "Research Interests"
+  value = "Software Architecture / Web Development"
+
+[[highlights]]
+  label = "Now Learning"
+  value = "Agent / AI4SE"
+
+[sections]
+  highlightsEyebrow = "At a glance"
+  highlightsTitle = "What this site is anchored around"
+  focusEyebrow = "Focus"
+  focusTitle = "Core areas I am building through"
+  focusIntro = "The homepage is organized around a small number of durable themes so future changes can extend sections instead of rewriting them."
+  projectsEyebrow = "Projects"
+  projectsTitle = "Selected work and structured experiments"
+  projectsIntro = "These entries are meant to be replaceable modules: each project can expand independently without forcing a homepage redesign."
+  projectsLink = "All projects"
+  postsEyebrow = "Writing"
+  postsTitle = "Recent notes from the learning process"
+  postsIntro = "Posts stay separate from project pages so content can grow under a stable information architecture."
+  postsLink = "All posts"
+  aboutEyebrow = "About"
+  aboutTitle = "A homepage designed to evolve without breaking its structure"
+  aboutIntro = "This version focuses on readable sections, stronger visual rhythm, and clear extension points. New cards, new writing, and future redesigns can be added by editing one section at a time."
+  aboutPrimaryCta = "More about me"
+  aboutSecondaryCta = "Get in touch"
