@@ -3,12 +3,15 @@
 {{ $identity := $home.identity }}
 {{ $author := .Site.Params.Author }}
 {{ $projects := first 2 (where site.RegularPages "Section" "projects") }}
+{{ $posts := first 3 (where site.RegularPages "Section" "posts") }}
+{{ $labels := $home.labels }}
+
 <section class="zyyo-home">
   <div class="zyyo-home__backdrop"></div>
-  <div class="zyyo-home__halo zyyo-home__halo--one"></div>
-  <div class="zyyo-home__halo zyyo-home__halo--two"></div>
+  <div class="zyyo-home__orb zyyo-home__orb--one"></div>
+  <div class="zyyo-home__orb zyyo-home__orb--two"></div>
 
-  <div class="zyyo-home__inner">
+  <div class="zyyo-shell">
     <aside class="zyyo-sidebar">
       <div class="zyyo-card zyyo-profile">
         {{ with $author.image }}
@@ -22,24 +25,41 @@
           {{ end }}
         {{ end }}
         <div class="zyyo-profile__meta">
-          <div class="zyyo-profile__line">
-            <span>⌖</span>
-            <span>{{ $hero.location }}</span>
-          </div>
-          <div class="zyyo-profile__line">
-            <span>▣</span>
-            <span>{{ $hero.organization }}</span>
-          </div>
+          <p class="zyyo-profile__name">{{ $author.name }}</p>
+          <p class="zyyo-profile__headline">{{ $author.headline }}</p>
         </div>
       </div>
 
-      <div class="zyyo-card zyyo-tags">
-        {{ range $home.tags }}
-          <span class="zyyo-tag">{{ .label }}</span>
-        {{ end }}
+      <div class="zyyo-card zyyo-meta">
+        <div class="zyyo-meta__row">
+          <span class="zyyo-meta__label">{{ $identity.roleLabel }}</span>
+          <span class="zyyo-meta__value">{{ $identity.roleValue }}</span>
+        </div>
+        <div class="zyyo-meta__row">
+          <span class="zyyo-meta__label">{{ $identity.focusLabel }}</span>
+          <span class="zyyo-meta__value">{{ $identity.focusValue }}</span>
+        </div>
+        <div class="zyyo-meta__row">
+          <span class="zyyo-meta__label">{{ $labels.location }}</span>
+          <span class="zyyo-meta__value">{{ $hero.location }}</span>
+        </div>
+        <div class="zyyo-meta__row">
+          <span class="zyyo-meta__label">{{ $labels.organization }}</span>
+          <span class="zyyo-meta__value">{{ $hero.organization }}</span>
+        </div>
+      </div>
+
+      <div class="zyyo-card zyyo-chipbox">
+        <div class="zyyo-chipbox__title">{{ $labels.tags }}</div>
+        <div class="zyyo-tags">
+          {{ range $home.tags }}
+            <span class="zyyo-tag">{{ .label }}</span>
+          {{ end }}
+        </div>
       </div>
 
       <div class="zyyo-card zyyo-timeline">
+        <div class="zyyo-chipbox__title">{{ $labels.timeline }}</div>
         <ul>
           {{ range $home.timeline }}
             <li>
@@ -58,50 +78,131 @@
       <section class="zyyo-hero">
         <p class="zyyo-hero__eyebrow">{{ $hero.eyebrow }}</p>
         <h1 class="zyyo-hero__title">{{ $author.name }}</h1>
-        <p class="zyyo-hero__subtitle">{{ $hero.statusLine }}</p>
-        <p class="zyyo-hero__motto">{{ $hero.motto }}</p>
+        <p class="zyyo-hero__subtitle">{{ $hero.title }}</p>
+        <p class="zyyo-hero__intro">{{ $hero.intro }}</p>
+        <p class="zyyo-hero__bio">{{ $hero.bio }}</p>
 
-        <div class="zyyo-hero__actions">{{ partialCached "author-links.html" . }}</div>
+        <div class="zyyo-hero__actions">
+          <a class="zyyo-button zyyo-button--solid" href="{{ $hero.primaryCtaLink | relLangURL }}">{{ $hero.primaryCtaLabel }}</a>
+          <a class="zyyo-button zyyo-button--ghost" href="{{ $hero.secondaryCtaLink | relLangURL }}">{{ $hero.secondaryCtaLabel }}</a>
+        </div>
 
-        <div class="zyyo-hero__marquee">
-          {{ range seq 1 72 }}
+        <div class="zyyo-social">
+          {{ partialCached "author-links.html" . }}
+        </div>
+
+        <div class="zyyo-hero__grid">
+          {{ range seq 1 42 }}
             <span></span>
           {{ end }}
         </div>
       </section>
 
       <section class="zyyo-section">
-        <h2 class="zyyo-section__title">site</h2>
+        <div class="zyyo-section__head">
+          <p>{{ $home.sections.highlightsEyebrow }}</p>
+          <h2>{{ $home.sections.highlightsTitle }}</h2>
+          <span>{{ $home.sections.highlightsIntro }}</span>
+        </div>
+        <div class="zyyo-highlights">
+          {{ range $home.highlights }}
+            <article class="zyyo-highlight">
+              <span class="zyyo-highlight__label">{{ .label }}</span>
+              <strong class="zyyo-highlight__value">{{ .value }}</strong>
+            </article>
+          {{ end }}
+        </div>
+      </section>
+
+      <section class="zyyo-section">
+        <div class="zyyo-section__head">
+          <p>{{ $home.sections.focusEyebrow }}</p>
+          <h2>{{ $home.sections.focusTitle }}</h2>
+          <span>{{ $home.sections.focusIntro }}</span>
+        </div>
         <div class="zyyo-grid">
-          {{ range $home.sites }}
-            <a class="zyyo-panel" href="{{ .link | relLangURL }}">
+          {{ range $home.focus }}
+            <article class="zyyo-panel">
               <div>
+                <span class="zyyo-panel__badge">{{ .badge }}</span>
                 <h3>{{ .title }}</h3>
                 <p>{{ .description }}</p>
               </div>
-              <span class="zyyo-panel__emoji">{{ .emoji }}</span>
-            </a>
+            </article>
           {{ end }}
         </div>
       </section>
 
       <section class="zyyo-section">
-        <h2 class="zyyo-section__title">project</h2>
-        <div class="zyyo-grid zyyo-grid--projects">
+        <div class="zyyo-section__head">
+          <p>{{ $home.sections.projectsEyebrow }}</p>
+          <h2>{{ $home.sections.projectsTitle }}</h2>
+          <span>{{ $home.sections.projectsIntro }}</span>
+        </div>
+        <div class="zyyo-grid">
           {{ range $projects }}
-            <a class="zyyo-panel" href="{{ .RelPermalink }}">
+            <a class="zyyo-panel zyyo-panel--link" href="{{ .RelPermalink }}">
               <div>
+                <span class="zyyo-panel__badge">{{ $labels.project }}</span>
                 <h3>{{ .Title }}</h3>
                 <p>{{ .Summary | plainify }}</p>
               </div>
-              <span class="zyyo-panel__emoji">☠</span>
+              <span class="zyyo-panel__arrow">↗</span>
             </a>
           {{ end }}
         </div>
       </section>
 
       <section class="zyyo-section">
-        <h2 class="zyyo-section__title">skills</h2>
+        <div class="zyyo-section__head">
+          <p>{{ $home.sections.postsEyebrow }}</p>
+          <h2>{{ $home.sections.postsTitle }}</h2>
+          <span>{{ $home.sections.postsIntro }}</span>
+        </div>
+        <div class="zyyo-list">
+          {{ if gt (len $posts) 0 }}
+            {{ range $posts }}
+              <article class="zyyo-list__item">
+                <div class="zyyo-list__meta">
+                  <span>{{ .Date.Format "2006-01-02" }}</span>
+                  <span>{{ .ReadingTime }} min</span>
+                </div>
+                <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+                <p>{{ .Summary | plainify }}</p>
+              </article>
+            {{ end }}
+          {{ else }}
+            <article class="zyyo-list__item zyyo-list__item--empty">
+              <div class="zyyo-list__meta">
+                <span>{{ $labels.comingSoon }}</span>
+              </div>
+              <h3>{{ $home.sections.postsEmptyTitle }}</h3>
+              <p>{{ $home.sections.postsEmptyText }}</p>
+            </article>
+          {{ end }}
+        </div>
+      </section>
+
+      <section class="zyyo-section">
+        <div class="zyyo-section__head">
+          <p>{{ $home.sections.aboutEyebrow }}</p>
+          <h2>{{ $home.sections.aboutTitle }}</h2>
+        </div>
+        <div class="zyyo-about">
+          <p>{{ $home.sections.aboutIntro }}</p>
+          <div class="zyyo-hero__actions">
+            <a class="zyyo-button zyyo-button--solid" href="/about/">{{ $home.sections.aboutPrimaryCta }}</a>
+            <a class="zyyo-button zyyo-button--ghost" href="mailto:1403555427@qq.com">{{ $home.sections.aboutSecondaryCta }}</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="zyyo-section">
+        <div class="zyyo-section__head">
+          <p>{{ $labels.skills }}</p>
+          <h2>{{ $labels.stack }}</h2>
+          <span>{{ $home.sections.skillsIntro }}</span>
+        </div>
         <div class="zyyo-skills">
           {{ range $home.skills }}
             <span class="zyyo-skill">{{ .label }}</span>

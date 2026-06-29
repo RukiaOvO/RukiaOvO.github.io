@@ -10,28 +10,26 @@ title = "RukiaOvO"
   isoCode = "en"
   rtl = false
   dateFormat = "2006-01-02"
-  description = "Where the winds ceases, there rests the soul."
+  description = "Where the winds cease, the soul comes to rest."
   copyright = "Copyright © 2026 RukiaOvO"
 
   [params.homepageText.hero]
-    eyebrow = "Personal Hub"
+    eyebrow = "Personal Homepage"
     title = "Build with patience. Grow with direction."
     intro = "A personal homepage centered on software architecture, web development, and the ongoing path into Agent / AI4SE."
-    bio = "I am a postgraduate student at Fudan University, working across Java, Go, software architecture, web development, and Agent / AI4SE."
+    bio = "I am a postgraduate student at Fudan University, working mainly with Java and Go while exploring software architecture, web development, and practical agent workflows for software engineering."
     primaryCtaLabel = "View Projects"
     primaryCtaLink = "/projects/"
     secondaryCtaLabel = "Read Posts"
     secondaryCtaLink = "/posts/"
-    location = "China · Shanghai"
+    location = "Shanghai, China"
     organization = "Fudan University"
-    statusLine = "A postgraduate student at Fudan University"
-    motto = "Where the winds ceases, there rests the soul."
 
   [params.homepageText.identity]
     roleLabel = "Role"
     roleValue = "Postgraduate"
     focusLabel = "Focus"
-    focusValue = "Architecture / Web"
+    focusValue = "Architecture / Web / Agent"
 
   [[params.homepageText.tags]]
     label = "Java"
@@ -40,10 +38,10 @@ title = "RukiaOvO"
     label = "Go"
 
   [[params.homepageText.tags]]
-    label = "Architecture"
+    label = "Software Architecture"
 
   [[params.homepageText.tags]]
-    label = "Web"
+    label = "Web Development"
 
   [[params.homepageText.tags]]
     label = "Agent"
@@ -52,44 +50,20 @@ title = "RukiaOvO"
     label = "AI4SE"
 
   [[params.homepageText.timeline]]
-    title = "Continuing to refine this homepage"
+    title = "Refined the homepage structure and visual system"
     date = "2026.06"
 
   [[params.homepageText.timeline]]
-    title = "Started structured learning on Agent / AI4SE"
+    title = "Started focused learning on Agent / AI4SE"
     date = "2026.01"
 
   [[params.homepageText.timeline]]
-    title = "Focused on software architecture and web development"
+    title = "Shifted attention toward software architecture and web development"
     date = "2025.09"
 
   [[params.homepageText.timeline]]
     title = "Began postgraduate study at Fudan University"
     date = "2024.09"
-
-  [[params.homepageText.sites]]
-    title = "Projects"
-    description = "Browse the representative projects I keep improving"
-    link = "/projects/"
-    emoji = "💻"
-
-  [[params.homepageText.sites]]
-    title = "Posts"
-    description = "Notes and reflections from my learning process"
-    link = "/posts/"
-    emoji = "📝"
-
-  [[params.homepageText.sites]]
-    title = "About"
-    description = "A quick view of my background and interests"
-    link = "/about/"
-    emoji = "👋"
-
-  [[params.homepageText.sites]]
-    title = "Contact"
-    description = "Reach me through email or social links"
-    link = "mailto:1403555427@qq.com"
-    emoji = "📮"
 
   [[params.homepageText.skills]]
     label = "Java"
@@ -121,33 +95,24 @@ title = "RukiaOvO"
   [[params.homepageText.skills]]
     label = "Linux"
 
-  [[params.homepageText.microfacts]]
-    label = "Java / Go"
-
-  [[params.homepageText.microfacts]]
-    label = "Software Architecture"
-
-  [[params.homepageText.microfacts]]
-    label = "Agent / AI4SE"
-
   [[params.homepageText.focus]]
     title = "Java / Go Engineering"
-    description = "Building backend skills with attention to maintainability, interface boundaries, and long-term evolution."
+    description = "Building backend skills with attention to maintainability, explicit boundaries, and systems that can evolve without collapsing."
     badge = "Engineering"
 
   [[params.homepageText.focus]]
     title = "Software Architecture"
-    description = "Learning how systems stay understandable as they grow: modularity, trade-offs, and practical abstractions."
+    description = "Learning how larger systems remain understandable through modular design, trade-offs, and practical abstractions."
     badge = "Architecture"
 
   [[params.homepageText.focus]]
     title = "Web Development"
-    description = "Treating the web as a product surface where structure, usability, and implementation details should reinforce each other."
+    description = "Treating the web as a product surface where structure, experience, and implementation detail should reinforce each other."
     badge = "Web"
 
   [[params.homepageText.focus]]
     title = "Agent / AI4SE"
-    description = "Exploring how agents can support software engineering workflows, iteration speed, and developer reasoning."
+    description = "Exploring how agents can support software engineering workflows, iteration speed, and developer reasoning in practice."
     badge = "Research"
 
   [[params.homepageText.highlights]]
@@ -159,7 +124,7 @@ title = "RukiaOvO"
     value = "Java / Go"
 
   [[params.homepageText.highlights]]
-    label = "Research Interests"
+    label = "Long-term Interests"
     value = "Software Architecture / Web Development"
 
   [[params.homepageText.highlights]]
@@ -167,22 +132,17 @@ title = "RukiaOvO"
     value = "Agent / AI4SE"
 
   [params.homepageText.sections]
-    highlightsEyebrow = "At a glance"
-    highlightsTitle = "What this site is anchored around"
+    highlightsEyebrow = "Overview"
+    highlightsTitle = "What this site keeps building around"
     focusEyebrow = "Focus"
-    focusTitle = "Core areas I am building through"
-    focusIntro = "The homepage is organized around a small number of durable themes so future changes can extend sections instead of rewriting them."
+    focusTitle = "Core themes I am actively building through"
     projectsEyebrow = "Projects"
-    projectsTitle = "Selected work and structured experiments"
-    projectsIntro = "These entries are meant to be replaceable modules: each project can expand independently without forcing a homepage redesign."
-    projectsLink = "All projects"
+    projectsTitle = "Selected work and evolving experiments"
     postsEyebrow = "Writing"
-    postsTitle = "Recent notes from the learning process"
-    postsIntro = "Posts stay separate from project pages so content can grow under a stable information architecture."
-    postsLink = "All posts"
+    postsTitle = "Recent notes from learning and building"
     aboutEyebrow = "About"
-    aboutTitle = "A homepage designed to evolve without breaking its structure"
-    aboutIntro = "This version focuses on readable sections, stronger visual rhythm, and clear extension points. New cards, new writing, and future redesigns can be added by editing one section at a time."
+    aboutTitle = "A homepage designed to keep evolving"
+    aboutIntro = "This rebuild turns the homepage into a more stable one-page structure. New projects, writing, and research directions can keep growing without forcing another redesign."
     aboutPrimaryCta = "More about me"
     aboutSecondaryCta = "Get in touch"
 
