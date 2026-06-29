@@ -1,0 +1,44 @@
+[hero]
+  eyebrow = "Personal Hub"
+  title = "Build with patience. Grow with direction."
+  intro = "A personal homepage centered on software architecture, web development, and the ongoing path into Agent / AI4SE."
+  primaryCtaLabel = "View Projects"
+  primaryCtaLink = "/projects/"
+  secondaryCtaLabel = "Read Posts"
+  secondaryCtaLink = "/posts/"
+
+[[focus]]
+  title = "Java / Go Engineering"
+  description = "Building backend skills with attention to maintainability, interface boundaries, and long-term evolution."
+  badge = "Engineering"
+
+[[focus]]
+  title = "Software Architecture"
+  description = "Learning how systems stay understandable as they grow: modularity, trade-offs, and practical abstractions."
+  badge = "Architecture"
+
+[[focus]]
+  title = "Web Development"
+  description = "Treating the web as a product surface where structure, usability, and implementation details should reinforce each other."
+  badge = "Web"
+
+[[focus]]
+  title = "Agent / AI4SE"
+  description = "Exploring how agents can support software engineering workflows, iteration speed, and developer reasoning."
+  badge = "Research"
+
+[[highlights]]
+  label = "Current Identity"
+  value = "Fudan University postgraduate student"
+
+[[highlights]]
+  label = "Primary Stack"
+  value = "Java / Go"
+
+[[highlights]]
+  label = "Research Interests"
+  value = "Software Architecture / Web Development"
+
+[[highlights]]
+  label = "Now Learning"
+  value = "Agent / AI4SE"

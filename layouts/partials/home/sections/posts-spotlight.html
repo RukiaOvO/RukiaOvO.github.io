@@ -1,0 +1,23 @@
+{{ $posts := first 3 (where site.RegularPages "Section" "posts") }}
+<section class="home-section">
+  <div class="home-section-heading home-section-heading--with-link">
+    <div>
+      <p class="home-eyebrow">Writing</p>
+      <h2>Recent notes from the learning process</h2>
+      <p>Posts stay separate from project pages so content can grow under a stable information architecture.</p>
+    </div>
+    <a class="home-text-link" href="/posts/">All posts</a>
+  </div>
+  <div class="home-article-list">
+    {{ range $posts }}
+      <article class="home-list-card">
+        <div class="home-list-card__meta">
+          <span>{{ .Date.Format "2006-01-02" }}</span>
+          <span>{{ .ReadingTime }} min read</span>
+        </div>
+        <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+        <p>{{ .Summary | plainify }}</p>
+      </article>
+    {{ end }}
+  </div>
+</section>

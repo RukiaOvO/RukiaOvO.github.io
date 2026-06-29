@@ -21,8 +21,8 @@ fingerprintAlgorithm = "sha512"
   showScrollToTop = true
 
 [homepage]
-  layout = "profile"
-  showRecent = true
+  layout = "custom"
+  showRecent = false
   showRecentItems = 4
   showMoreLink = true
   showMoreLinkDest = "/posts/"

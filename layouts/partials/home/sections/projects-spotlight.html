@@ -1,0 +1,27 @@
+{{ $projects := first 2 (where site.RegularPages "Section" "projects") }}
+<section class="home-section">
+  <div class="home-section-heading home-section-heading--with-link">
+    <div>
+      <p class="home-eyebrow">Projects</p>
+      <h2>Selected work and structured experiments</h2>
+      <p>These entries are meant to be replaceable modules: each project can expand independently without forcing a homepage redesign.</p>
+    </div>
+    <a class="home-text-link" href="/projects/">All projects</a>
+  </div>
+  <div class="home-article-grid">
+    {{ range $projects }}
+      <article class="home-article-card">
+        <div class="home-article-card__meta">
+          {{ with .Params.categories }}
+            <span class="home-pill">{{ index . 0 }}</span>
+          {{ else }}
+            <span class="home-pill">Project</span>
+          {{ end }}
+          <span>{{ .Date.Format "2006-01-02" }}</span>
+        </div>
+        <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+        <p>{{ .Summary | plainify }}</p>
+      </article>
+    {{ end }}
+  </div>
+</section>
