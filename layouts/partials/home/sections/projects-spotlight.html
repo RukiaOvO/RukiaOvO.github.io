@@ -1,4 +1,4 @@
-{{ $homepage := index hugo.Data (default "zh-cn" .Site.Language.Lang) | default hugo.Data.homepage }}
+{{ $homepage := .Site.Language.Params.homepageText }}
 {{ $projects := first 2 (where site.RegularPages "Section" "projects") }}
 <section class="home-section">
   <div class="home-section-heading home-section-heading--with-link">

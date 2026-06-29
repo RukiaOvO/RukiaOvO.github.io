@@ -1,4 +1,4 @@
-{{ $homepage := index hugo.Data (default "zh-cn" .Site.Language.Lang) | default hugo.Data.homepage }}
+{{ $homepage := .Site.Language.Params.homepageText }}
 {{ $hero := $homepage.hero }}
 {{ $identity := $homepage.identity }}
 <section class="home-section home-hero">
