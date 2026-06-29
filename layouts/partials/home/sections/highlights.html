@@ -1,18 +1,16 @@
 {{ $homepage := .Site.Language.Params.homepageText }}
 {{ $items := $homepage.highlights }}
 <section class="home-section">
-  <div class="home-panel">
-    <div class="home-section-heading">
-      <p class="home-eyebrow">{{ $homepage.sections.highlightsEyebrow }}</p>
-      <h2>{{ $homepage.sections.highlightsTitle }}</h2>
-    </div>
-    <div class="home-highlights">
-      {{ range $items }}
-        <div class="home-highlight">
-          <p class="home-highlight__label">{{ .label }}</p>
-          <p class="home-highlight__value">{{ .value }}</p>
-        </div>
-      {{ end }}
-    </div>
+  <div class="home-section-heading">
+    <p class="home-eyebrow">{{ $homepage.sections.highlightsEyebrow }}</p>
+    <h2>{{ $homepage.sections.highlightsTitle }}</h2>
+  </div>
+  <div class="home-highlights">
+    {{ range $items }}
+      <div class="home-highlight">
+        <p class="home-highlight__label">{{ .label }}</p>
+        <p class="home-highlight__value">{{ .value }}</p>
+      </div>
+    {{ end }}
   </div>
 </section>

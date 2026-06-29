@@ -16,8 +16,10 @@
           <span>{{ .Date.Format "2006-01-02" }}</span>
           <span>{{ .ReadingTime }} min read</span>
         </div>
-        <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
-        <p>{{ .Summary | plainify }}</p>
+        <div class="home-list-card__body">
+          <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+          <p>{{ .Summary | plainify }}</p>
+        </div>
       </article>
     {{ end }}
   </div>
