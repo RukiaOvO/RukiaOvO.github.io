@@ -22,12 +22,104 @@ title = "RukiaOvO"
     primaryCtaLink = "/projects/"
     secondaryCtaLabel = "阅读文章"
     secondaryCtaLink = "/posts/"
+    location = "中国 · 上海"
+    organization = "复旦大学"
+    statusLine = "A postgraduate student at Fudan University"
+    motto = "Where the winds ceases, there rests the soul."
 
   [params.homepageText.identity]
     roleLabel = "身份"
     roleValue = "研究生"
     focusLabel = "关注"
     focusValue = "架构 / Web"
+
+  [[params.homepageText.tags]]
+    label = "Java"
+
+  [[params.homepageText.tags]]
+    label = "Go"
+
+  [[params.homepageText.tags]]
+    label = "软件架构"
+
+  [[params.homepageText.tags]]
+    label = "Web 开发"
+
+  [[params.homepageText.tags]]
+    label = "Agent"
+
+  [[params.homepageText.tags]]
+    label = "AI4SE"
+
+  [[params.homepageText.timeline]]
+    title = "继续完善个人主页"
+    date = "2026.06"
+
+  [[params.homepageText.timeline]]
+    title = "开始系统学习 Agent / AI4SE"
+    date = "2026.01"
+
+  [[params.homepageText.timeline]]
+    title = "聚焦软件架构与 Web 开发"
+    date = "2025.09"
+
+  [[params.homepageText.timeline]]
+    title = "在复旦大学继续研究生阶段学习"
+    date = "2024.09"
+
+  [[params.homepageText.sites]]
+    title = "项目"
+    description = "查看我正在持续完善的代表性项目"
+    link = "/projects/"
+    emoji = "💻"
+
+  [[params.homepageText.sites]]
+    title = "文章"
+    description = "记录学习过程中的思考与笔记"
+    link = "/posts/"
+    emoji = "📝"
+
+  [[params.homepageText.sites]]
+    title = "关于"
+    description = "快速了解我的背景、兴趣与方向"
+    link = "/about/"
+    emoji = "👋"
+
+  [[params.homepageText.sites]]
+    title = "联系"
+    description = "通过邮箱或社交链接找到我"
+    link = "mailto:1403555427@qq.com"
+    emoji = "📮"
+
+  [[params.homepageText.skills]]
+    label = "Java"
+
+  [[params.homepageText.skills]]
+    label = "Go"
+
+  [[params.homepageText.skills]]
+    label = "Spring Boot"
+
+  [[params.homepageText.skills]]
+    label = "Gin"
+
+  [[params.homepageText.skills]]
+    label = "Hugo"
+
+  [[params.homepageText.skills]]
+    label = "MySQL"
+
+  [[params.homepageText.skills]]
+    label = "Redis"
+
+  [[params.homepageText.skills]]
+    label = "Docker"
+
+  [[params.homepageText.skills]]
+    label = "Git"
+
+  [[params.homepageText.skills]]
+    label = "Linux"
 
   [[params.homepageText.microfacts]]
     label = "Java / Go"

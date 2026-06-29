@@ -1,84 +1,113 @@
-{{ $homepage := .Site.Language.Params.homepageText }}
-{{ $hero := $homepage.hero }}
-{{ $identity := $homepage.identity }}
+{{ $home := .Site.Language.Params.homepageText }}
+{{ $hero := $home.hero }}
+{{ $identity := $home.identity }}
 {{ $author := .Site.Params.Author }}
-{{ $projectsURL := "/projects/" | relLangURL }}
-{{ $postsURL := "/posts/" | relLangURL }}
-{{ $aboutURL := "/about/" | relLangURL }}
-{{ $mailURL := "mailto:1403555427@qq.com" }}
-<section class="home-cover">
-  <div class="home-cover__mask"></div>
-  <div class="home-cover__glow home-cover__glow--one"></div>
-  <div class="home-cover__glow home-cover__glow--two"></div>
+{{ $projects := first 2 (where site.RegularPages "Section" "projects") }}
+<section class="zyyo-home">
+  <div class="zyyo-home__backdrop"></div>
+  <div class="zyyo-home__halo zyyo-home__halo--one"></div>
+  <div class="zyyo-home__halo zyyo-home__halo--two"></div>
 
-  <div class="home-cover__inner">
-    <div class="home-cover__brand">{{ .Site.Title }}</div>
-
-    <div class="home-cover__content">
-      <div class="home-cover__avatar-wrap">
+  <div class="zyyo-home__inner">
+    <aside class="zyyo-sidebar">
+      <div class="zyyo-card zyyo-profile">
         {{ with $author.image }}
           {{ $authorImage := resources.Get . }}
           {{ if $authorImage }}
             {{ $imageURL := $authorImage.RelPermalink }}
             {{ if not (eq $authorImage.MediaType.SubType "svg") }}
-              {{ $imageURL = ($authorImage.Fill "360x360").RelPermalink }}
+              {{ $imageURL = ($authorImage.Fill "320x320").RelPermalink }}
             {{ end }}
-            <img
-              class="home-cover__avatar"
-              src="{{ $imageURL }}"
-              alt="{{ $author.name }}">
+            <img class="zyyo-profile__avatar" src="{{ $imageURL }}" alt="{{ $author.name }}">
           {{ end }}
+        {{ end }}
+        <div class="zyyo-profile__meta">
+          <div class="zyyo-profile__line">
+            <span>⌖</span>
+            <span>{{ $hero.location }}</span>
+          </div>
+          <div class="zyyo-profile__line">
+            <span>▣</span>
+            <span>{{ $hero.organization }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="zyyo-card zyyo-tags">
+        {{ range $home.tags }}
+          <span class="zyyo-tag">{{ .label }}</span>
         {{ end }}
       </div>
 
-      <div class="home-cover__main">
-        <p class="home-cover__eyebrow">{{ $hero.eyebrow }}</p>
-        <h1 class="home-cover__title">{{ $author.name }}</h1>
-        <p class="home-cover__subtitle">{{ $author.headline }}</p>
-        <p class="home-cover__tagline">{{ .Site.Params.Description | default .Site.Params.description }}</p>
+      <div class="zyyo-card zyyo-timeline">
+        <ul>
+          {{ range $home.timeline }}
+            <li>
+              <span class="zyyo-timeline__dot"></span>
+              <div>
+                <p>{{ .title }}</p>
+                <small>{{ .date }}</small>
+              </div>
+            </li>
+          {{ end }}
+        </ul>
+      </div>
+    </aside>
 
-        <div class="home-cover__meta">
-          <span>{{ $identity.roleValue }}</span>
-          <span>{{ $identity.focusValue }}</span>
-          {{ range first 1 $homepage.microfacts }}
-            <span>{{ .label }}</span>
+    <main class="zyyo-main">
+      <section class="zyyo-hero">
+        <p class="zyyo-hero__eyebrow">{{ $hero.eyebrow }}</p>
+        <h1 class="zyyo-hero__title">{{ $author.name }}</h1>
+        <p class="zyyo-hero__subtitle">{{ $hero.statusLine }}</p>
+        <p class="zyyo-hero__motto">{{ $hero.motto }}</p>
+
+        <div class="zyyo-hero__actions">{{ partialCached "author-links.html" . }}</div>
+
+        <div class="zyyo-hero__marquee">
+          {{ range seq 1 72 }}
+            <span></span>
           {{ end }}
         </div>
+      </section>
 
-        <nav class="home-cover__nav" aria-label="Primary">
-          <a href="{{ $projectsURL }}">{{ i18n "article.projects" | default "Projects" }}</a>
-          <a href="{{ $postsURL }}">{{ i18n "article.posts" | default "Posts" }}</a>
-          <a href="{{ $aboutURL }}">{{ i18n "article.about" | default "About" }}</a>
-          <a href="{{ $mailURL }}">{{ $homepage.sections.aboutSecondaryCta }}</a>
-        </nav>
-
-        <div class="home-cover__actions">
-          <a class="home-cover__button home-cover__button--primary" href="{{ $projectsURL }}">{{ $hero.primaryCtaLabel }}</a>
-          <a class="home-cover__button" href="{{ $postsURL }}">{{ $hero.secondaryCtaLabel }}</a>
-          <a class="home-cover__button" href="{{ $aboutURL }}">{{ $homepage.sections.aboutPrimaryCta }}</a>
+      <section class="zyyo-section">
+        <h2 class="zyyo-section__title">site</h2>
+        <div class="zyyo-grid">
+          {{ range $home.sites }}
+            <a class="zyyo-panel" href="{{ .link | relLangURL }}">
+              <div>
+                <h3>{{ .title }}</h3>
+                <p>{{ .description }}</p>
+              </div>
+              <span class="zyyo-panel__emoji">{{ .emoji }}</span>
+            </a>
+          {{ end }}
         </div>
+      </section>
 
-        <div class="home-cover__links">{{ partialCached "author-links.html" . }}</div>
-      </div>
-    </div>
+      <section class="zyyo-section">
+        <h2 class="zyyo-section__title">project</h2>
+        <div class="zyyo-grid zyyo-grid--projects">
+          {{ range $projects }}
+            <a class="zyyo-panel" href="{{ .RelPermalink }}">
+              <div>
+                <h3>{{ .Title }}</h3>
+                <p>{{ .Summary | plainify }}</p>
+              </div>
+              <span class="zyyo-panel__emoji">☠</span>
+            </a>
+          {{ end }}
+        </div>
+      </section>
 
-    <div class="home-cover__footer">
-      <div class="home-cover__footer-copy">
-        <span>{{ $identity.roleLabel }}</span>
-        <strong>{{ $identity.roleValue }}</strong>
-      </div>
-      <div class="home-cover__footer-copy">
-        <span>{{ $identity.focusLabel }}</span>
-        <strong>{{ $identity.focusValue }}</strong>
-      </div>
-      <div class="home-cover__footer-copy">
-        <span>{{ $hero.eyebrow }}</span>
-        <strong>{{ .Site.Params.Description | default .Site.Params.description }}</strong>
-      </div>
-      <div class="home-cover__footer-copy">
-        <span>{{ $homepage.sections.postsEyebrow }}</span>
-        <strong><a href="{{ $postsURL }}">{{ $homepage.sections.postsLink }}</a></strong>
-      </div>
-    </div>
+      <section class="zyyo-section">
+        <h2 class="zyyo-section__title">skills</h2>
+        <div class="zyyo-skills">
+          {{ range $home.skills }}
+            <span class="zyyo-skill">{{ .label }}</span>
+          {{ end }}
+        </div>
+      </section>
+    </main>
   </div>
 </section>
