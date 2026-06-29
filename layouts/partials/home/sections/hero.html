@@ -1,59 +1,84 @@
 {{ $homepage := .Site.Language.Params.homepageText }}
 {{ $hero := $homepage.hero }}
 {{ $identity := $homepage.identity }}
-<section class="home-section home-hero">
-  <div class="home-hero__backdrop"></div>
-  <div class="home-hero__content">
-    <div class="home-hero__text">
-      {{ with $hero.eyebrow }}
-        <p class="home-eyebrow">{{ . }}</p>
-      {{ end }}
-      <h1 class="home-hero__title">{{ $hero.title }}</h1>
-      <p class="home-hero__lead">
-        {{ $hero.intro }}
-      </p>
-      <p class="home-hero__lead home-hero__lead--bio">
-        {{ $hero.bio }}
-      </p>
-      <div class="home-hero__microfacts">
-        {{ range $homepage.microfacts }}
-          <span class="home-pill home-pill--muted">{{ .label }}</span>
+{{ $author := .Site.Params.Author }}
+{{ $projectsURL := "/projects/" | relLangURL }}
+{{ $postsURL := "/posts/" | relLangURL }}
+{{ $aboutURL := "/about/" | relLangURL }}
+{{ $mailURL := "mailto:1403555427@qq.com" }}
+<section class="home-cover">
+  <div class="home-cover__mask"></div>
+  <div class="home-cover__glow home-cover__glow--one"></div>
+  <div class="home-cover__glow home-cover__glow--two"></div>
+
+  <div class="home-cover__inner">
+    <div class="home-cover__brand">{{ .Site.Title }}</div>
+
+    <div class="home-cover__content">
+      <div class="home-cover__avatar-wrap">
+        {{ with $author.image }}
+          {{ $authorImage := resources.Get . }}
+          {{ if $authorImage }}
+            {{ $imageURL := $authorImage.RelPermalink }}
+            {{ if not (eq $authorImage.MediaType.SubType "svg") }}
+              {{ $imageURL = ($authorImage.Fill "360x360").RelPermalink }}
+            {{ end }}
+            <img
+              class="home-cover__avatar"
+              src="{{ $imageURL }}"
+              alt="{{ $author.name }}">
+          {{ end }}
         {{ end }}
       </div>
-      <div class="home-hero__actions">
-        <a class="home-button home-button--primary" href="{{ $hero.primaryCtaLink }}">{{ $hero.primaryCtaLabel }}</a>
-        <a class="home-button home-button--secondary" href="{{ $hero.secondaryCtaLink }}">{{ $hero.secondaryCtaLabel }}</a>
+
+      <div class="home-cover__main">
+        <p class="home-cover__eyebrow">{{ $hero.eyebrow }}</p>
+        <h1 class="home-cover__title">{{ $author.name }}</h1>
+        <p class="home-cover__subtitle">{{ $author.headline }}</p>
+        <p class="home-cover__tagline">{{ .Site.Params.Description | default .Site.Params.description }}</p>
+
+        <div class="home-cover__meta">
+          <span>{{ $identity.roleValue }}</span>
+          <span>{{ $identity.focusValue }}</span>
+          {{ range first 1 $homepage.microfacts }}
+            <span>{{ .label }}</span>
+          {{ end }}
+        </div>
+
+        <nav class="home-cover__nav" aria-label="Primary">
+          <a href="{{ $projectsURL }}">{{ i18n "article.projects" | default "Projects" }}</a>
+          <a href="{{ $postsURL }}">{{ i18n "article.posts" | default "Posts" }}</a>
+          <a href="{{ $aboutURL }}">{{ i18n "article.about" | default "About" }}</a>
+          <a href="{{ $mailURL }}">{{ $homepage.sections.aboutSecondaryCta }}</a>
+        </nav>
+
+        <div class="home-cover__actions">
+          <a class="home-cover__button home-cover__button--primary" href="{{ $projectsURL }}">{{ $hero.primaryCtaLabel }}</a>
+          <a class="home-cover__button" href="{{ $postsURL }}">{{ $hero.secondaryCtaLabel }}</a>
+          <a class="home-cover__button" href="{{ $aboutURL }}">{{ $homepage.sections.aboutPrimaryCta }}</a>
+        </div>
+
+        <div class="home-cover__links">{{ partialCached "author-links.html" . }}</div>
       </div>
     </div>
-    <aside class="home-hero__card">
-      {{ with .Site.Params.Author.image }}
-        {{ $authorImage := resources.Get . }}
-        {{ if $authorImage }}
-          {{ $imageURL := $authorImage.RelPermalink }}
-          {{ if not (eq $authorImage.MediaType.SubType "svg") }}
-            {{ $imageURL = ($authorImage.Fill "420x420").RelPermalink }}
-          {{ end }}
-          <img
-            class="home-hero__avatar"
-            src="{{ $imageURL }}"
-            alt="{{ $.Site.Params.Author.name }}">
-        {{ end }}
-      {{ end }}
-      <div class="home-hero__identity">
-        <p class="home-hero__name">{{ .Site.Params.Author.name }}</p>
-        <p class="home-hero__headline">{{ .Site.Params.Author.headline }}</p>
-        <div class="home-hero__stats">
-          <div>
-            <span>{{ $identity.roleLabel }}</span>
-            <strong>{{ $identity.roleValue }}</strong>
-          </div>
-          <div>
-            <span>{{ $identity.focusLabel }}</span>
-            <strong>{{ $identity.focusValue }}</strong>
-          </div>
-        </div>
-        <div class="home-hero__links">{{ partialCached "author-links.html" . }}</div>
+
+    <div class="home-cover__footer">
+      <div class="home-cover__footer-copy">
+        <span>{{ $identity.roleLabel }}</span>
+        <strong>{{ $identity.roleValue }}</strong>
       </div>
-    </aside>
+      <div class="home-cover__footer-copy">
+        <span>{{ $identity.focusLabel }}</span>
+        <strong>{{ $identity.focusValue }}</strong>
+      </div>
+      <div class="home-cover__footer-copy">
+        <span>{{ $hero.eyebrow }}</span>
+        <strong>{{ $hero.intro }}</strong>
+      </div>
+      <div class="home-cover__footer-copy">
+        <span>{{ $homepage.sections.postsEyebrow }}</span>
+        <strong><a href="{{ $postsURL }}">{{ $homepage.sections.postsLink }}</a></strong>
+      </div>
+    </div>
   </div>
 </section>
