@@ -14,10 +14,7 @@
 
 ### Cloudflare Workers 实时方案
 
-代码位置：
-
-- Worker 脚本：`workers/steam-status-worker.js`
-- Wrangler 示例配置：`workers/wrangler.example.toml`
+Worker 通过 Cloudflare 控制台手动维护，仓库不保存 Worker 源码或 Wrangler 本地配置。
 
 返回数据格式与前端兼容：
 
@@ -33,59 +30,40 @@
 }
 ```
 
-部署步骤：
+控制台配置摘要：
 
-1. 进入 Worker 目录：
+1. Worker 通过 Cloudflare 控制台创建和编辑，不通过本仓库自动部署。
 
-   ```bash
-   cd workers
-   copy wrangler.example.toml wrangler.toml
-   ```
-
-2. 登录 Cloudflare：
-
-   ```bash
-   npx wrangler login
-   ```
-
-3. 写入 Steam Web API Key。该值会作为 Cloudflare Secret 保存，不要写入仓库：
-
-   ```bash
-   npx wrangler secret put STEAM_WEB_API_KEY
-   ```
-
-4. 部署 Worker：
-
-   ```bash
-   npx wrangler deploy
-   ```
-
-5. 记录部署后的 Worker URL，例如：
+2. Worker 访问地址：
 
    ```text
-   https://rukia-steam-status.<your-subdomain>.workers.dev
+   https://rukia-steam-status.1403555427.workers.dev/
    ```
 
-6. 回到仓库根目录，修改 `data/home.yaml`：
+3. Worker 环境变量：
+
+   ```text
+   STEAM_ID=76561198417009401
+   ALLOWED_ORIGINS=https://rukiaovo.github.io,http://localhost:1313
+   ```
+
+4. Worker Secret：
+
+   ```text
+   STEAM_WEB_API_KEY=<Steam Web API Key>
+   ```
+
+5. 站点配置位于 `data/home.yaml`：
 
    ```yaml
    steam:
-     workerUrl: "https://rukia-steam-status.<your-subdomain>.workers.dev"
-   ```
-
-7. 构建并推送站点：
-
-   ```bash
-   hugo --minify
-   git add data/home.yaml
-   git commit -m "chore: configure steam worker"
-   git push origin main
+     workerUrl: "https://rukia-steam-status.1403555427.workers.dev/"
    ```
 
 验证方式：
 
 ```bash
-curl "https://rukia-steam-status.<your-subdomain>.workers.dev"
+curl "https://rukia-steam-status.1403555427.workers.dev/"
 ```
 
 如果返回 `ok: true` 且包含 `onlineState`，首页会优先使用 Worker，并每 30 秒轮询一次。若 `workerUrl` 为空，前端会回退到公开 Steam XML；若实时接口失败，会保留静态快照显示。

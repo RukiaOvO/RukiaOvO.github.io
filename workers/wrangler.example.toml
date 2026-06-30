@@ -1,7 +1,0 @@
-name = "rukia-steam-status"
-main = "steam-status-worker.js"
-compatibility_date = "2026-06-30"
-
-[vars]
-STEAM_ID = "76561198417009401"
-ALLOWED_ORIGINS = "https://rukiaovo.github.io,http://localhost:1313"

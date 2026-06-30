@@ -3,4 +3,15 @@ resources/_gen/
 .hugo_build.lock
 .dev.vars*
 .env*
-workers/wrangler.toml
+*.local
+*.secret
+*.secrets
+*.pem
+*.key
+*.p12
+*.pfx
+wrangler.toml
+wrangler.json
+.wrangler/
+.mf/
+.cloudflare/
