@@ -1,6 +1,24 @@
 (() => {
-  const root = document.querySelector(".profile-home, .activity-page");
+  const root = document.querySelector(".profile-home, .activity-page, .posts-page");
   if (!root) return;
+
+  const applyBeijingTimeTheme = () => {
+    const hourPart = new Intl.DateTimeFormat("en-US", {
+      hour: "2-digit",
+      hour12: false,
+      timeZone: "Asia/Shanghai",
+    })
+      .formatToParts(new Date())
+      .find((part) => part.type === "hour");
+    const hour = Number(hourPart?.value || 0);
+    const isDaytime = hour >= 6 && hour < 18;
+
+    document.documentElement.classList.toggle("theme-day", isDaytime);
+    document.documentElement.classList.toggle("theme-night", !isDaytime);
+  };
+
+  applyBeijingTimeTheme();
+  window.setInterval(applyBeijingTimeTheme, 60000);
 
   const weatherCodes = {
     0: ["晴", "☀"],
@@ -503,7 +521,7 @@
         refreshFromSteamProfile().catch(() => {
           // Keep the last successful snapshot or live status visible.
         });
-      }, 60000);
+      }, 30000);
     } catch (error) {
       if (!target.textContent.trim() || target.textContent.includes("状态加载中")) {
         target.innerHTML = `

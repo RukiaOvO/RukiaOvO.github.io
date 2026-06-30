@@ -1,5 +1,6 @@
 :root {
-  color-scheme: light;
+  color-scheme: var(--theme-color-scheme);
+  --theme-color-scheme: light;
   --page-bg: #f6f8fa;
   --text: #24292f;
   --muted: #57606a;
@@ -11,6 +12,51 @@
   --accent: #58a6ff;
   --accent-2: #7ee787;
   --shadow: 0 24px 70px rgba(140, 149, 159, 0.24);
+  --page-wash-start: rgba(246, 248, 250, 0.84);
+  --page-wash-end: rgba(246, 248, 250, 0.96);
+  --page-glow-blue: rgba(88, 166, 255, 0.22);
+  --page-glow-green: rgba(126, 231, 135, 0.14);
+  --page-glow-purple: rgba(168, 85, 247, 0.09);
+  --grid-line: rgba(255, 255, 255, 0.04);
+  --glass-start: rgba(255, 255, 255, 0.88);
+  --glass-end: rgba(255, 255, 255, 0.68);
+  --glass-sheen: rgba(255, 255, 255, 0.66);
+  --main-glass-start: rgba(255, 255, 255, 0.9);
+  --main-glass-end: rgba(255, 255, 255, 0.72);
+  --main-glass-sheen: rgba(255, 255, 255, 0.7);
+  --soft-surface: rgba(255, 255, 255, 0.04);
+  --soft-surface-strong: rgba(255, 255, 255, 0.05);
+  --soft-surface-muted: rgba(255, 255, 255, 0.035);
+  --heatmap-end: rgba(255, 255, 255, 0.025);
+}
+
+:root.theme-night {
+  --theme-color-scheme: dark;
+  --page-bg: #0d1117;
+  --text: #f0f6fc;
+  --muted: #8b949e;
+  --muted-2: #7d8590;
+  --line: rgba(240, 246, 252, 0.12);
+  --line-strong: rgba(240, 246, 252, 0.24);
+  --panel: rgba(13, 17, 23, 0.72);
+  --panel-strong: rgba(22, 27, 34, 0.88);
+  --shadow: 0 24px 70px rgba(1, 4, 9, 0.46);
+  --page-wash-start: rgba(13, 17, 23, 0.78);
+  --page-wash-end: rgba(13, 17, 23, 0.96);
+  --page-glow-blue: rgba(88, 166, 255, 0.14);
+  --page-glow-green: rgba(126, 231, 135, 0.08);
+  --page-glow-purple: rgba(168, 85, 247, 0.08);
+  --grid-line: rgba(240, 246, 252, 0.045);
+  --glass-start: rgba(22, 27, 34, 0.9);
+  --glass-end: rgba(13, 17, 23, 0.7);
+  --glass-sheen: rgba(255, 255, 255, 0.07);
+  --main-glass-start: rgba(22, 27, 34, 0.9);
+  --main-glass-end: rgba(13, 17, 23, 0.72);
+  --main-glass-sheen: rgba(255, 255, 255, 0.07);
+  --soft-surface: rgba(240, 246, 252, 0.045);
+  --soft-surface-strong: rgba(240, 246, 252, 0.06);
+  --soft-surface-muted: rgba(240, 246, 252, 0.04);
+  --heatmap-end: rgba(13, 17, 23, 0.2);
 }
 
 body:has(.profile-home),
@@ -18,7 +64,7 @@ body:has(.activity-page),
 body:has(.posts-page) {
   background: var(--page-bg);
   color: var(--text);
-  color-scheme: light;
+  color-scheme: var(--theme-color-scheme);
 }
 
 body:has(.profile-home),
@@ -39,10 +85,10 @@ body:has(.posts-page)::before {
   inset: 0;
   z-index: -3;
   background:
-    linear-gradient(180deg, rgba(246, 248, 250, 0.84), rgba(246, 248, 250, 0.96)),
-    radial-gradient(circle at 18% 16%, rgba(88, 166, 255, 0.22), transparent 28%),
-    radial-gradient(circle at 82% 12%, rgba(126, 231, 135, 0.14), transparent 25%),
-    radial-gradient(circle at 50% 86%, rgba(168, 85, 247, 0.09), transparent 28%),
+    linear-gradient(180deg, var(--page-wash-start), var(--page-wash-end)),
+    radial-gradient(circle at 18% 16%, var(--page-glow-blue), transparent 28%),
+    radial-gradient(circle at 82% 12%, var(--page-glow-green), transparent 25%),
+    radial-gradient(circle at 50% 86%, var(--page-glow-purple), transparent 28%),
     var(--page-bg);
 }
 
@@ -184,8 +230,8 @@ body:has(.posts-page) > .min-h-\[148px\] {
   inset: 3.6rem 0 0;
   z-index: -2;
   background:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(var(--grid-line) 1px, transparent 1px);
   background-size: 64px 64px;
   mask-image: linear-gradient(to bottom, black, transparent 78%);
 }
@@ -283,8 +329,8 @@ body:has(.posts-page) > .min-h-\[148px\] {
   border: 1px solid var(--line);
   border-radius: 14px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.72)),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.7), transparent 38%);
+    linear-gradient(180deg, var(--main-glass-start), var(--main-glass-end)),
+    linear-gradient(135deg, var(--main-glass-sheen), transparent 38%);
   box-shadow: var(--shadow);
   backdrop-filter: blur(22px) saturate(1.15);
   padding: 1rem;
@@ -294,8 +340,8 @@ body:has(.posts-page) > .min-h-\[148px\] {
   border: 1px solid var(--line);
   border-radius: 14px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.68)),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.66), transparent 38%);
+    linear-gradient(180deg, var(--glass-start), var(--glass-end)),
+    linear-gradient(135deg, var(--glass-sheen), transparent 38%);
   box-shadow: var(--shadow);
   backdrop-filter: blur(22px) saturate(1.15);
   padding: 1rem;
@@ -377,7 +423,7 @@ body:has(.posts-page) > .min-h-\[148px\] {
   border-radius: 10px;
   color: var(--text) !important;
   text-decoration: none !important;
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--soft-surface);
 }
 
 .profile-button span:last-child {
@@ -418,7 +464,7 @@ body:has(.posts-page) > .min-h-\[148px\] {
 
 .profile-button--primary {
   border-color: var(--line);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--soft-surface);
   color: var(--text) !important;
   font-weight: 750;
 }
@@ -455,7 +501,7 @@ body:has(.posts-page) > .min-h-\[148px\] {
   justify-content: center;
   border-radius: 10px;
   border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--soft-surface);
 }
 
 .info-row small,
@@ -505,7 +551,7 @@ body:has(.posts-page) > .min-h-\[148px\] {
   border: 1px solid var(--line);
   border-radius: 999px;
   color: var(--text);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--soft-surface);
 }
 
 .chip-list--small span {
@@ -547,10 +593,17 @@ body:has(.posts-page) > .min-h-\[148px\] {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
+  align-items: stretch;
 }
 
 .inline-panel {
   min-width: 0;
+}
+
+.home-status-grid > .inline-panel {
+  min-height: 12.25rem;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
 }
 
 .heatmap-frame {
@@ -558,7 +611,7 @@ body:has(.posts-page) > .min-h-\[148px\] {
   border: 1px solid var(--line);
   border-radius: 12px;
   background:
-    linear-gradient(180deg, rgba(88, 166, 255, 0.09), rgba(255, 255, 255, 0.025)),
+    linear-gradient(180deg, rgba(88, 166, 255, 0.09), var(--heatmap-end)),
     color-mix(in srgb, var(--panel-strong) 72%, transparent);
   padding: 0.75rem;
 }
@@ -594,6 +647,8 @@ body:has(.posts-page) > .min-h-\[148px\] {
   grid-template-columns: 5.25rem minmax(0, 1fr);
   gap: 1rem;
   align-items: center;
+  min-height: 7.6rem;
+  align-self: stretch;
 }
 
 .weather-icon {
@@ -603,7 +658,7 @@ body:has(.posts-page) > .min-h-\[148px\] {
   place-items: center;
   border: 1px solid var(--line);
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--soft-surface-strong);
   font-size: 2rem;
 }
 
@@ -636,18 +691,21 @@ body:has(.posts-page) > .min-h-\[148px\] {
 
 .activity-page__grid--streams {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  align-items: start;
+  align-items: stretch;
 }
 
 .activity-page__grid--streams > .glass-card {
+  height: min(72vh, 38rem);
   min-height: 32rem;
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr);
+  overflow: hidden;
 }
 
 .activity-list,
 .github-event-list {
-  max-height: 26rem;
+  min-height: 0;
+  height: 100%;
   overflow-y: auto;
   padding-right: 0.35rem;
 }
@@ -676,7 +734,7 @@ body:has(.posts-page) > .min-h-\[148px\] {
   border-radius: 999px;
   padding: 0.2rem 0.65rem;
   color: var(--muted);
-  background: rgba(255, 255, 255, 0.035);
+  background: var(--soft-surface-muted);
   cursor: pointer;
 }
 
@@ -690,11 +748,13 @@ body:has(.posts-page) > .min-h-\[148px\] {
   display: grid;
   grid-template-columns: 1rem minmax(0, 1fr);
   gap: 0.85rem;
-  align-items: start;
+  align-items: center;
+  min-height: 7.6rem;
+  align-self: stretch;
   padding: 0.85rem;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.035);
+  background: var(--soft-surface-muted);
 }
 
 .steam-status strong,
@@ -743,7 +803,7 @@ body:has(.posts-page) > .min-h-\[148px\] {
   padding: 0.8rem;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.035);
+  background: var(--soft-surface-muted);
 }
 
 .github-event a {
@@ -789,7 +849,7 @@ body:has(.posts-page) > .min-h-\[148px\] {
   padding: 0.8rem;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.035);
+  background: var(--soft-surface-muted);
 }
 
 .issue-summary a {
@@ -824,7 +884,7 @@ body:has(.posts-page) > .min-h-\[148px\] {
   padding: 0.8rem;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.035);
+  background: var(--soft-surface-muted);
 }
 
 .comment-item img {
@@ -855,7 +915,7 @@ body:has(.posts-page) > .min-h-\[148px\] {
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.035);
+  background: var(--soft-surface-muted);
 }
 
 .utterances-wrap .utterances {

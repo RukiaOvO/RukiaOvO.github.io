@@ -1,4 +1,5 @@
 {{ define "main" }}
+  {{ $homeJS := resources.Get "js/homepage.js" | resources.Minify | resources.Fingerprint (site.Params.fingerprintAlgorithm | default "sha512") }}
   <section class="posts-page">
     {{ partial "site-dock.html" . }}
 
@@ -32,10 +33,11 @@
           <p>Coming Soon</p>
           <h2>内容正在整理中</h2>
         </div>
-        <p class="empty-state">这里会承接技术帖子、论文研读、教程与阶段复盘。</p>
+        <p class="empty-state">这里会不定期分享技术帖子、论文研读、教程与阶段复盘。</p>
       {{ end }}
     </section>
 
     {{ partial "site-footer.html" . }}
   </section>
+  <script defer src="{{ $homeJS.RelPermalink }}" integrity="{{ $homeJS.Data.Integrity }}"></script>
 {{ end }}
