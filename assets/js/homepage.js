@@ -469,6 +469,7 @@
   const loadSteamStatus = async () => {
     const target = root.querySelector("[data-steam-status]");
     const profileUrl = root.dataset.steamUrl;
+    const workerUrl = root.dataset.steamWorkerUrl;
     if (!target || !profileUrl) return;
 
     const renderSteam = (state, summary, meta = "") => {
@@ -494,6 +495,25 @@
       `;
     };
 
+    const renderSteamPayload = (payload, meta) => {
+      if (!payload) return;
+      renderSteam(
+        payload.onlineState,
+        payload.gameExtraInfo ? `正在玩 ${payload.gameExtraInfo}` : payload.statusText,
+        meta || (payload.updatedAt ? `实时 ${formatTime(payload.updatedAt)}` : "实时")
+      );
+    };
+
+    const refreshFromSteamWorker = async () => {
+      const url = new URL(workerUrl);
+      url.searchParams.set("t", Date.now());
+      const status = await fetchJsonIfAvailable(url.toString(), 5000);
+      if (!status?.ok && !status?.statusText) {
+        throw new Error("Steam Worker unavailable");
+      }
+      renderSteamPayload(status);
+    };
+
     const refreshFromSteamProfile = async () => {
       const xmlUrl = `${profileUrl.replace(/\/$/, "")}/?xml=1&t=${Date.now()}`;
       const proxies = readJsonScript("profile-steam-proxies", [root.dataset.steamProxy || ""]);
@@ -509,16 +529,16 @@
     try {
       const staticStatus = await fetchJsonIfAvailable(root.dataset.steamStaticUrl);
       if (staticStatus?.ok || staticStatus?.statusText) {
-        renderSteam(
-          staticStatus.onlineState,
-          staticStatus.gameExtraInfo ? `正在玩 ${staticStatus.gameExtraInfo}` : staticStatus.statusText,
+        renderSteamPayload(
+          staticStatus,
           staticStatus.updatedAt ? `快照 ${formatTime(staticStatus.updatedAt)}` : "快照"
         );
       }
 
-      await refreshFromSteamProfile();
+      const refreshLiveStatus = workerUrl ? refreshFromSteamWorker : refreshFromSteamProfile;
+      await refreshLiveStatus();
       window.setInterval(() => {
-        refreshFromSteamProfile().catch(() => {
+        refreshLiveStatus().catch(() => {
           // Keep the last successful snapshot or live status visible.
         });
       }, 30000);

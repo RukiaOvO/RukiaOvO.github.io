@@ -1,3 +1,6 @@
 public/
 resources/_gen/
 .hugo_build.lock
+.dev.vars*
+.env*
+workers/wrangler.toml

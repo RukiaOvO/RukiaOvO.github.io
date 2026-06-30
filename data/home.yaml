@@ -63,6 +63,7 @@ github:
 steam:
   steamId: "76561198417009401"
   profileUrl: "https://steamcommunity.com/profiles/76561198417009401/"
+  workerUrl: ""
   staticStatusUrl: "/data/steam-status.json"
   corsProxy: "https://api.allorigins.win/raw?url="
   corsProxies:
