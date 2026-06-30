@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "updatedAt": "2026-06-30T16:32:52.226Z",
+  "updatedAt": "2026-06-30T22:41:09.380Z",
   "sources": [
     {
       "label": "B站动态",
@@ -42,6 +42,14 @@
     "财联社电报: https://rsshub.rss.tips/cls/telegraph 502"
   ],
   "items": [
+    {
+      "label": "IT之家",
+      "category": "科技",
+      "title": "苹果升级 Apple 创作坊：扩展 AI 工具，订阅年费 380 元",
+      "link": "https://www.ithome.com/0/970/790.htm",
+      "date": "Tue, 30 Jun 2026 17:04:50 GMT",
+      "description": "IT之家 7 月 1 日消息，苹果公司昨日（6 月 30 日）发布博文，宣布升级 Apple 创作坊，增强 Final Cut Pro 等应用联动，并扩展多项 AI 工具。IT之家援引博文介绍，用户可以在 Keynote 讲演、Pages 文稿和 Numbers 表格中打开和自定任何图像，还能从 Final Cut Pro 中直接向 Pixelmator Pro 发送关键帧。Logic Pro 用户现可利用升级后的和弦 ID 功能加速音乐制作流程，或探索来自格莱美获奖制作人的"
+    },
     {
       "label": "IT之家",
       "category": "科技",
@@ -129,14 +137,6 @@
       "link": "https://www.ithome.com/0/970/771.htm",
       "date": "Tue, 30 Jun 2026 14:32:39 GMT",
       "description": "IT之家 6 月 30 日消息，据 The Information 报道，OpenAI 工程师在内部透露，公司已通过一系列全新的系统底层优化，成功将 AI 模型的推理（运行）成本降低了 50% 以上。据IT之家了解，推理成本指的是模型在实际运行并响应用户请求时所消耗的计算资源。此次优化主要得益于现有服务器资源利用率的提升，而非依赖新增计算芯片的投入。这使得运行其 AI 系统所需的英伟达芯片更少，这些节省的成本可用于降低 API 定价或提高用户使用限额。"
-    },
-    {
-      "label": "IT之家",
-      "category": "科技",
-      "title": "米哈游《星布谷地》通过美国 ESRB 评级，覆盖 PC、任天堂 Switch 2 平台",
-      "link": "https://www.ithome.com/0/970/766.htm",
-      "date": "Tue, 30 Jun 2026 14:23:44 GMT",
-      "description": "IT之家 6 月 30 日消息，游戏《星布谷地》（Petit Planet）现已获得美国 ESRB 评级，开发商为 COGNOSPHERE PTE. LTD（识隙之城，米哈游全资子公司）。ESRB 数据库显示，《星布谷地》获得了“E”（Everyone）评级，适合 6 岁以上玩家游玩。游戏内容涵盖用户互动、内购等，覆盖 PC、任天堂 Switch 2 平台。结合IT之家此前报道，《星布谷地》是一款生活模拟游戏，以星际田园为主题，玩家在游戏中将可以赶海、钓鱼、种田等，期待理想生"
     },
     {
       "label": "36氪快讯",
