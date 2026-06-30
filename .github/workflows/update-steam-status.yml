@@ -1,0 +1,38 @@
+name: Update Steam status
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: steam-status
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    env:
+      STEAM_ID: "76561198417009401"
+      STEAM_WEB_API_KEY: ${{ secrets.STEAM_WEB_API_KEY }}
+      STEAM_STATUS_OUTPUT: "static/data/steam-status.json"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Fetch Steam status
+        run: node scripts/update-steam-status.mjs
+
+      - name: Commit updated status
+        uses: stefanzweifel/git-auto-commit-action@v6
+        with:
+          commit_message: "chore: update steam status"
+          file_pattern: static/data/steam-status.json

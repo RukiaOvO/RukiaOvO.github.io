@@ -1,0 +1,140 @@
+{
+  "ok": true,
+  "updatedAt": "2026-06-30T13:05:51.008Z",
+  "sources": [
+    {
+      "label": "B站动态",
+      "category": "B站",
+      "url": "https://rsshub.app/bilibili/user/dynamic/102770566"
+    },
+    {
+      "label": "番剧更新",
+      "category": "番剧",
+      "url": "https://rsshub.app/bangumi/calendar/today"
+    },
+    {
+      "label": "IT之家",
+      "category": "科技",
+      "url": "https://www.ithome.com/rss/"
+    },
+    {
+      "label": "36氪快讯",
+      "category": "科技",
+      "url": "https://rsshub.app/36kr/newsflashes"
+    },
+    {
+      "label": "财联社电报",
+      "category": "股市",
+      "url": "https://www.cls.cn/nodeapi/telegraphList"
+    }
+  ],
+  "errors": [
+    "B站动态: https://rsshub.app/bilibili/user/dynamic/102770566 fetch failed",
+    "B站动态: https://rsshub.rssforever.com/bilibili/user/dynamic/102770566 fetch failed",
+    "番剧更新: https://rsshub.app/bangumi/calendar/today fetch failed",
+    "番剧更新: https://rsshub.rssforever.com/bangumi/calendar/today fetch failed",
+    "36氪快讯: https://rsshub.app/36kr/newsflashes fetch failed",
+    "36氪快讯: https://rsshub.rssforever.com/36kr/newsflashes fetch failed",
+    "财联社电报: https://www.cls.cn/nodeapi/telegraphList 404",
+    "财联社电报: https://rsshub.app/cls/telegraph fetch failed",
+    "财联社电报: https://rsshub.rssforever.com/cls/telegraph fetch failed"
+  ],
+  "items": [
+    {
+      "label": "IT之家",
+      "category": "科技",
+      "title": "华为乾崑智驾 ADS Max 高阶功能包限时优惠价格将于今天到期，明起恢复“一次性购买 3.6 万元”标准价",
+      "link": "https://www.ithome.com/0/970/749.htm",
+      "date": "Tue, 30 Jun 2026 13:01:07 GMT",
+      "description": "IT之家 6 月 30 日消息，据“华为乾崑智能汽车解决方案”公众号，华为乾崑智驾 ADS Max 高阶功能包限时优惠价格（一次性购买 32000 元）将于 2026 年 6 月 30 日（今天）到期。自 7 月 1 日起将恢复原标准价格（一次性购买 36000 元）。同时，2026 年 7 月 1 日之前已一次性购买高阶功能包的用户，可享受 1 年 ADS 高阶包保障与服务权益；2026 年 7 月 1 日至 2026 年 12 月 31 日期间下单高阶功能包的用户，最高可"
+    },
+    {
+      "label": "IT之家",
+      "category": "科技",
+      "title": "深开鸿 KaihongOS 桌面版（x86）V5.0.2.30 更新上线，升级相机、文档编辑能力",
+      "link": "https://www.ithome.com/0/970/747.htm",
+      "date": "Tue, 30 Jun 2026 12:59:49 GMT",
+      "description": "IT之家 6 月 30 日消息，深开鸿今天宣布，KaihongOS 桌面版（x86）V5.0.2.30 更新现已正式上线，带来相机、文档编辑能力升级，让办公娱乐体验更高效。IT之家附本次更新详情如下：新增功能：新增相机服务，支持应用调用摄像头进行图像采集新增文档编辑器，支持 Office 格式文档的创建、编辑和保存功能与性能优化：优化视频编解码器，提升视频解码效率，播放更流畅优化分辨率调节功能，支持多种分辨率调节优化屏幕缩放功能，支持多档调节，界面显示更清晰、更协调值得一提的"
+    },
+    {
+      "label": "IT之家",
+      "category": "科技",
+      "title": "称无人网约车是世界最大骗局，一传媒公司被判向萝卜快跑赔偿并致歉",
+      "link": "https://www.ithome.com/0/970/746.htm",
+      "date": "Tue, 30 Jun 2026 12:53:26 GMT",
+      "description": "IT之家 6 月 30 日消息，今日，萝卜快跑法务部发布涉“萝卜快跑”网络侵权案最新进展声明。IT之家附声明原文如下：近日，就萝卜快跑起诉济南我又火了文化传媒有限公司网络侵权责任纠纷一案，北京互联网法院作出一审判决，目前该判决已生效。经法院审理认定，侵权方发布的涉案内容以“无人网约车是全世界最大的骗局”“背后隐藏着惊人的资本运作手法”等表述，捏造、散布虚假事实，构成诽谤；侵权方使用“资本家的狐狸尾巴”“背后的黑幕”“阴招”等贬损性言语，构成侮辱。该公司的侵权言论足以降低我司的"
+    },
+    {
+      "label": "IT之家",
+      "category": "科技",
+      "title": "Arena 公布 AI 模型评测榜变现成果，商业评测服务 AI Evaluations 年度经常性收入突破 1 亿美元",
+      "link": "https://www.ithome.com/0/970/745.htm",
+      "date": "Tue, 30 Jun 2026 12:49:46 GMT",
+      "description": "IT之家 6 月 30 日消息，AI 模型评测平台 Arena 宣布，其企业级模型评测服务 AI Evaluations 上线仅 8 个月，年度经常性收入（Annualized Run-Rate Revenue，即“每年通过客户订阅合同产生的可预测、重复性收入”）已突破 1 亿美元（IT之家注：现汇率约合 6.8 亿元人民币）。据介绍，Arena 的前身是加州大学伯克利分校 2023 年启动的 AI 模型评测研究项目，最初名为 LMArena，主要以“免费”战略，让普通用户测"
+    },
+    {
+      "label": "IT之家",
+      "category": "科技",
+      "title": "松下推进储能供应链美国本土化，将在堪萨斯工厂产储能电芯",
+      "link": "https://www.ithome.com/0/970/744.htm",
+      "date": "Tue, 30 Jun 2026 12:44:15 GMT",
+      "description": "IT之家 6 月 30 日消息，据路透社报道，松下电器首席执行官楠见雄规于当地时间周二表示，这家日本企业正推进储能系统美国供应链本土化布局，计划在堪萨斯州工厂生产电芯，转型面向数据中心供货。楠见雄规在东京举行的圆桌访谈中称：“我们储能系统的客户大多集中在美国，因此我们认为，尽可能在美国本土搭建完整供应链具备现实意义。”IT之家注意到，松下本月透露，旗下能源业务板块位于堪萨斯州的工厂计划在 2029 年 3 月结束的财年内，批量生产专供数据中心使用的电芯；该工厂同时也为特斯拉生"
+    },
+    {
+      "label": "IT之家",
+      "category": "科技",
+      "title": "叠纸游戏宣布《恋与深空》取消敖尹上线与开发安排，承诺未来不再推出新男主",
+      "link": "https://www.ithome.com/0/970/743.htm",
+      "date": "Tue, 30 Jun 2026 12:44:14 GMT",
+      "description": "IT之家 6 月 30 日消息，叠纸游戏官方今天在微博发文道歉，宣布旗下游戏《恋与深空》将取消敖尹上线与开发安排。据博文所述，叠纸游戏自项目筹备之初就希望《恋与深空》能够成为一个持续成长、不断丰富的恋爱世界，为玩家带来更多样的体验。近期各种问题接连发生，他们及时调整并处理相关内容，并于内部进行深刻反思。官方确实在没有准备好的情况下就将敖尹带到了大家面前，伤害了玩家感情也破坏了玩家信任。因此，《恋与深空》制作组决定作出以下调整：1、取消新男主的上线与开发安排，在未来的内容规划上"
+    },
+    {
+      "label": "IT之家",
+      "category": "科技",
+      "title": "号称“全球首款大双屏彩色墨水屏手机”BIGME 大我 HiBreak Dual 2 价格公布，“早早鸟”价格 699 美元起",
+      "link": "https://www.ithome.com/0/970/742.htm",
+      "date": "Tue, 30 Jun 2026 12:37:32 GMT",
+      "description": "IT之家 6 月 30 日消息，BIGME 大我宣布旗下“全球首款大双屏彩色墨水屏手机”HiBreak Dual 2 现已开启 Kickstarter 众筹页面，早早鸟价格为 699 美元（IT之家注：现汇率约合 4756 元人民币）。早早鸟：699 美元（现汇率约合 4756 元人民币）起早鸟：769 美元（现汇率约合 5233 元人民币）起Kickstarter 标准版：899 美元（现汇率约合 6117 元人民币）起Kickstarter 专属版：989 美元（现汇率约"
+    },
+    {
+      "label": "IT之家",
+      "category": "科技",
+      "title": "光荣特库摩新作“FUJI”入选日本 IP360 计划，将获政府资助",
+      "link": "https://www.ithome.com/0/970/741.htm",
+      "date": "Tue, 30 Jun 2026 12:31:31 GMT",
+      "description": "IT之家 6 月 30 日消息，据外媒 Automaton 昨天报道，日本经济产业省日前公布 IP360 计划入选名单，其中包括光荣特库摩新作“FUJI”。IT之家在此援引 Automaton，IP360 计划启动于今年 3 月，旨在推动日本文化出口，发展电子游戏、动漫等产业，鼓励本土企业打造全新 IP。根据入选名单公开信息，该游戏将采用东洋风格美术、主打动作游戏玩法。不过这种表述其实适用于光荣特库摩旗下大多数作品，该公司近年来推出的多款 IP 也基本符合上述定位。此外，科乐"
+    },
+    {
+      "label": "IT之家",
+      "category": "科技",
+      "title": "大疆无人机 DJI Fly 鸿蒙版 App 正式上架华为应用市场",
+      "link": "https://www.ithome.com/0/970/740.htm",
+      "date": "Tue, 30 Jun 2026 12:19:33 GMT",
+      "description": "IT之家 6 月 30 日消息，据多名IT之家读者投稿，大疆旗下无人机飞控应用 DJI Fly 现已正式上架 HarmonyOS 鸿蒙应用市场，支持连接无人机、通过 Wi-Fi 查看相册、快捷传输素材到手机，同时拥有飞行安全地图、大疆学堂等内容。公开信息显示，大疆 DJI Fly 应用主要用于控制大疆无人机，可连接近年来发售的大疆 Mavic 系列、Air 系列、Mini 系列、Avata / Flip / Neo 等各种产品。"
+    },
+    {
+      "label": "IT之家",
+      "category": "科技",
+      "title": "游戏《恋与深空》回应“人体试药实验档案编号 0731”：虚构日期，是无实际意义的占位信息",
+      "link": "https://www.ithome.com/0/970/739.htm",
+      "date": "Tue, 30 Jun 2026 12:18:14 GMT",
+      "description": "IT之家 6 月 30 日消息，游戏《恋与深空》昨晚再度发文，回应了网络上流传着许多《恋与深空》游戏及宣传内容的相关讨论。据玩家反馈，在 6.0 游戏剧情里，出现了一组用于人体试药记录的数字编号“A-0731”，大量玩家看到后十分反感并要求严查抵制。对此，游戏官方回应称，该数字为虚构日期，因是无实际意义的占位信息，未进行任何包装，并以最快速度完成线上修改。制作组也承认了团队部分成员存在敏感性不足的问题，表示将加强培训，避免再次出现此类情况。IT之家附官方声明原文如下：近日，我"
+    },
+    {
+      "label": "IT之家",
+      "category": "科技",
+      "title": "宁德时代与福特合作美国电池厂已投产，匈牙利、印尼工厂年内投产",
+      "link": "https://www.ithome.com/0/970/738.htm",
+      "date": "Tue, 30 Jun 2026 12:15:39 GMT",
+      "description": "IT之家 6 月 30 日消息，宁德时代正加快海外产能建设，据财新网报道，在今日举行的中国汽车动力电池产业创新联盟年会上，宁德时代副总裁孟祥峰透露，宁德时代在海外布局了多座工厂，其中匈牙利工厂和印尼工厂将在年内投产，与福特汽车以技术授权服务模式合作建设的工厂已于 6 月建成投产。2023 年 2 月，宁德时代与福特汽车达成新形式合作。福特汽车投资 35 亿美元（IT之家注：现汇率约合 238.15 亿元人民币）在美国密歇根州建设一座磷酸铁锂电池工厂，由福特汽车全资持有。宁德时"
+    },
+    {
+      "label": "IT之家",
+      "category": "科技",
+      "title": "特斯拉中国推出夏季专属权益：购 Model 3/Y 汽车享 5 年 0 息、月供低至 2460 元",
+      "link": "https://www.ithome.com/0/970/737.htm",
+      "date": "Tue, 30 Jun 2026 12:13:22 GMT",
+      "description": "IT之家 6 月 30 日消息，特斯拉中国宣布推出夏季购车专属权益，购 Model 3/Y 可享 5 年 0 息，月供低至 2460 元；或享 1-5 年超低息，首付低至 4.59 万元。特斯拉表示，2026 年 7 月 31 日（含）前下单纳入活动范围内的 Model 3/Y，并按订单中条款和条件提车，且符合贷款资质的客户可申请下述金融特惠方案：首付 55,900 元起，可享受 5 年分期金融方案，Model 3 尾款 45,500 元，Model Y 尾款 52,700 "
+    }
+  ]
+}

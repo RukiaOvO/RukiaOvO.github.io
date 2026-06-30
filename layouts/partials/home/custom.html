@@ -1,1 +1,207 @@
-{{ partial "home/sections/hero.html" . }}
+{{ $home := hugo.Data.home }}
+{{ $profile := $home.profile }}
+{{ $github := $home.github }}
+{{ $comments := $home.comments }}
+{{ $weather := $home.weather }}
+{{ $steam := $home.steam }}
+{{ $disableImageOptimization := site.Params.disableImageOptimization | default false }}
+{{ $avatar := resources.Get ($profile.avatar | default site.Params.Author.image) }}
+{{ $homeJS := resources.Get "js/homepage.js" | resources.Minify | resources.Fingerprint (site.Params.fingerprintAlgorithm | default "sha512") }}
+
+<section
+  id="top"
+  class="profile-home"
+  data-github-user="{{ $github.username }}"
+  data-steam-url="{{ $steam.profileUrl }}"
+  data-steam-static-url="{{ $steam.staticStatusUrl | relURL }}"
+  data-steam-proxy="{{ $steam.corsProxy }}"
+  data-comments-owner="{{ $comments.owner }}"
+  data-comments-repo="{{ $comments.repo }}"
+  data-comments-issue="{{ $comments.issueNumber }}"
+  data-comments-label="{{ $comments.utterances.label | default "comment" }}"
+  data-github-events-limit="{{ $github.eventsLimit | default 10 }}">
+  <div class="profile-bg" aria-hidden="true"></div>
+
+  {{ partial "site-dock.html" . }}
+
+  <div class="profile-shell">
+    <aside class="profile-sidebar" aria-label="个人信息">
+      <section class="glass-card profile-card">
+        {{ if $avatar }}
+          {{ $avatarURL := $avatar.RelPermalink }}
+          {{ if not (or $disableImageOptimization (eq $avatar.MediaType.SubType "svg")) }}
+            {{ $avatarURL = ($avatar.Fill "360x360").RelPermalink }}
+          {{ end }}
+          <img class="profile-card__avatar" src="{{ $avatarURL }}" alt="{{ $profile.displayName }}">
+        {{ end }}
+        <h1>{{ $profile.displayName }}</h1>
+        <p class="profile-card__bio">{{ $profile.bio }}</p>
+
+        <div class="profile-actions profile-actions--social">
+          <a class="profile-button profile-button--primary" href="https://github.com/{{ $github.username }}" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+            {{ partial "icon.html" "github" }}
+            <span>GitHub</span>
+          </a>
+          <a class="profile-button" href="mailto:{{ $profile.email }}" aria-label="Email">
+            {{ partial "icon.html" "email" }}
+            <span>Email</span>
+          </a>
+          <a class="profile-button" href="https://wpa.qq.com/msgrd?v=3&uin={{ $profile.qq }}&site=qq&menu=yes" target="_blank" rel="noopener noreferrer" aria-label="QQ">
+            <span class="profile-button__mark">Q</span>
+            <span>QQ</span>
+          </a>
+          <a class="profile-button" href="{{ $profile.bilibili }}" target="_blank" rel="noopener noreferrer" aria-label="Bilibili">
+            <span class="profile-button__mark">B</span>
+            <span>Bilibili</span>
+          </a>
+          <a class="profile-button" href="{{ $profile.twitter }}" target="_blank" rel="noopener noreferrer" aria-label="X">
+            {{ partial "icon.html" "x-twitter" }}
+            <span>X</span>
+          </a>
+          <a class="profile-button" href="{{ $profile.steam }}" target="_blank" rel="noopener noreferrer" aria-label="Steam">
+            {{ partial "icon.html" "steam" }}
+            <span>Steam</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="glass-card info-card profile-meta-card">
+        <div class="info-row">
+          <span>{{ partial "icon.html" "code" }}</span>
+          <div>
+            <small>技术栈</small>
+            <strong>Java / Go</strong>
+          </div>
+        </div>
+        <div class="info-row">
+          <span>{{ partial "icon.html" "location-dot" }}</span>
+          <div>
+            <small>城市</small>
+            <strong>{{ $profile.location }}</strong>
+          </div>
+        </div>
+        <div class="info-row">
+          <span>{{ partial "icon.html" "graduation-cap" }}</span>
+          <div>
+            <small>学校</small>
+            <strong>{{ $profile.role }}</strong>
+          </div>
+        </div>
+        <div class="info-row">
+          <span>{{ partial "icon.html" "lightbulb" }}</span>
+          <div>
+            <small>研究方向</small>
+            <strong>Agent / AI4SE</strong>
+          </div>
+        </div>
+        <div class="meta-tags">
+          <div class="section-title">
+            <p>Tags</p>
+            <h2>技能标签</h2>
+          </div>
+          <div class="chip-list">
+            {{ range $home.skills }}
+              <span>{{ . }}</span>
+            {{ end }}
+          </div>
+        </div>
+      </section>
+
+    </aside>
+
+    <main class="profile-main">
+      <section class="profile-panel heatmap-card">
+        <div class="section-head">
+          <div class="section-title">
+            <p>GitHub</p>
+            <h2>Commit 热力图</h2>
+          </div>
+        </div>
+        <div class="heatmap-frame">
+          <img
+            src="{{ $github.heatmapProvider }}/{{ $github.heatmapColor }}/{{ $github.username }}"
+            alt="{{ $github.username }} GitHub contribution heatmap"
+            loading="eager">
+        </div>
+      </section>
+
+      <section class="profile-panel home-status-grid">
+        <article class="inline-panel weather-card" data-weather>
+          <div class="section-head">
+            <div class="section-title">
+              <p>Weather</p>
+              <div class="title-control">
+                <h2>今日天气</h2>
+                <select class="weather-select" data-weather-select aria-label="选择天气城市">
+                  {{ range $weather.cities }}
+                    <option
+                      value="{{ .latitude }},{{ .longitude }}"
+                      {{ if eq .label $weather.defaultCity }}selected{{ end }}>
+                      {{ .label }}
+                    </option>
+                  {{ end }}
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="weather-body">
+            <div class="weather-icon" data-weather-icon>☁</div>
+            <div>
+              <strong data-weather-temp>--°C</strong>
+              <p data-weather-desc>天气加载中</p>
+              <span data-weather-detail>--</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="inline-panel steam-card">
+          <div class="section-head">
+            <div class="section-title">
+              <p>Steam</p>
+              <h2>Steam 状态</h2>
+            </div>
+          </div>
+          <div class="steam-status" data-steam-status>
+            <span class="status-dot status-dot--unknown"></span>
+            <div>
+              <strong>状态加载中</strong>
+              <p>读取公开 Steam 资料</p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section id="comments" class="profile-panel comments-card">
+        <div class="section-head">
+          <div class="section-title">
+            <p>Issue Comments</p>
+            <h2>{{ $comments.title }}</h2>
+          </div>
+        </div>
+        <div class="issue-summary" data-issue-summary>
+          <p class="empty-state">留言区加载中</p>
+        </div>
+        <div class="comment-list" data-comments-list hidden></div>
+        {{ if $comments.utterances.enabled }}
+        <div class="utterances-wrap">
+          <p class="utterances-hint">若评论框未出现，请确认浏览器允许加载 utteranc.es，并在弹出的 GitHub 授权页完成登录。</p>
+          <script
+            src="https://utteranc.es/client.js"
+            repo="{{ $comments.owner }}/{{ $comments.repo }}"
+              issue-term="{{ $comments.utterances.issueTerm }}"
+              label="{{ $comments.utterances.label }}"
+              theme="{{ $comments.utterances.theme }}"
+              crossorigin="anonymous"
+              async>
+            </script>
+          </div>
+        {{ end }}
+      </section>
+    </main>
+  </div>
+
+  {{ partial "site-footer.html" . }}
+
+  <script type="application/json" id="profile-steam-proxies">{{ $steam.corsProxies | jsonify | safeJS }}</script>
+  <script defer src="{{ $homeJS.RelPermalink }}" integrity="{{ $homeJS.Data.Integrity }}"></script>
+</section>

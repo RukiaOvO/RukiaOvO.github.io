@@ -1,0 +1,17 @@
+{{ $home := hugo.Data.home }}
+{{ $profile := $home.profile }}
+{{ $current := .RelPermalink | default "/" }}
+<nav class="profile-dock" aria-label="站点导航">
+  <a class="profile-dock__brand" href="{{ "/" | relURL }}">
+    <strong>{{ $profile.siteTitle }}</strong>
+    <span>{{ $home.hero.quote }}</span>
+  </a>
+  <div class="profile-dock__links">
+    {{ range $home.navigation }}
+      {{ $href := .href | relURL }}
+      {{ $isHome := and (eq $current "/") (or (eq .href "/") (eq .href "#top")) }}
+      {{ $active := or $isHome (eq $current $href) }}
+      <a class="{{ if $active }}is-active{{ end }}" href="{{ $href }}">{{ .label }}</a>
+    {{ end }}
+  </div>
+</nav>

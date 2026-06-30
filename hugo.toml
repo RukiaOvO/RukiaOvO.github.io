@@ -1,5 +1,6 @@
 theme = "blowfish"
 baseURL = "https://rukiaovo.github.io/"
+title = "Hello, I am Ruk1a."
 defaultContentLanguage = "zh-cn"
 defaultContentLanguageInSubdir = false
 hasCJKLanguage = true

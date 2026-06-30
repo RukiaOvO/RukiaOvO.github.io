@@ -3,170 +3,20 @@ locale = "zh-CN"
 label = "简体中文"
 direction = "ltr"
 weight = 1
-title = "RukiaOvO"
+title = "Hello, I am Ruk1a."
 
 [params]
   displayName = "ZH"
   isoCode = "zh-CN"
   rtl = false
   dateFormat = "2006-01-02"
-  description = "风止于此，灵魂得以栖息。"
-  copyright = "Copyright © 2026 RukiaOvO"
-
-  [params.homepageText.hero]
-    eyebrow = "Personal Homepage"
-    title = "耐心构建，持续生长。"
-    intro = "一个围绕软件架构、Web 开发与 Agent / AI4SE 持续展开的个人主页。"
-    bio = "我目前是复旦大学研究生，主要使用 Java / Go，关注软件架构、Web 开发，以及 Agent 在软件工程中的真实落地。"
-    primaryCtaLabel = "查看项目"
-    primaryCtaLink = "/projects/"
-    secondaryCtaLabel = "阅读文章"
-    secondaryCtaLink = "/posts/"
-    location = "中国 · 上海"
-    organization = "复旦大学"
-
-  [params.homepageText.identity]
-    roleLabel = "身份"
-    roleValue = "研究生"
-    focusLabel = "方向"
-    focusValue = "架构 / Web / Agent"
-
-  [params.homepageText.labels]
-    location = "地点"
-    organization = "机构"
-    tags = "标签"
-    timeline = "时间线"
-    project = "项目"
-    skills = "技能"
-    stack = "技术栈"
-    comingSoon = "Coming Soon"
-
-  [[params.homepageText.tags]]
-    label = "Java"
-
-  [[params.homepageText.tags]]
-    label = "Go"
-
-  [[params.homepageText.tags]]
-    label = "Software Architecture"
-
-  [[params.homepageText.tags]]
-    label = "Web Development"
-
-  [[params.homepageText.tags]]
-    label = "Agent"
-
-  [[params.homepageText.tags]]
-    label = "AI4SE"
-
-  [[params.homepageText.timeline]]
-    title = "重构个人主页的信息结构与视觉系统"
-    date = "2026.06"
-
-  [[params.homepageText.timeline]]
-    title = "开始系统关注 Agent / AI4SE"
-    date = "2026.01"
-
-  [[params.homepageText.timeline]]
-    title = "聚焦软件架构与 Web 开发"
-    date = "2025.09"
-
-  [[params.homepageText.timeline]]
-    title = "在复旦大学继续研究生阶段学习"
-    date = "2024.09"
-
-  [[params.homepageText.skills]]
-    label = "Java"
-
-  [[params.homepageText.skills]]
-    label = "Go"
-
-  [[params.homepageText.skills]]
-    label = "Spring Boot"
-
-  [[params.homepageText.skills]]
-    label = "Gin"
-
-  [[params.homepageText.skills]]
-    label = "Hugo"
-
-  [[params.homepageText.skills]]
-    label = "MySQL"
-
-  [[params.homepageText.skills]]
-    label = "Redis"
-
-  [[params.homepageText.skills]]
-    label = "Docker"
-
-  [[params.homepageText.skills]]
-    label = "Git"
-
-  [[params.homepageText.skills]]
-    label = "Linux"
-
-  [[params.homepageText.focus]]
-    title = "Java / Go 工程实践"
-    description = "持续打磨后端工程能力，关注代码可维护性、边界清晰度，以及系统随着需求变化时的稳定演进。"
-    badge = "Engineering"
-
-  [[params.homepageText.focus]]
-    title = "软件架构"
-    description = "关注系统在复杂度上升后的可理解性，持续学习模块划分、取舍判断与抽象设计。"
-    badge = "Architecture"
-
-  [[params.homepageText.focus]]
-    title = "Web 开发"
-    description = "把 Web 当作表达产品与个人内容的界面，重视结构、体验与实现细节之间的协同。"
-    badge = "Web"
-
-  [[params.homepageText.focus]]
-    title = "Agent / AI4SE"
-    description = "探索 Agent 如何真正服务于软件工程流程、开发效率，以及开发者的推理过程。"
-    badge = "Research"
-
-  [[params.homepageText.highlights]]
-    label = "当前身份"
-    value = "复旦大学研究生"
-
-  [[params.homepageText.highlights]]
-    label = "主要技术栈"
-    value = "Java / Go"
-
-  [[params.homepageText.highlights]]
-    label = "长期兴趣"
-    value = "软件架构 / Web 开发"
-
-  [[params.homepageText.highlights]]
-    label = "当前学习"
-    value = "Agent / AI4SE"
-
-  [params.homepageText.sections]
-    highlightsEyebrow = "Overview"
-    highlightsTitle = "这个站点正在围绕什么持续展开"
-    highlightsIntro = "主页不再只是内容堆积，而是把个人状态、技术方向与正在进行的主题放在同一个节奏里。"
-    focusEyebrow = "Focus"
-    focusTitle = "我正在持续投入的核心主题"
-    focusIntro = "这些主题会持续影响项目选择、写作内容与后续主页的扩展方向。"
-    projectsEyebrow = "Projects"
-    projectsTitle = "阶段性项目与持续演进的实践"
-    projectsIntro = "只保留最值得长期展示的条目，让首页像作品入口，而不是归档页。"
-    postsEyebrow = "Writing"
-    postsTitle = "最近的学习记录与技术笔记"
-    postsIntro = "文章区会逐步补齐，用来承接项目之外的思考、实验和学习笔记。"
-    postsEmptyTitle = "文章内容正在整理中"
-    postsEmptyText = "这一部分会陆续加入架构、工程实践与 Agent / AI4SE 相关记录，先把主页结构稳定下来。"
-    aboutEyebrow = "About"
-    aboutTitle = "一个可以持续迭代的个人主页"
-    aboutIntro = "这次重构不再只是堆叠内容，而是把主页整理成更稳定的单页结构。后续新增项目、文章或研究方向时，都可以继续沿着这套布局扩展。"
-    aboutPrimaryCta = "更多关于我"
-    aboutSecondaryCta = "联系我"
-    skillsIntro = "当前的工具链以 Java / Go 为核心，围绕后端开发、部署与内容表达逐步扩展。"
+  description = "露琪亚的个人主页与技术博客"
+  copyright = "Copyright © 2026 Hello, I am Ruk1a."
 
 [params.author]
-  name = "Rukia"
+  name = "露琪亚"
   image = "img/avatar.jpg"
-  headline = "love Takagi3"
+  headline = "Java / Go · Web · 软件架构 · Agent / AI4SE"
   bio = ""
   links = [
     { github = "https://github.com/RukiaOvO" },

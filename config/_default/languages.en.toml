@@ -1,4 +1,4 @@
-disabled = false
+disabled = true
 locale = "en"
 label = "English"
 direction = "ltr"

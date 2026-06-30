@@ -1,0 +1,135 @@
+profile:
+  siteTitle: "Hello, I am Ruk1a."
+  displayName: "露琪亚"
+  romanName: "Ruk1a"
+  role: "Fudan University"
+  location: "Shanghai"
+  avatar: "img/avatar.jpg"
+  github: "RukiaOvO"
+  email: "1403555427@qq.com"
+  bilibili: "https://space.bilibili.com/102770566"
+  twitter: "https://x.com/Ruk1aOvO"
+  steam: "https://steamcommunity.com/profiles/76561198417009401/"
+  qq: "1403555427"
+  bio: "无风去处是归宿"
+
+hero:
+  title: "Hello, I am Ruk1a."
+  quote: "把日常工程实践、公开动态和阶段性思考整理成一个可以持续更新的工作台。"
+
+navigation:
+  - label: "首页"
+    href: "/"
+  - label: "帖子"
+    href: "/posts/"
+  - label: "动态"
+    href: "/activity/"
+
+skills:
+  - "Java"
+  - "Go"
+  - "Web"
+  - "软件架构"
+  - "Agent"
+  - "AI4SE"
+
+timeline:
+  - date: "2026.06"
+    title: "重构个人主页为 GitHub Profile 风格仪表盘"
+  - date: "2026.01"
+    title: "持续关注 Agent / AI4SE 与软件工程结合"
+  - date: "2025.09"
+    title: "聚焦 Web、后端工程与软件架构"
+  - date: "2024.09"
+    title: "在 Fudan University 开始新的阶段"
+
+weather:
+  defaultCity: "上海"
+  cities:
+    - label: "上海"
+      latitude: 31.2304
+      longitude: 121.4737
+    - label: "福建泉州"
+      latitude: 24.8741
+      longitude: 118.6757
+
+github:
+  username: "RukiaOvO"
+  heatmapProvider: "https://ghchart.rshah.org"
+  heatmapColor: "58a6ff"
+  staticEventsUrl: "/data/github-events.json"
+  eventsLimit: 10
+
+steam:
+  steamId: "76561198417009401"
+  profileUrl: "https://steamcommunity.com/profiles/76561198417009401/"
+  staticStatusUrl: "/data/steam-status.json"
+  corsProxy: "https://api.allorigins.win/raw?url="
+  corsProxies:
+    - ""
+    - "https://api.allorigins.win/raw?url="
+  useWebApi: false
+  apiKeyEnv: "STEAM_WEB_API_KEY"
+
+comments:
+  owner: "RukiaOvO"
+  repo: "RukiaOvO.github.io"
+  issueNumber: 1
+  title: "留言区"
+  description: "这里同步 GitHub Issue 的留言、评论数量和 reactions。登录 GitHub 后可直接在下方留言。"
+  utterances:
+    enabled: true
+    issueTerm: "pathname"
+    label: "comment"
+    theme: "preferred-color-scheme"
+
+externalFeeds:
+  - label: "B站动态"
+    category: "B站"
+    url: "https://rsshub.app/bilibili/user/dynamic/102770566"
+    fallbackUrls:
+      - "https://rsshub.rssforever.com/bilibili/user/dynamic/102770566"
+  - label: "番剧更新"
+    category: "番剧"
+    url: "https://rsshub.app/bangumi/calendar/today"
+    fallbackUrls:
+      - "https://rsshub.rssforever.com/bangumi/calendar/today"
+  - label: "IT之家"
+    category: "科技"
+    url: "https://www.ithome.com/rss/"
+    fallbackUrls:
+      - "https://rsshub.app/ithome/ranking/24h"
+      - "https://rsshub.rssforever.com/ithome/ranking/24h"
+  - label: "36氪快讯"
+    category: "科技"
+    url: "https://rsshub.app/36kr/newsflashes"
+    fallbackUrls:
+      - "https://rsshub.rssforever.com/36kr/newsflashes"
+  - label: "财联社电报"
+    category: "股市"
+    url: "https://rsshub.app/cls/telegraph"
+    fallbackUrls:
+      - "https://rsshub.rssforever.com/cls/telegraph"
+
+rss:
+  staticFeedUrl: "/data/rss-feed.json"
+  categories:
+    - "全部"
+    - "B站"
+    - "番剧"
+    - "科技"
+    - "股市"
+  corsProxies:
+    - ""
+    - "https://api.allorigins.win/raw?url="
+
+activity:
+  title: "动态中心"
+  description: "聚合 GitHub 公开开发记录和外部 RSS / Stream。"
+  githubDescription: ""
+  rssDescription: "RSS 源可以接入新闻、B 站动态、番剧更新或其他外部 stream。"
+
+footer:
+  copyright: "© 2026 Hello, I am Ruk1a."
+  poweredBy: "Powered by Hugo and GitHub Pages."
+  license: "All rights reserved unless otherwise stated."

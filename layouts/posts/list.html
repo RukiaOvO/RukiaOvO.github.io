@@ -1,0 +1,41 @@
+{{ define "main" }}
+  <section class="posts-page">
+    {{ partial "site-dock.html" . }}
+
+    <header class="glass-card posts-page__hero">
+      <p class="hero-card__eyebrow">Posts</p>
+      <h1>{{ .Title }}</h1>
+      <p>{{ .Description }}</p>
+    </header>
+
+    <section class="glass-card posts-grid">
+      {{ if gt .Pages 0 }}
+        {{ range (.Paginate (.Pages.GroupByDate "2006")).PageGroups }}
+          <div class="section-title">
+            <p>Archive</p>
+            <h2>{{ .Key }}</h2>
+          </div>
+          {{ range .Pages }}
+            <a class="post-row" href="{{ .RelPermalink }}">
+              <div class="post-row__meta">
+                {{ with .Date }}<time>{{ .Format "2006-01-02" }}</time>{{ end }}
+                {{ with .Params.categories }}<span>{{ delimit . " / " }}</span>{{ end }}
+              </div>
+              <h2>{{ .Title }}</h2>
+              {{ with .Summary }}<p>{{ . | plainify | truncate 120 }}</p>{{ end }}
+            </a>
+          {{ end }}
+        {{ end }}
+        {{ partial "pagination.html" . }}
+      {{ else }}
+        <div class="section-title">
+          <p>Coming Soon</p>
+          <h2>内容正在整理中</h2>
+        </div>
+        <p class="empty-state">这里会承接技术帖子、论文研读、教程与阶段复盘。</p>
+      {{ end }}
+    </section>
+
+    {{ partial "site-footer.html" . }}
+  </section>
+{{ end }}

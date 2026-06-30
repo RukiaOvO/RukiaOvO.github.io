@@ -1,0 +1,58 @@
+{{ define "main" }}
+  {{ $home := hugo.Data.home }}
+  {{ $github := $home.github }}
+  {{ $homeJS := resources.Get "js/homepage.js" | resources.Minify | resources.Fingerprint (site.Params.fingerprintAlgorithm | default "sha512") }}
+
+  <section
+    class="activity-page"
+    data-github-user="{{ $github.username }}"
+    data-github-events-url="{{ $github.staticEventsUrl | relURL }}"
+    data-rss-feed-url="{{ $home.rss.staticFeedUrl | relURL }}"
+    data-github-events-limit="{{ $github.eventsLimit | default 10 }}">
+    {{ partial "site-dock.html" . }}
+
+    <header class="glass-card activity-page__hero">
+      <p class="hero-card__eyebrow">Activity</p>
+      <h1>{{ $home.activity.title | default .Title }}</h1>
+      <p>{{ $home.activity.description | default .Description }}</p>
+    </header>
+
+    <section class="activity-page__grid activity-page__grid--streams">
+      <article class="glass-card github-card">
+        <div class="section-head">
+          <div class="section-title">
+            <p>GitHub API</p>
+            <h2>GitHub 动态</h2>
+          </div>
+        </div>
+        <div class="github-event-list" data-github-events>
+          <p class="empty-state">GitHub 动态加载中</p>
+        </div>
+      </article>
+
+      <article class="glass-card activity-card">
+        <div class="section-head">
+          <div class="section-title">
+            <p>RSS / Stream</p>
+            <h2>外部动态</h2>
+          </div>
+          <span data-feed-status>RSS</span>
+        </div>
+        <div class="feed-filter" data-feed-filter>
+          {{ range $home.rss.categories }}
+            <button type="button" data-feed-category="{{ . }}" class="{{ if eq . "全部" }}is-active{{ end }}">{{ . }}</button>
+          {{ end }}
+        </div>
+        <div class="activity-list" data-feed-list>
+          <p class="empty-state">外部 RSS 加载中</p>
+        </div>
+      </article>
+    </section>
+
+    {{ partial "site-footer.html" . }}
+  </section>
+
+  <script type="application/json" id="profile-rss-proxies">{{ $home.rss.corsProxies | jsonify | safeJS }}</script>
+  <script type="application/json" id="profile-feeds">{{ $home.externalFeeds | jsonify | safeJS }}</script>
+  <script defer src="{{ $homeJS.RelPermalink }}" integrity="{{ $homeJS.Data.Integrity }}"></script>
+{{ end }}

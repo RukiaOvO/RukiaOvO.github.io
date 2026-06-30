@@ -4,16 +4,11 @@
   weight = 10
 
 [[main]]
-  name = "项目"
-  pageRef = "/projects"
+  name = "帖子"
+  pageRef = "/posts"
   weight = 20
 
 [[main]]
-  name = "文章"
-  pageRef = "/posts"
+  name = "动态"
+  pageRef = "/activity"
   weight = 30
-
-[[main]]
-  name = "关于"
-  pageRef = "/about"
-  weight = 40
