@@ -1,50 +1,47 @@
-﻿# RukiaOvO.github.io
+# RukiaOvO.github.io
 
-个人主页：GitHub Profile 风格仪表盘 + 个人主页 + 技术帖子入口。
-当前站点仍使用 Hugo 构建并部署到 GitHub Pages，核心页面通过自定义模板维护：
+这是我的个人主页项目，基于 Hugo 构建，站点内容围绕个人介绍、项目展示、技术文章入口和动态聚合展开。页面采用自定义模板覆盖默认主题行为，并结合本地数据文件与前端脚本实现首页的实时信息展示。
 
-- 首页：个人名片、GitHub 热力图、今日天气、Steam 状态、GitHub Issues 留言区
-- 帖子：技术帖子、论文阅读与阶段总结入口
-- 动态：GitHub 公开动态与中文 RSS 外部信息流
+## 项目概述
 
-## Steam 状态
+这个仓库不是面向他人二次部署的开源模板，而是我自己的长期维护主页。项目核心目标是把个人信息、项目沉淀、公开动态和外部信息流统一放在一个可持续更新的静态站点里。
 
-Steam 状态现在只走 Cloudflare Worker 这一条实时链路。浏览器只轮询 Worker 暴露的 JSON 接口，不再保留 GitHub Actions 的 Steam 快照分支。
+当前站点主要包含：
 
-Worker 地址：
-```text
-https://rukia-steam-status.1403555427.workers.dev/
-```
+- 首页个人面板
+- 项目列表与项目详情页
+- 动态聚合页
+- 文章 / 记录类内容入口
+- 基础 SEO、站点地图、RSS 等静态站点能力
 
-站点配置位于 `data/home.yaml`：
-```yaml
-steam:
-  workerUrl: "https://rukia-steam-status.1403555427.workers.dev/"
-```
+## 功能简介
 
-验证方式：
-```bash
-curl "https://rukia-steam-status.1403555427.workers.dev/"
-```
+- 首页展示个人信息、头像、技能标签和社交入口
+- 首页集成 GitHub 热力图、天气、Steam 状态和留言区
+- Steam 状态通过 Cloudflare Worker 提供实时数据
+- GitHub 动态与外部 RSS/Stream 内容通过本地静态数据和前端脚本同步展示
+- 支持中文与英文内容结构
+- 支持文章、项目、动态等不同内容页的独立布局
 
-如果返回 `ok: true` 且包含 `onlineState`，首页会优先显示 Worker 返回的实时状态，并每 30 秒轮询一次。
+## 文件架构
 
-## 本地开发
-```bash
-hugo server --bind 127.0.0.1 --port 1313 --disableFastRender
-```
+- `content/`：站点内容，包含首页入口、关于页、项目页、文章页等
+- `data/home.yaml`：主页数据源，维护个人资料、社交链接、天气城市、RSS 源、Steam 配置等
+- `layouts/`：Hugo 模板覆盖层
+  - `layouts/partials/home/`：首页各个模块的模板
+  - `layouts/posts/`：文章列表页
+  - `layouts/activity/`：动态聚合页
+  - `layouts/_default/`：默认页模板
+- `assets/`：前端资源
+  - `assets/css/`：自定义样式
+  - `assets/js/`：首页交互脚本
+  - `assets/img/`：图片资源
+- `static/data/`：构建后或外部同步使用的静态 JSON 数据
+- `scripts/`：数据更新脚本
+- `workers/`：Cloudflare Worker 相关代码
+- `config/_default/`：站点配置与多语言配置
+- `themes/blowfish/`：主题子模块
 
-构建检查：
-```bash
-hugo --minify
-node --check assets/js/homepage-live.js
-```
+## 说明
 
-## 主要维护入口
-
-- `data/home.yaml`：主页文案、社交链接、天气城市、RSS 源、GitHub/Steam 配置
-- `layouts/partials/home/custom.html`：首页结构
-- `layouts/posts/list.html`：帖子列表页
-- `layouts/activity/list.html`：动态页
-- `assets/js/homepage-live.js`：天气、GitHub 动态、RSS、Steam、留言区数据读取
-- `assets/css/custom.css`：统一视觉系统与响应式布局
+本仓库仅记录站点实现与内容组织方式，不提供独立部署教程或对外部复刻的操作说明。
