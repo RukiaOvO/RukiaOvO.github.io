@@ -1,8 +1,148 @@
 {
   "ok": true,
   "username": "RukiaOvO",
-  "updatedAt": "2026-06-30T16:32:52.226Z",
+  "updatedAt": "2026-06-30T19:06:13.492Z",
   "events": [
+    {
+      "id": "14129168356",
+      "type": "PushEvent",
+      "actor": {
+        "id": 109339232,
+        "login": "RukiaOvO",
+        "display_login": "RukiaOvO",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/RukiaOvO",
+        "avatar_url": "https://avatars.githubusercontent.com/u/109339232?"
+      },
+      "repo": {
+        "id": 1283562143,
+        "name": "RukiaOvO/RukiaOvO.github.io",
+        "url": "https://api.github.com/repos/RukiaOvO/RukiaOvO.github.io"
+      },
+      "payload": {
+        "repository_id": 1283562143,
+        "push_id": 36417876927,
+        "ref": "refs/heads/main",
+        "head": "7d32f77bd00578c4d01607e1798c96a2e8350f3e",
+        "before": "86725443952c48aaa41232374888865808fa308f",
+        "commits": [
+          {
+            "sha": "7d32f77bd00578c4d01607e1798c96a2e8350f3e",
+            "message": "feat: optimize github heatmap refresh",
+            "url": "https://github.com/RukiaOvO/RukiaOvO.github.io/commit/7d32f77bd00578c4d01607e1798c96a2e8350f3e"
+          }
+        ],
+        "size": 1,
+        "distinct_size": 1
+      },
+      "public": true,
+      "created_at": "2026-06-30T19:00:02Z"
+    },
+    {
+      "id": "14127957380",
+      "type": "PushEvent",
+      "actor": {
+        "id": 109339232,
+        "login": "RukiaOvO",
+        "display_login": "RukiaOvO",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/RukiaOvO",
+        "avatar_url": "https://avatars.githubusercontent.com/u/109339232?"
+      },
+      "repo": {
+        "id": 1283562143,
+        "name": "RukiaOvO/RukiaOvO.github.io",
+        "url": "https://api.github.com/repos/RukiaOvO/RukiaOvO.github.io"
+      },
+      "payload": {
+        "repository_id": 1283562143,
+        "push_id": 36416657760,
+        "ref": "refs/heads/main",
+        "head": "86725443952c48aaa41232374888865808fa308f",
+        "before": "8d40f9607ed2eb2520934904a48c9e49a66914cb",
+        "commits": [
+          {
+            "sha": "86725443952c48aaa41232374888865808fa308f",
+            "message": "docs: rewrite README and stabilize header overrides",
+            "url": "https://github.com/RukiaOvO/RukiaOvO.github.io/commit/86725443952c48aaa41232374888865808fa308f"
+          }
+        ],
+        "size": 1,
+        "distinct_size": 1
+      },
+      "public": true,
+      "created_at": "2026-06-30T18:31:58Z"
+    },
+    {
+      "id": "14127050420",
+      "type": "PushEvent",
+      "actor": {
+        "id": 109339232,
+        "login": "RukiaOvO",
+        "display_login": "RukiaOvO",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/RukiaOvO",
+        "avatar_url": "https://avatars.githubusercontent.com/u/109339232?"
+      },
+      "repo": {
+        "id": 1283562143,
+        "name": "RukiaOvO/RukiaOvO.github.io",
+        "url": "https://api.github.com/repos/RukiaOvO/RukiaOvO.github.io"
+      },
+      "payload": {
+        "repository_id": 1283562143,
+        "push_id": 36415744290,
+        "ref": "refs/heads/main",
+        "head": "8d40f9607ed2eb2520934904a48c9e49a66914cb",
+        "before": "0df97abebe33b0d45c94b3d0a7af7541b2ed5407",
+        "commits": [
+          {
+            "sha": "8d40f9607ed2eb2520934904a48c9e49a66914cb",
+            "message": "docs: rewrite README for personal homepage",
+            "url": "https://github.com/RukiaOvO/RukiaOvO.github.io/commit/8d40f9607ed2eb2520934904a48c9e49a66914cb"
+          }
+        ],
+        "size": 1,
+        "distinct_size": 1
+      },
+      "public": true,
+      "created_at": "2026-06-30T18:11:45Z"
+    },
+    {
+      "id": "14124400858",
+      "type": "PushEvent",
+      "actor": {
+        "id": 109339232,
+        "login": "RukiaOvO",
+        "display_login": "RukiaOvO",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/RukiaOvO",
+        "avatar_url": "https://avatars.githubusercontent.com/u/109339232?"
+      },
+      "repo": {
+        "id": 1283562143,
+        "name": "RukiaOvO/RukiaOvO.github.io",
+        "url": "https://api.github.com/repos/RukiaOvO/RukiaOvO.github.io"
+      },
+      "payload": {
+        "repository_id": 1283562143,
+        "push_id": 36413079028,
+        "ref": "refs/heads/main",
+        "head": "0df97abebe33b0d45c94b3d0a7af7541b2ed5407",
+        "before": "8b2759616a85a75662715480472d9d0c9df18eec",
+        "commits": [
+          {
+            "sha": "0df97abebe33b0d45c94b3d0a7af7541b2ed5407",
+            "message": "fix projects output formats",
+            "url": "https://github.com/RukiaOvO/RukiaOvO.github.io/commit/0df97abebe33b0d45c94b3d0a7af7541b2ed5407"
+          }
+        ],
+        "size": 1,
+        "distinct_size": 1
+      },
+      "public": true,
+      "created_at": "2026-06-30T17:14:04Z"
+    },
     {
       "id": "14120858012",
       "type": "PushEvent",
@@ -562,156 +702,6 @@
       },
       "public": true,
       "created_at": "2026-06-29T06:21:45Z"
-    },
-    {
-      "id": "14034341796",
-      "type": "PushEvent",
-      "actor": {
-        "id": 109339232,
-        "login": "RukiaOvO",
-        "display_login": "RukiaOvO",
-        "gravatar_id": "",
-        "url": "https://api.github.com/users/RukiaOvO",
-        "avatar_url": "https://avatars.githubusercontent.com/u/109339232?"
-      },
-      "repo": {
-        "id": 1283562143,
-        "name": "RukiaOvO/RukiaOvO.github.io",
-        "url": "https://api.github.com/repos/RukiaOvO/RukiaOvO.github.io"
-      },
-      "payload": {
-        "repository_id": 1283562143,
-        "push_id": 36322585717,
-        "ref": "refs/heads/main",
-        "head": "beec30cacef3feb32d0497c7e4b12b7dcbbf9d90",
-        "before": "963e8c6feb041f2cf04e3ba75594b1e5d9a71236",
-        "commits": [
-          {
-            "sha": "beec30cacef3feb32d0497c7e4b12b7dcbbf9d90",
-            "message": "feat: prepare personal homepage for launch",
-            "url": "https://github.com/RukiaOvO/RukiaOvO.github.io/commit/beec30cacef3feb32d0497c7e4b12b7dcbbf9d90"
-          }
-        ],
-        "size": 1,
-        "distinct_size": 1
-      },
-      "public": true,
-      "created_at": "2026-06-29T05:54:27Z"
-    },
-    {
-      "id": "14029873703",
-      "type": "CreateEvent",
-      "actor": {
-        "id": 109339232,
-        "login": "RukiaOvO",
-        "display_login": "RukiaOvO",
-        "gravatar_id": "",
-        "url": "https://api.github.com/users/RukiaOvO",
-        "avatar_url": "https://avatars.githubusercontent.com/u/109339232?"
-      },
-      "repo": {
-        "id": 1283562143,
-        "name": "RukiaOvO/RukiaOvO.github.io",
-        "url": "https://api.github.com/repos/RukiaOvO/RukiaOvO.github.io"
-      },
-      "payload": {
-        "ref": "main",
-        "ref_type": "branch",
-        "full_ref": "refs/heads/main",
-        "master_branch": "main",
-        "description": null,
-        "pusher_type": "user"
-      },
-      "public": true,
-      "created_at": "2026-06-29T03:22:11Z"
-    },
-    {
-      "id": "11087557688",
-      "type": "PullRequestEvent",
-      "actor": {
-        "id": 109339232,
-        "login": "RukiaOvO",
-        "display_login": "RukiaOvO",
-        "gravatar_id": "",
-        "url": "https://api.github.com/users/RukiaOvO",
-        "avatar_url": "https://avatars.githubusercontent.com/u/109339232?"
-      },
-      "repo": {
-        "id": 614445639,
-        "name": "west2-online/fzu-run",
-        "url": "https://api.github.com/repos/west2-online/fzu-run"
-      },
-      "payload": {
-        "action": "opened",
-        "number": 108,
-        "pull_request": {
-          "url": "https://api.github.com/repos/west2-online/fzu-run/pulls/108",
-          "id": 3951358871,
-          "number": 108,
-          "head": {
-            "ref": "main",
-            "sha": "d9d0cde2225270066c3dfa348f1cb297a04333e7",
-            "repo": {
-              "id": 1283146470,
-              "url": "https://api.github.com/repos/RukiaOvO/fzu-run",
-              "name": "fzu-run"
-            }
-          },
-          "base": {
-            "ref": "main",
-            "sha": "ba46236684ede3f1217be2d2820ad3c9504107c4",
-            "repo": {
-              "id": 614445639,
-              "url": "https://api.github.com/repos/west2-online/fzu-run",
-              "name": "fzu-run"
-            }
-          }
-        }
-      },
-      "public": true,
-      "created_at": "2026-06-28T17:10:06Z",
-      "org": {
-        "id": 127833489,
-        "login": "west2-online",
-        "gravatar_id": "",
-        "url": "https://api.github.com/orgs/west2-online",
-        "avatar_url": "https://avatars.githubusercontent.com/u/127833489?"
-      }
-    },
-    {
-      "id": "14014016356",
-      "type": "PushEvent",
-      "actor": {
-        "id": 109339232,
-        "login": "RukiaOvO",
-        "display_login": "RukiaOvO",
-        "gravatar_id": "",
-        "url": "https://api.github.com/users/RukiaOvO",
-        "avatar_url": "https://avatars.githubusercontent.com/u/109339232?"
-      },
-      "repo": {
-        "id": 1283146470,
-        "name": "RukiaOvO/fzu-run",
-        "url": "https://api.github.com/repos/RukiaOvO/fzu-run"
-      },
-      "payload": {
-        "repository_id": 1283146470,
-        "push_id": 36302237047,
-        "ref": "refs/heads/main",
-        "head": "d9d0cde2225270066c3dfa348f1cb297a04333e7",
-        "before": "ba46236684ede3f1217be2d2820ad3c9504107c4",
-        "commits": [
-          {
-            "sha": "d9d0cde2225270066c3dfa348f1cb297a04333e7",
-            "message": "add：26考研-复旦大学-计算与智能创新学院",
-            "url": "https://github.com/RukiaOvO/fzu-run/commit/d9d0cde2225270066c3dfa348f1cb297a04333e7"
-          }
-        ],
-        "size": 1,
-        "distinct_size": 1
-      },
-      "public": true,
-      "created_at": "2026-06-28T17:08:53Z"
     }
   ]
 }
