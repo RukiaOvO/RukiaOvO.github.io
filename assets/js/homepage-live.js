@@ -107,6 +107,63 @@
     }
   };
 
+  const getBeijingClock = (date = new Date()) => {
+    const shifted = new Date(date.getTime() + 8 * 60 * 60 * 1000);
+    return {
+      year: String(shifted.getUTCFullYear()),
+      month: String(shifted.getUTCMonth() + 1).padStart(2, "0"),
+      day: String(shifted.getUTCDate()).padStart(2, "0"),
+      hour: String(shifted.getUTCHours()).padStart(2, "0"),
+      minute: String(shifted.getUTCMinutes()).padStart(2, "0"),
+      second: String(shifted.getUTCSeconds()).padStart(2, "0"),
+    };
+  };
+
+  const getBeijingHourKey = () => {
+    const { year, month, day, hour } = getBeijingClock();
+    return `${year}-${month}-${day}-${hour}`;
+  };
+
+  const getNextBeijingHourDelay = () => {
+    const now = Date.now();
+    const beijingNow = now + 8 * 60 * 60 * 1000;
+    const nextHourBeijing = Math.floor(beijingNow / 3_600_000) * 3_600_000 + 3_600_000 + 5_000;
+    return Math.max(60_000, nextHourBeijing - beijingNow);
+  };
+
+  const heatmapState = {
+    timer: null,
+    lastKey: "",
+  };
+
+  const scheduleGitHubHeatmapRefresh = () => {
+    if (heatmapState.timer) {
+      window.clearTimeout(heatmapState.timer);
+    }
+    heatmapState.timer = window.setTimeout(() => {
+      refreshGitHubHeatmap();
+      scheduleGitHubHeatmapRefresh();
+    }, getNextBeijingHourDelay());
+  };
+
+  const refreshGitHubHeatmap = () => {
+    const image = root.querySelector("[data-github-heatmap]");
+    if (!image) return;
+
+    const provider = image.dataset.heatmapProvider?.replace(/\/$/, "");
+    const color = image.dataset.heatmapColor;
+    const user = image.dataset.heatmapUser;
+    if (!provider || !color || !user) return;
+
+    const key = getBeijingHourKey();
+    if (heatmapState.lastKey === key) return;
+
+    const url = new URL(`${provider}/${encodeURIComponent(color)}/${encodeURIComponent(user)}`);
+    url.searchParams.set("v", key);
+    image.src = url.toString();
+    heatmapState.lastKey = key;
+  };
+
   const loadWeather = async () => {
     const card = root.querySelector("[data-weather]");
     const select = root.querySelector("[data-weather-select]");
@@ -500,6 +557,12 @@
 
   applyBeijingTimeTheme();
   window.setInterval(applyBeijingTimeTheme, 60000);
+  refreshGitHubHeatmap();
+  scheduleGitHubHeatmapRefresh();
+  window.addEventListener("pageshow", refreshGitHubHeatmap);
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) refreshGitHubHeatmap();
+  });
 
   loadWeather();
   loadFeeds();

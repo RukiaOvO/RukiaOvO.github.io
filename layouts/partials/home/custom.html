@@ -118,8 +118,13 @@
         <div class="heatmap-frame">
           <img
             src="{{ $github.heatmapProvider }}/{{ $github.heatmapColor }}/{{ $github.username }}"
+            data-github-heatmap
+            data-heatmap-provider="{{ $github.heatmapProvider }}"
+            data-heatmap-color="{{ $github.heatmapColor }}"
+            data-heatmap-user="{{ $github.username }}"
             alt="{{ $github.username }} GitHub contribution heatmap"
-            loading="eager">
+            loading="eager"
+            referrerpolicy="no-referrer">
         </div>
       </section>
 
