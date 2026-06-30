@@ -64,13 +64,7 @@ steam:
   steamId: "76561198417009401"
   profileUrl: "https://steamcommunity.com/profiles/76561198417009401/"
   workerUrl: "https://rukia-steam-status.1403555427.workers.dev/"
-  staticStatusUrl: "/data/steam-status.json"
-  corsProxy: "https://api.allorigins.win/raw?url="
-  corsProxies:
-    - ""
-    - "https://api.allorigins.win/raw?url="
-  useWebApi: false
-  apiKeyEnv: "STEAM_WEB_API_KEY"
+  source: "cloudflare-worker"
 
 comments:
   owner: "RukiaOvO"
@@ -120,10 +114,6 @@ rss:
     - "番剧"
     - "科技"
     - "股市"
-  corsProxies:
-    - ""
-    - "https://api.allorigins.win/raw?url="
-
 activity:
   title: "动态中心"
   description: "聚合 GitHub 公开开发记录和外部 RSS / Stream。"

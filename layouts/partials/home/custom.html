@@ -6,16 +6,13 @@
 {{ $steam := $home.steam }}
 {{ $disableImageOptimization := site.Params.disableImageOptimization | default false }}
 {{ $avatar := resources.Get ($profile.avatar | default site.Params.Author.image) }}
-{{ $homeJS := resources.Get "js/homepage.js" | resources.Minify | resources.Fingerprint (site.Params.fingerprintAlgorithm | default "sha512") }}
+{{ $homeJS := resources.Get "js/homepage-live.js" | resources.Minify | resources.Fingerprint (site.Params.fingerprintAlgorithm | default "sha512") }}
 
 <section
   id="top"
   class="profile-home"
   data-github-user="{{ $github.username }}"
-  data-steam-url="{{ $steam.profileUrl }}"
   data-steam-worker-url="{{ $steam.workerUrl }}"
-  data-steam-static-url="{{ $steam.staticStatusUrl | relURL }}"
-  data-steam-proxy="{{ $steam.corsProxy }}"
   data-comments-owner="{{ $comments.owner }}"
   data-comments-repo="{{ $comments.repo }}"
   data-comments-issue="{{ $comments.issueNumber }}"
@@ -203,6 +200,5 @@
 
   {{ partial "site-footer.html" . }}
 
-  <script type="application/json" id="profile-steam-proxies">{{ $steam.corsProxies | jsonify | safeJS }}</script>
   <script defer src="{{ $homeJS.RelPermalink }}" integrity="{{ $homeJS.Data.Integrity }}"></script>
 </section>

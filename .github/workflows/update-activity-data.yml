@@ -1,4 +1,4 @@
-name: Update activity data
+﻿name: Update activity data
 
 on:
   schedule:
@@ -7,6 +7,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
   group: activity-data
@@ -16,6 +18,7 @@ jobs:
   update:
     runs-on: ubuntu-latest
     env:
+      HUGO_VERSION: 0.163.3
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GITHUB_EVENTS_OUTPUT: "static/data/github-events.json"
       RSS_FEED_OUTPUT: "static/data/rss-feed.json"
@@ -32,7 +35,34 @@ jobs:
         run: node scripts/update-activity-data.mjs
 
       - name: Commit updated activity data
+        id: auto-commit-action
         uses: stefanzweifel/git-auto-commit-action@v6
         with:
           commit_message: "chore: update activity data"
           file_pattern: static/data/github-events.json static/data/rss-feed.json
+
+      - name: Setup Pages
+        if: steps.auto-commit-action.outputs.changes_detected == 'true'
+        id: pages
+        uses: actions/configure-pages@v6
+
+      - name: Install Hugo
+        if: steps.auto-commit-action.outputs.changes_detected == 'true'
+        run: |
+          curl -L -o hugo.tar.gz https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz
+          tar -xzf hugo.tar.gz
+          sudo mv hugo /usr/local/bin/hugo
+
+      - name: Build Pages artifact
+        if: steps.auto-commit-action.outputs.changes_detected == 'true'
+        run: hugo --gc --minify --baseURL "${{ steps.pages.outputs.base_url }}/"
+
+      - name: Upload Pages artifact
+        if: steps.auto-commit-action.outputs.changes_detected == 'true'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: ./public
+
+      - name: Deploy to GitHub Pages
+        if: steps.auto-commit-action.outputs.changes_detected == 'true'
+        uses: actions/deploy-pages@v5

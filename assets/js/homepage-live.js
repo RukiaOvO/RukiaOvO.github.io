@@ -3,64 +3,58 @@
   if (!root) return;
 
   const applyBeijingTimeTheme = () => {
-    const hourPart = new Intl.DateTimeFormat("en-US", {
-      hour: "2-digit",
-      hour12: false,
-      timeZone: "Asia/Shanghai",
-    })
-      .formatToParts(new Date())
-      .find((part) => part.type === "hour");
-    const hour = Number(hourPart?.value || 0);
+    const hour = Number(
+      new Intl.DateTimeFormat("en-US", {
+        hour: "2-digit",
+        hour12: false,
+        timeZone: "Asia/Shanghai",
+      })
+        .formatToParts(new Date())
+        .find((part) => part.type === "hour")?.value || 0
+    );
     const isDaytime = hour >= 6 && hour < 18;
-
     document.documentElement.classList.toggle("theme-day", isDaytime);
     document.documentElement.classList.toggle("theme-night", !isDaytime);
   };
 
-  applyBeijingTimeTheme();
-  window.setInterval(applyBeijingTimeTheme, 60000);
-
   const weatherCodes = {
-    0: ["晴", "☀"],
-    1: ["大部晴朗", "☀"],
-    2: ["局部多云", "⛅"],
-    3: ["阴", "☁"],
-    45: ["有雾", "☁"],
-    48: ["雾凇", "☁"],
-    51: ["小毛毛雨", "☂"],
-    53: ["毛毛雨", "☂"],
-    55: ["较强毛毛雨", "☂"],
-    61: ["小雨", "☂"],
-    63: ["中雨", "☂"],
-    65: ["大雨", "☂"],
-    71: ["小雪", "❄"],
-    73: ["中雪", "❄"],
-    75: ["大雪", "❄"],
-    80: ["阵雨", "☂"],
-    81: ["较强阵雨", "☂"],
-    82: ["强阵雨", "☂"],
-    95: ["雷暴", "⚡"],
-    96: ["雷暴伴冰雹", "⚡"],
-    99: ["强雷暴伴冰雹", "⚡"],
+    0: ["Clear", "☀"],
+    1: ["Mainly clear", "☀"],
+    2: ["Partly cloudy", "⛅"],
+    3: ["Overcast", "☁"],
+    45: ["Fog", "☁"],
+    48: ["Depositing rime fog", "☁"],
+    51: ["Light drizzle", "☂"],
+    53: ["Drizzle", "☂"],
+    55: ["Heavy drizzle", "☂"],
+    61: ["Light rain", "☂"],
+    63: ["Rain", "☂"],
+    65: ["Heavy rain", "☂"],
+    71: ["Light snow", "❄"],
+    73: ["Snow", "❄"],
+    75: ["Heavy snow", "❄"],
+    80: ["Rain showers", "☂"],
+    81: ["Heavy showers", "☂"],
+    82: ["Violent showers", "☂"],
+    95: ["Thunderstorm", "⚡"],
+    96: ["Thunderstorm with hail", "⚡"],
+    99: ["Heavy thunderstorm with hail", "⚡"],
   };
 
-  const formatDate = (value) => {
-    if (!value) return "";
-    return new Date(value).toLocaleDateString("zh-CN", {
-      month: "2-digit",
-      day: "2-digit",
-    });
-  };
+  const formatDate = (value) =>
+    value
+      ? new Date(value).toLocaleDateString("zh-CN", { month: "2-digit", day: "2-digit" })
+      : "";
 
-  const formatTime = (value) => {
-    if (!value) return "";
-    return new Date(value).toLocaleString("zh-CN", {
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
+  const formatTime = (value) =>
+    value
+      ? new Date(value).toLocaleString("zh-CN", {
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      : "";
 
   const escapeHtml = (value) =>
     String(value || "")
@@ -72,24 +66,21 @@
   const fetchWithTimeout = async (url, options = {}, timeoutMs = 8000) => {
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), timeoutMs);
-
     try {
-      return await fetch(url, {
-        ...options,
-        signal: controller.signal,
-      });
+      return await fetch(url, { ...options, signal: controller.signal });
     } finally {
       window.clearTimeout(timeout);
     }
   };
 
-  const readJsonScript = (id, fallback = []) => {
-    const source = document.getElementById(id);
-    if (!source) return fallback;
+  const fetchJsonIfAvailable = async (url, timeoutMs = 3000) => {
+    if (!url) return null;
     try {
-      return JSON.parse(source.textContent || "[]");
-    } catch (error) {
-      return fallback;
+      const response = await fetchWithTimeout(url, { cache: "no-store" }, timeoutMs);
+      if (!response.ok) return null;
+      return await response.json();
+    } catch {
+      return null;
     }
   };
 
@@ -98,22 +89,21 @@
       const requestUrl = proxy ? `${proxy}${encodeURIComponent(url)}` : url;
       try {
         const response = await fetchWithTimeout(requestUrl, { cache: "no-store" }, timeoutMs);
-        if (response.ok) return response.text();
-      } catch (error) {
-        // Try the next proxy.
+        if (response.ok) return await response.text();
+      } catch {
+        // next proxy
       }
     }
-    throw new Error("All fetch fallbacks failed");
+    throw new Error("fetch failed");
   };
 
-  const fetchJsonIfAvailable = async (url, timeoutMs = 3000) => {
-    if (!url) return null;
+  const readJsonScript = (id, fallback = []) => {
+    const source = document.getElementById(id);
+    if (!source) return fallback;
     try {
-      const response = await fetchWithTimeout(url, { cache: "no-store" }, timeoutMs);
-      if (!response.ok) return null;
-      return response.json();
-    } catch (error) {
-      return null;
+      return JSON.parse(source.textContent || "[]");
+    } catch {
+      return fallback;
     }
   };
 
@@ -143,17 +133,16 @@
         const data = await response.json();
         const current = data.current_weather;
         const daily = data.daily || {};
-        const [label, symbol] = weatherCodes[current.weathercode] || ["未知天气", "☁"];
-
+        const [label, symbol] = weatherCodes[current.weathercode] || ["Unknown", "☁"];
         icon.textContent = symbol;
         temp.textContent = `${Math.round(current.temperature)}°C`;
         desc.textContent = `${city} · ${label}`;
-        detail.textContent = `高 ${Math.round(daily.temperature_2m_max?.[0] ?? current.temperature)}° / 低 ${Math.round(daily.temperature_2m_min?.[0] ?? current.temperature)}° · 风速 ${Math.round(current.windspeed)} km/h · ${formatDate(current.time)}`;
-      } catch (error) {
+        detail.textContent = `High ${Math.round(daily.temperature_2m_max?.[0] ?? current.temperature)}° / Low ${Math.round(daily.temperature_2m_min?.[0] ?? current.temperature)}° · Wind ${Math.round(current.windspeed)} km/h · ${formatDate(current.time)}`;
+      } catch {
         icon.textContent = "☁";
         temp.textContent = "--°C";
-        desc.textContent = `${city} 天气暂不可用`;
-        detail.textContent = "Open-Meteo 接口暂时无法访问";
+        desc.textContent = `${city} weather unavailable`;
+        detail.textContent = "Open-Meteo request failed";
       }
     };
 
@@ -168,15 +157,13 @@
 
     const renderEvents = (events) => {
       target.innerHTML = "";
-
       events.forEach((event) => {
         const repo = event.repo?.name || username;
         const payload = event.payload || {};
-        const eventName = event.type.replace("Event", "");
         const item = document.createElement("article");
         item.className = "github-event";
 
-        let title = eventName;
+        let title = event.type.replace("Event", "");
         let detail = repo;
         let commits = "";
         let href = `https://github.com/${repo}`;
@@ -185,35 +172,34 @@
           const branch = payload.ref?.replace("refs/heads/", "") || "unknown";
           const visibleCommits = Array.isArray(payload.commits) ? payload.commits : [];
           const commitCount = Number(payload.size ?? payload.distinct_size ?? visibleCommits.length);
-          title = `Push · ${branch}`;
-          detail = commitCount > 0 ? `${repo} · ${commitCount} commit${commitCount > 1 ? "s" : ""}` : `${repo} · push 更新`;
+          title = `Push ${branch}`;
+          detail = commitCount > 0 ? `${repo} ${commitCount} commit${commitCount > 1 ? "s" : ""}` : `${repo} push`;
           commits = visibleCommits
             .slice(0, 3)
             .map((commit) => `<li><code>${escapeHtml((commit.sha || "").slice(0, 7))}</code><span>${escapeHtml(commit.message || "Commit")}</span></li>`)
             .join("");
           href = payload.head ? `https://github.com/${repo}/commit/${payload.head}` : href;
         } else if (event.type === "PullRequestEvent") {
-          title = `Pull Request · ${payload.action || "update"}`;
+          title = `Pull Request ${payload.action || "update"}`;
           detail = payload.pull_request?.title || repo;
           href = payload.pull_request?.html_url || href;
         } else if (event.type === "IssuesEvent") {
-          title = `Issue · ${payload.action || "update"}`;
+          title = `Issue ${payload.action || "update"}`;
           detail = payload.issue?.title || repo;
           href = payload.issue?.html_url || href;
         } else if (event.type === "IssueCommentEvent") {
-          title = `Issue Comment · ${payload.action || "comment"}`;
+          title = `Issue Comment ${payload.action || "comment"}`;
           detail = payload.issue?.title || repo;
           href = payload.comment?.html_url || payload.issue?.html_url || href;
         } else if (event.type === "CreateEvent") {
-          title = `Create · ${payload.ref_type || "resource"}`;
-          detail = payload.ref ? `${repo} · ${payload.ref}` : repo;
+          title = `Create ${payload.ref_type || "resource"}`;
+          detail = payload.ref ? `${repo} ${payload.ref}` : repo;
         } else if (event.type === "ReleaseEvent") {
-          title = `Release · ${payload.action || "publish"}`;
+          title = `Release ${payload.action || "publish"}`;
           detail = payload.release?.name || payload.release?.tag_name || repo;
           href = payload.release?.html_url || href;
         } else if (event.type === "WatchEvent") {
           title = "Star";
-          detail = repo;
         }
 
         item.innerHTML = `
@@ -228,26 +214,32 @@
       });
 
       if (!target.children.length) {
-        target.innerHTML = '<p class="empty-state">暂无公开 GitHub 动态</p>';
+        target.innerHTML = '<p class="empty-state">No public GitHub activity</p>';
       }
     };
 
     try {
       const limit = Number(root.dataset.githubEventsLimit || 10);
+      const response = await fetchWithTimeout(
+        `https://api.github.com/users/${username}/events/public?per_page=${Math.max(limit, 10)}`,
+        { headers: { Accept: "application/vnd.github+json" } },
+        8000
+      );
+
+      if (response.ok) {
+        renderEvents((await response.json()).slice(0, limit));
+        return;
+      }
+
       const staticEvents = await fetchJsonIfAvailable(root.dataset.githubEventsUrl);
       if (Array.isArray(staticEvents?.events) && staticEvents.events.length) {
         renderEvents(staticEvents.events.slice(0, limit));
         return;
       }
 
-      const response = await fetchWithTimeout(`https://api.github.com/users/${username}/events/public?per_page=${Math.max(limit, 10)}`, {
-        headers: { Accept: "application/vnd.github+json" },
-      }, 8000);
-      if (!response.ok) throw new Error(`GitHub ${response.status}`);
-      const events = await response.json();
-      renderEvents(events.slice(0, limit));
-    } catch (error) {
-      target.innerHTML = '<p class="empty-state">GitHub API 暂时无法访问</p>';
+      throw new Error(`GitHub ${response.status}`);
+    } catch {
+      target.innerHTML = '<p class="empty-state">GitHub API temporarily unavailable</p>';
     }
   };
 
@@ -264,14 +256,16 @@
 
       if (commentsIssue) {
         const issueResponse = await fetchWithTimeout(`${issueBase}/${commentsIssue}`, { headers }, 8000);
-        if (issueResponse.ok) {
-          issue = await issueResponse.json();
-        }
+        if (issueResponse.ok) issue = await issueResponse.json();
       }
 
       if (!issue) {
         const label = root.dataset.commentsLabel || "comment";
-        const issuesResponse = await fetchWithTimeout(`${issueBase}?state=open&labels=${encodeURIComponent(label)}&per_page=30`, { headers }, 8000);
+        const issuesResponse = await fetchWithTimeout(
+          `${issueBase}?state=open&labels=${encodeURIComponent(label)}&per_page=30`,
+          { headers },
+          8000
+        );
         if (issuesResponse.ok) {
           const issues = await issuesResponse.json();
           const pathname = window.location.pathname.replace(/\/$/, "") || "/";
@@ -283,9 +277,7 @@
       }
 
       if (!issue) {
-        if (summaryTarget) {
-          summaryTarget.innerHTML = '<p class="empty-state">登录 GitHub 后可在下方留言。</p>';
-        }
+        if (summaryTarget) summaryTarget.innerHTML = '<p class="empty-state">Sign in to GitHub to comment.</p>';
         target.hidden = true;
         target.innerHTML = "";
         return;
@@ -293,9 +285,9 @@
 
       const commentsResponse = await fetchWithTimeout(`${issue.comments_url}?per_page=8`, { headers }, 8000);
       if (!commentsResponse.ok) throw new Error("Issue comments unavailable");
-
       const comments = await commentsResponse.json();
       target.innerHTML = "";
+
       if (summaryTarget) {
         const reactions = issue.reactions || {};
         const reactionItems = [
@@ -308,12 +300,10 @@
           <div class="issue-summary__meta">
             <span>#${issue.number}</span>
             <span>${escapeHtml(issue.state)}</span>
-            <span>${issue.comments || 0} 条评论</span>
+            <span>${issue.comments || 0} comments</span>
           </div>
           <a href="${issue.html_url}" target="_blank" rel="noopener noreferrer">${escapeHtml(issue.title || "GitHub Issue")}</a>
-          <div class="reaction-row">
-            ${reactionItems.map(([emoji, count]) => `<span>${emoji} ${count}</span>`).join("")}
-          </div>
+          <div class="reaction-row">${reactionItems.map(([emoji, count]) => `<span>${emoji} ${count}</span>`).join("")}</div>
         `;
       }
 
@@ -340,16 +330,9 @@
         target.appendChild(article);
       });
 
-      if (!comments.length) {
-        target.hidden = true;
-        target.innerHTML = "";
-      } else {
-        target.hidden = false;
-      }
-    } catch (error) {
-      if (summaryTarget) {
-        summaryTarget.innerHTML = '<p class="empty-state">留言区暂时无法访问。</p>';
-      }
+      target.hidden = comments.length === 0;
+    } catch {
+      if (summaryTarget) summaryTarget.innerHTML = '<p class="empty-state">Comments temporarily unavailable.</p>';
       target.hidden = true;
       target.innerHTML = "";
     }
@@ -363,23 +346,21 @@
     const feeds = readJsonScript("profile-feeds");
     const proxies = readJsonScript("profile-rss-proxies", ["https://api.allorigins.win/raw?url="]);
     const filter = root.querySelector("[data-feed-filter]");
-    let activeCategory = filter?.querySelector(".is-active")?.dataset.feedCategory || "全部";
+    let activeCategory = filter?.querySelector(".is-active")?.dataset.feedCategory || filter?.querySelector("button")?.dataset.feedCategory || "All";
     let items = [];
     let isLoading = true;
 
     const renderItems = () => {
-      const visibleItems = activeCategory === "全部"
-        ? items
-        : items.filter((item) => item.category === activeCategory);
-
+      const visibleItems = activeCategory === "All" || activeCategory === "鍏ㄩ儴" ? items : items.filter((item) => item.category === activeCategory);
       target.innerHTML = "";
+
       if (isLoading) {
-        target.innerHTML = `<p class="empty-state">${escapeHtml(activeCategory)} RSS 加载中。</p>`;
+        target.innerHTML = `<p class="empty-state">${escapeHtml(activeCategory)} RSS loading...</p>`;
         return;
       }
 
       if (!visibleItems.length) {
-        target.innerHTML = `<p class="empty-state">${escapeHtml(activeCategory)} 暂无可展示的 RSS 条目。</p>`;
+        target.innerHTML = `<p class="empty-state">${escapeHtml(activeCategory)} has no items.</p>`;
         return;
       }
 
@@ -392,7 +373,7 @@
           link.target = "_blank";
           link.rel = "noopener noreferrer";
           link.dataset.feedCategory = item.category;
-          link.innerHTML = `<time>${escapeHtml(item.category)} · ${escapeHtml(item.label)} · ${formatDate(item.date)}</time><strong>${escapeHtml(item.title)}</strong><p>${escapeHtml(item.description).slice(0, 120) || "查看详情"}</p>`;
+          link.innerHTML = `<time>${escapeHtml(item.category)} · ${escapeHtml(item.label)} · ${formatDate(item.date)}</time><strong>${escapeHtml(item.title)}</strong><p>${escapeHtml(item.description).slice(0, 120) || "View details"}</p>`;
           target.appendChild(link);
         });
     };
@@ -401,7 +382,7 @@
       filter.addEventListener("click", (event) => {
         const button = event.target.closest("[data-feed-category]");
         if (!button) return;
-        activeCategory = button.dataset.feedCategory || "全部";
+        activeCategory = button.dataset.feedCategory || "鍏ㄩ儴";
         filter.querySelectorAll("button").forEach((item) => item.classList.remove("is-active"));
         button.classList.add("is-active");
         renderItems();
@@ -415,7 +396,7 @@
       items = staticFeed.items;
       isLoading = false;
       renderItems();
-      if (status) status.textContent = "RSS 已同步";
+      if (status) status.textContent = "RSS synced";
       return;
     }
 
@@ -427,8 +408,8 @@
           try {
             text = await fetchTextWithFallback(url, proxies, 5000);
             if (text) break;
-          } catch (error) {
-            // Try the next source URL.
+          } catch {
+            // next url
           }
         }
         if (!text) return [];
@@ -445,52 +426,41 @@
           });
         });
         return feedItems;
-      } catch (error) {
+      } catch {
         return [];
       }
     }));
 
-    items = feedResults.flatMap((result) =>
-      result.status === "fulfilled" ? result.value : []
-    );
+    items = feedResults.flatMap((result) => (result.status === "fulfilled" ? result.value : []));
     isLoading = false;
-
-    if (!items.length) {
-      renderItems();
-      if (status) status.textContent = "RSS 不可用";
-      return;
-    }
-
     renderItems();
-
-    if (status) status.textContent = "RSS 已同步";
+    if (status) status.textContent = items.length ? "RSS synced" : "RSS unavailable";
   };
 
   const loadSteamStatus = async () => {
     const target = root.querySelector("[data-steam-status]");
-    const profileUrl = root.dataset.steamUrl;
     const workerUrl = root.dataset.steamWorkerUrl;
-    if (!target || !profileUrl) return;
+    if (!target || !workerUrl) return;
 
     const renderSteam = (state, summary, meta = "") => {
       const normalizedState = String(state || "unknown").toLowerCase();
       const isOnline = ["online", "busy", "away", "snooze", "looking_to_trade", "looking_to_play"].includes(normalizedState);
       const labelMap = {
-        online: "在线",
-        offline: "离线",
-        busy: "忙碌",
-        away: "离开",
-        snooze: "暂离",
-        looking_to_trade: "想交易",
-        looking_to_play: "想玩游戏",
-        unknown: "未知",
+        online: "online",
+        offline: "offline",
+        busy: "busy",
+        away: "away",
+        snooze: "snooze",
+        looking_to_trade: "looking to trade",
+        looking_to_play: "looking to play",
+        unknown: "unknown",
       };
 
       target.innerHTML = `
         <span class="status-dot ${isOnline ? "status-dot--online" : normalizedState === "offline" ? "status-dot--offline" : "status-dot--unknown"}"></span>
         <div>
-          <strong>Steam ${labelMap[normalizedState] || state || "未知"}</strong>
-          <p>${escapeHtml(summary || "未检测到正在游玩的游戏")}${meta ? ` · ${escapeHtml(meta)}` : ""}</p>
+          <strong>Steam ${labelMap[normalizedState] || state || "unknown"}</strong>
+          <p>${escapeHtml(summary || "No live Steam activity detected")}${meta ? ` · ${escapeHtml(meta)}` : ""}</p>
         </div>
       `;
     };
@@ -499,8 +469,8 @@
       if (!payload) return;
       renderSteam(
         payload.onlineState,
-        payload.gameExtraInfo ? `正在玩 ${payload.gameExtraInfo}` : payload.statusText,
-        meta || (payload.updatedAt ? `实时 ${formatTime(payload.updatedAt)}` : "实时")
+        payload.gameExtraInfo ? `Playing ${payload.gameExtraInfo}` : payload.statusText,
+        meta || (payload.updatedAt ? `Live ${formatTime(payload.updatedAt)}` : "Live")
       );
     };
 
@@ -508,52 +478,28 @@
       const url = new URL(workerUrl);
       url.searchParams.set("t", Date.now());
       const status = await fetchJsonIfAvailable(url.toString(), 5000);
-      if (!status?.ok && !status?.statusText) {
-        throw new Error("Steam Worker unavailable");
-      }
+      if (!status?.ok && !status?.statusText) throw new Error("Steam Worker unavailable");
       renderSteamPayload(status);
     };
 
-    const refreshFromSteamProfile = async () => {
-      const xmlUrl = `${profileUrl.replace(/\/$/, "")}/?xml=1&t=${Date.now()}`;
-      const proxies = readJsonScript("profile-steam-proxies", [root.dataset.steamProxy || ""]);
-      const text = await fetchTextWithFallback(xmlUrl, proxies, 5000);
-      const xml = new DOMParser().parseFromString(text, "application/xml");
-      const state = xml.querySelector("onlineState")?.textContent?.trim() || "unknown";
-      const stateMessage = xml.querySelector("stateMessage")?.textContent?.replace(/<[^>]*>/g, "").trim() || "";
-      const game = xml.querySelector("inGameInfo gameName")?.textContent?.trim();
-      const summary = game ? `正在玩 ${game}` : stateMessage || "未检测到正在游玩的游戏";
-      renderSteam(state, summary, "实时");
-    };
-
     try {
-      const staticStatus = await fetchJsonIfAvailable(root.dataset.steamStaticUrl);
-      if (staticStatus?.ok || staticStatus?.statusText) {
-        renderSteamPayload(
-          staticStatus,
-          staticStatus.updatedAt ? `快照 ${formatTime(staticStatus.updatedAt)}` : "快照"
-        );
-      }
-
-      const refreshLiveStatus = workerUrl ? refreshFromSteamWorker : refreshFromSteamProfile;
-      await refreshLiveStatus();
+      await refreshFromSteamWorker();
       window.setInterval(() => {
-        refreshLiveStatus().catch(() => {
-          // Keep the last successful snapshot or live status visible.
-        });
+        refreshFromSteamWorker().catch(() => {});
       }, 30000);
-    } catch (error) {
-      if (!target.textContent.trim() || target.textContent.includes("状态加载中")) {
-        target.innerHTML = `
-          <span class="status-dot status-dot--unknown"></span>
-          <div>
-            <strong>Steam 状态不可用</strong>
-            <p>请确认 Steam 个人资料公开，或在 data/home.yaml 中修改 profileUrl。</p>
-          </div>
-        `;
-      }
+    } catch {
+      target.innerHTML = `
+        <span class="status-dot status-dot--unknown"></span>
+        <div>
+          <strong>Steam unavailable</strong>
+          <p>Check the Cloudflare Worker endpoint.</p>
+        </div>
+      `;
     }
   };
+
+  applyBeijingTimeTheme();
+  window.setInterval(applyBeijingTimeTheme, 60000);
 
   loadWeather();
   loadFeeds();

@@ -626,20 +626,34 @@ body:has(.posts-page) > .min-h-\[148px\] {
 }
 
 .weather-select {
-  min-height: 2.1rem;
-  max-width: 8.5rem;
+  min-height: 2.15rem;
+  width: min(100%, 11rem);
+  min-width: 7.5rem;
   border: 1px solid rgba(88, 166, 255, 0.28);
   border-radius: 999px;
-  background: rgba(88, 166, 255, 0.08);
+  background: color-mix(in srgb, var(--panel-strong) 74%, rgba(88, 166, 255, 0.08));
   color: var(--text);
   padding: 0 2rem 0 0.75rem;
   font-size: 0.9rem;
   outline: none;
+  line-height: 1.2;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .weather-select:focus {
   border-color: rgba(88, 166, 255, 0.52);
   box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.12);
+}
+
+.weather-select option {
+  color: #24292f;
+  background: #ffffff;
+}
+
+:root.theme-night .weather-select option {
+  color: #f0f6fc;
+  background: #161b22;
 }
 
 .weather-body {

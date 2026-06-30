@@ -1,5 +1,5 @@
 {{ define "main" }}
-  {{ $homeJS := resources.Get "js/homepage.js" | resources.Minify | resources.Fingerprint (site.Params.fingerprintAlgorithm | default "sha512") }}
+  {{ $homeJS := resources.Get "js/homepage-live.js" | resources.Minify | resources.Fingerprint (site.Params.fingerprintAlgorithm | default "sha512") }}
   <section class="posts-page">
     {{ partial "site-dock.html" . }}
 
