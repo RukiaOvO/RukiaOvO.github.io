@@ -453,7 +453,7 @@
     const profileUrl = root.dataset.steamUrl;
     if (!target || !profileUrl) return;
 
-    const renderSteam = (state, summary) => {
+    const renderSteam = (state, summary, meta = "") => {
       const normalizedState = String(state || "unknown").toLowerCase();
       const isOnline = ["online", "busy", "away", "snooze", "looking_to_trade", "looking_to_play"].includes(normalizedState);
       const labelMap = {
@@ -471,35 +471,49 @@
         <span class="status-dot ${isOnline ? "status-dot--online" : normalizedState === "offline" ? "status-dot--offline" : "status-dot--unknown"}"></span>
         <div>
           <strong>Steam ${labelMap[normalizedState] || state || "未知"}</strong>
-          <p>${escapeHtml(summary || "未检测到正在游玩的游戏")}</p>
+          <p>${escapeHtml(summary || "未检测到正在游玩的游戏")}${meta ? ` · ${escapeHtml(meta)}` : ""}</p>
         </div>
       `;
+    };
+
+    const refreshFromSteamProfile = async () => {
+      const xmlUrl = `${profileUrl.replace(/\/$/, "")}/?xml=1&t=${Date.now()}`;
+      const proxies = readJsonScript("profile-steam-proxies", [root.dataset.steamProxy || ""]);
+      const text = await fetchTextWithFallback(xmlUrl, proxies, 5000);
+      const xml = new DOMParser().parseFromString(text, "application/xml");
+      const state = xml.querySelector("onlineState")?.textContent?.trim() || "unknown";
+      const stateMessage = xml.querySelector("stateMessage")?.textContent?.replace(/<[^>]*>/g, "").trim() || "";
+      const game = xml.querySelector("inGameInfo gameName")?.textContent?.trim();
+      const summary = game ? `正在玩 ${game}` : stateMessage || "未检测到正在游玩的游戏";
+      renderSteam(state, summary, "实时");
     };
 
     try {
       const staticStatus = await fetchJsonIfAvailable(root.dataset.steamStaticUrl);
       if (staticStatus?.ok || staticStatus?.statusText) {
-        renderSteam(staticStatus.onlineState, staticStatus.gameExtraInfo ? `正在玩 ${staticStatus.gameExtraInfo}` : staticStatus.statusText);
-        return;
+        renderSteam(
+          staticStatus.onlineState,
+          staticStatus.gameExtraInfo ? `正在玩 ${staticStatus.gameExtraInfo}` : staticStatus.statusText,
+          staticStatus.updatedAt ? `快照 ${formatTime(staticStatus.updatedAt)}` : "快照"
+        );
       }
 
-      const xmlUrl = `${profileUrl.replace(/\/$/, "")}/?xml=1`;
-      const proxies = readJsonScript("profile-steam-proxies", [root.dataset.steamProxy || ""]);
-      const text = await fetchTextWithFallback(xmlUrl, proxies, 5000);
-      const xml = new DOMParser().parseFromString(text, "application/xml");
-      const state = xml.querySelector("onlineState")?.textContent?.trim() || "unknown";
-      const stateMessage = xml.querySelector("stateMessage")?.textContent?.trim() || "";
-      const game = xml.querySelector("inGameInfo gameName")?.textContent?.trim();
-      const summary = game ? `正在玩 ${game}` : stateMessage || "未检测到正在游玩的游戏";
-      renderSteam(state, summary);
+      await refreshFromSteamProfile();
+      window.setInterval(() => {
+        refreshFromSteamProfile().catch(() => {
+          // Keep the last successful snapshot or live status visible.
+        });
+      }, 60000);
     } catch (error) {
-      target.innerHTML = `
-        <span class="status-dot status-dot--unknown"></span>
-        <div>
-          <strong>Steam 状态不可用</strong>
-          <p>请确认 Steam 个人资料公开，或在 data/home.yaml 中修改 profileUrl。</p>
-        </div>
-      `;
+      if (!target.textContent.trim() || target.textContent.includes("状态加载中")) {
+        target.innerHTML = `
+          <span class="status-dot status-dot--unknown"></span>
+          <div>
+            <strong>Steam 状态不可用</strong>
+            <p>请确认 Steam 个人资料公开，或在 data/home.yaml 中修改 profileUrl。</p>
+          </div>
+        `;
+      }
     }
   };
 

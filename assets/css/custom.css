@@ -1,19 +1,5 @@
 :root {
-  color-scheme: light dark;
-  --page-bg: #0d1117;
-  --text: #e6edf3;
-  --muted: #8b949e;
-  --muted-2: #6e7681;
-  --line: rgba(240, 246, 252, 0.12);
-  --line-strong: rgba(240, 246, 252, 0.2);
-  --panel: rgba(22, 27, 34, 0.68);
-  --panel-strong: rgba(22, 27, 34, 0.88);
-  --accent: #58a6ff;
-  --accent-2: #7ee787;
-  --shadow: 0 24px 80px rgba(1, 4, 9, 0.42);
-}
-
-:root:not(.dark) {
+  color-scheme: light;
   --page-bg: #f6f8fa;
   --text: #24292f;
   --muted: #57606a;
@@ -22,6 +8,8 @@
   --line-strong: rgba(31, 35, 40, 0.24);
   --panel: rgba(255, 255, 255, 0.68);
   --panel-strong: rgba(255, 255, 255, 0.88);
+  --accent: #58a6ff;
+  --accent-2: #7ee787;
   --shadow: 0 24px 70px rgba(140, 149, 159, 0.24);
 }
 
@@ -30,6 +18,7 @@ body:has(.activity-page),
 body:has(.posts-page) {
   background: var(--page-bg);
   color: var(--text);
+  color-scheme: light;
 }
 
 body:has(.profile-home),
@@ -50,10 +39,10 @@ body:has(.posts-page)::before {
   inset: 0;
   z-index: -3;
   background:
-    linear-gradient(180deg, rgba(13, 17, 23, 0.1), rgba(13, 17, 23, 0.55)),
-    radial-gradient(circle at 18% 16%, rgba(88, 166, 255, 0.32), transparent 28%),
-    radial-gradient(circle at 82% 12%, rgba(126, 231, 135, 0.18), transparent 25%),
-    radial-gradient(circle at 50% 86%, rgba(168, 85, 247, 0.12), transparent 28%),
+    linear-gradient(180deg, rgba(246, 248, 250, 0.84), rgba(246, 248, 250, 0.96)),
+    radial-gradient(circle at 18% 16%, rgba(88, 166, 255, 0.22), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(126, 231, 135, 0.14), transparent 25%),
+    radial-gradient(circle at 50% 86%, rgba(168, 85, 247, 0.09), transparent 28%),
     var(--page-bg);
 }
 
@@ -294,34 +283,22 @@ body:has(.posts-page) > .min-h-\[148px\] {
   border: 1px solid var(--line);
   border-radius: 14px;
   background:
-    linear-gradient(180deg, var(--panel), rgba(22, 27, 34, 0.5)),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.18), transparent 35%);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.72)),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.7), transparent 38%);
   box-shadow: var(--shadow);
   backdrop-filter: blur(22px) saturate(1.15);
   padding: 1rem;
-}
-
-:root:not(.dark) .profile-main {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.72)),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.7), transparent 38%);
 }
 
 .glass-card {
   border: 1px solid var(--line);
   border-radius: 14px;
   background:
-    linear-gradient(180deg, var(--panel), rgba(22, 27, 34, 0.5)),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.18), transparent 35%);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.68)),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.66), transparent 38%);
   box-shadow: var(--shadow);
   backdrop-filter: blur(22px) saturate(1.15);
   padding: 1rem;
-}
-
-:root:not(.dark) .glass-card {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.68)),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.66), transparent 38%);
 }
 
 .profile-panel {
