@@ -130,6 +130,10 @@ activity:
   githubDescription: ""
   rssDescription: "RSS 源可以接入新闻、B 站动态、番剧更新或其他外部 stream。"
 
+posts:
+  title: "帖子"
+  description: "技术帖子、论文研读与阶段总结"
+
 footer:
   copyright: "© 2026 Hello, I am Ruk1a."
   poweredBy: "Powered by Hugo and GitHub Pages."
