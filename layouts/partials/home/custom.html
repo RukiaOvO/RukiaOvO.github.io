@@ -171,6 +171,12 @@
       </section>
 
       <section id="comments" class="profile-panel comments-card">
+        <div class="section-head">
+          <div class="section-title">
+            <p>Issue Comments</p>
+            <h2>{{ $comments.title }}</h2>
+          </div>
+        </div>
         {{ if $comments.utterances.enabled }}
         <div class="utterances-wrap">
           <script
