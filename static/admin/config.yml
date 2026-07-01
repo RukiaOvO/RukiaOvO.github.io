@@ -4,7 +4,7 @@ backend:
   branch: main
   base_url: https://ruk1a-decap-oauth.1403555427.workers.dev
 
-media_folder: "assets/img/posts"
+media_folder: "static/img/posts"
 public_folder: "/img/posts"
 
 locale: "zh_Hans"
