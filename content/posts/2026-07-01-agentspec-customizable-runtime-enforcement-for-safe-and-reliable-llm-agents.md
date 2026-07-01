@@ -7,6 +7,8 @@ tags:
 categories:
   - 论文研读
 ---
+论文链接：https://arxiv.org/abs/2503.18666v3
+
 ## 论文主旨
 **ICSE 2026，主要研究Agent运行时的安全约束，规范Agent行为并降低风险。**
 
