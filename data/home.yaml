@@ -82,7 +82,7 @@ comments:
     categoryId: "DIC_kwDOTIGan84DAQuk"
     mapping: "pathname"
     strict: "0"
-    reactionsEnabled: "1"
+    reactionsEnabled: "0"
     emitMetadata: "0"
     inputPosition: "bottom"
     theme: "light"
