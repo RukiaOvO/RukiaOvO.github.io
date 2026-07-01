@@ -29,12 +29,15 @@
           <img class="profile-card__avatar" src="{{ $avatarURL }}" alt="{{ $profile.displayName }}">
         {{ end }}
         <h1>{{ $profile.displayName }}</h1>
-        <p class="profile-card__bio">{{ $profile.bio }}</p>
-        {{ with $profile.visitorBadge }}
-          <div class="profile-card__visitor">
-            <img src="{{ . }}" alt="Visitor count" loading="lazy" referrerpolicy="no-referrer">
-          </div>
-        {{ end }}
+        <div class="profile-card__status">
+          <p class="profile-card__bio">{{ $profile.bio }}</p>
+          {{ with $profile.visitorBadge }}
+            <div class="profile-card__visitor" aria-label="Visitor count">
+              <img class="profile-card__visitor-img profile-card__visitor-img--light" src="{{ .light }}" alt="Visitor count" loading="lazy" referrerpolicy="no-referrer">
+              <img class="profile-card__visitor-img profile-card__visitor-img--dark" src="{{ .dark }}" alt="Visitor count" loading="lazy" referrerpolicy="no-referrer">
+            </div>
+          {{ end }}
+        </div>
 
         <div class="profile-actions profile-actions--social">
           <a class="profile-button profile-button--primary" href="https://github.com/{{ $github.username }}" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
