@@ -1136,3 +1136,19 @@ body:has(.posts-page) a[href="#the-top"] {
   background: var(--soft-surface-muted);
   padding: 0.85rem;
 }
+
+
+.recent-post-row__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.recent-post-row__meta time {
+  font-size: inherit;
+  color: inherit;
+}
+

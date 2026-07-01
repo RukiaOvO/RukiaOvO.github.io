@@ -24,7 +24,6 @@
                 {{ with .Params.categories }}<span>{{ delimit . " / " }}</span>{{ end }}
               </div>
               <h2>{{ .Title }}</h2>
-              {{ with .Summary }}<p>{{ . | plainify | truncate 120 }}</p>{{ end }}
             </a>
           {{ end }}
         {{ end }}

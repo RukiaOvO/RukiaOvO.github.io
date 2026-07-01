@@ -12,9 +12,12 @@
   {{ if $recent }}
     {{ range $recent }}
     <a class="recent-post-row" href="{{ .RelPermalink }}">
-      <time>{{ .Date.Format "2006-01-02" }}</time>
+      <div class="recent-post-row__meta">
+        <time>{{ .Date.Format "2006-01-02" }}</time>
+        {{ with .Params.categories }}<span>{{ delimit . " / " }}</span>{{ end }}
+        {{ with .Params.tags }}<span>{{ delimit . " / " }}</span>{{ end }}
+      </div>
       <strong>{{ .Title }}</strong>
-      {{ with .Summary }}<p>{{ . | plainify | truncate 100 }}</p>{{ end }}
     </a>
     {{ end }}
   {{ else }}
