@@ -937,14 +937,6 @@ body:has(.posts-page) > .min-h-\[148px\] {
   max-width: 100%;
 }
 
-.utterances-hint {
-  margin: 0;
-  padding: 0.75rem 0.85rem 0;
-  color: var(--muted);
-  font-size: 0.9rem;
-  line-height: 1.6;
-}
-
 .profile-footer {
   width: min(1420px, calc(100% - 2rem));
   margin: 1rem auto 0;

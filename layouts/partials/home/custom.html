@@ -175,19 +175,12 @@
       </section>
 
       <section id="comments" class="profile-panel comments-card">
-        <div class="section-head">
-          <div class="section-title">
-            <p>Issue Comments</p>
-            <h2>{{ $comments.title }}</h2>
-          </div>
-        </div>
         <div class="issue-summary" data-issue-summary>
-          <p class="empty-state">留言区加载中</p>
+          <p class="empty-state">加载中</p>
         </div>
         <div class="comment-list" data-comments-list hidden></div>
         {{ if $comments.utterances.enabled }}
         <div class="utterances-wrap">
-          <p class="utterances-hint">若评论框未出现，请确认浏览器允许加载 utteranc.es，并在弹出的 GitHub 授权页完成登录。</p>
           <script
             src="https://utteranc.es/client.js"
             repo="{{ $comments.owner }}/{{ $comments.repo }}"
