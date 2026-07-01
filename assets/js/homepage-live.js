@@ -306,101 +306,6 @@
     }
   };
 
-  const loadIssueComments = async () => {
-    const target = root.querySelector("[data-comments-list]");
-    const summaryTarget = root.querySelector("[data-issue-summary]");
-    const { commentsOwner, commentsRepo, commentsIssue } = root.dataset;
-    if (!target || !commentsOwner || !commentsRepo) return;
-
-    try {
-      const headers = { Accept: "application/vnd.github+json" };
-      const issueBase = `https://api.github.com/repos/${commentsOwner}/${commentsRepo}/issues`;
-      let issue = null;
-
-      if (commentsIssue) {
-        const issueResponse = await fetchWithTimeout(`${issueBase}/${commentsIssue}`, { headers }, 8000);
-        if (issueResponse.ok) issue = await issueResponse.json();
-      }
-
-      if (!issue) {
-        const label = root.dataset.commentsLabel || "comment";
-        const issuesResponse = await fetchWithTimeout(
-          `${issueBase}?state=open&labels=${encodeURIComponent(label)}&per_page=30`,
-          { headers },
-          8000
-        );
-        if (issuesResponse.ok) {
-          const issues = await issuesResponse.json();
-          const pathname = window.location.pathname.replace(/\/$/, "") || "/";
-          issue = issues.find((item) => {
-            const title = item.title || "";
-            return title === pathname || title === window.location.pathname || title.includes(pathname);
-          }) || issues[0] || null;
-        }
-      }
-
-      if (!issue) {
-        if (summaryTarget) summaryTarget.innerHTML = '<p class="empty-state">Sign in to GitHub to comment.</p>';
-        target.hidden = true;
-        target.innerHTML = "";
-        return;
-      }
-
-      const commentsResponse = await fetchWithTimeout(`${issue.comments_url}?per_page=8`, { headers }, 8000);
-      if (!commentsResponse.ok) throw new Error("Issue comments unavailable");
-      const comments = await commentsResponse.json();
-      target.innerHTML = "";
-
-      if (summaryTarget) {
-        const reactions = issue.reactions || {};
-        const reactionItems = [
-          ["👍", reactions["+1"] || 0],
-          ["❤️", reactions.heart || 0],
-          ["🚀", reactions.rocket || 0],
-          ["👀", reactions.eyes || 0],
-        ];
-        summaryTarget.innerHTML = `
-          <div class="issue-summary__meta">
-            <span>#${issue.number}</span>
-            <span>${escapeHtml(issue.state)}</span>
-            <span>${issue.comments || 0} comments</span>
-          </div>
-          <a href="${issue.html_url}" target="_blank" rel="noopener noreferrer">${escapeHtml(issue.title || "GitHub Issue")}</a>
-          <div class="reaction-row">${reactionItems.map(([emoji, count]) => `<span>${emoji} ${count}</span>`).join("")}</div>
-        `;
-      }
-
-      comments.slice(0, 6).forEach((comment) => {
-        const reactions = comment.reactions || {};
-        const article = document.createElement("article");
-        article.className = "comment-item";
-        article.innerHTML = `
-          <img src="${comment.user.avatar_url}" alt="${escapeHtml(comment.user.login)}">
-          <div>
-            <div class="comment-item__meta">
-              <strong>${escapeHtml(comment.user.login)}</strong>
-              <time>${formatTime(comment.created_at)}</time>
-            </div>
-            <p>${escapeHtml(comment.body).slice(0, 220)}</p>
-            <div class="reaction-row">
-              <span>👍 ${reactions["+1"] || 0}</span>
-              <span>❤️ ${reactions.heart || 0}</span>
-              <span>🚀 ${reactions.rocket || 0}</span>
-              <span>👀 ${reactions.eyes || 0}</span>
-            </div>
-          </div>
-        `;
-        target.appendChild(article);
-      });
-
-      target.hidden = comments.length === 0;
-    } catch {
-      if (summaryTarget) summaryTarget.innerHTML = '<p class="empty-state">Comments temporarily unavailable.</p>';
-      target.hidden = true;
-      target.innerHTML = "";
-    }
-  };
-
   const loadFeeds = async () => {
     const target = root.querySelector("[data-feed-list]");
     const status = root.querySelector("[data-feed-status]");
@@ -587,5 +492,4 @@
   loadFeeds();
   loadSteamStatus();
   loadGitHubEvents();
-  loadIssueComments();
 })();

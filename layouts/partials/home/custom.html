@@ -13,10 +13,6 @@
   class="profile-home"
   data-github-user="{{ $github.username }}"
   data-steam-worker-url="{{ $steam.workerUrl }}"
-  data-comments-owner="{{ $comments.owner }}"
-  data-comments-repo="{{ $comments.repo }}"
-  data-comments-issue="{{ $comments.issueNumber }}"
-  data-comments-label="{{ $comments.utterances.label | default "comment" }}"
   data-github-events-limit="{{ $github.eventsLimit | default 10 }}">
   <div class="profile-bg" aria-hidden="true"></div>
 
@@ -175,10 +171,6 @@
       </section>
 
       <section id="comments" class="profile-panel comments-card">
-        <div class="issue-summary" data-issue-summary>
-          <p class="empty-state">加载中</p>
-        </div>
-        <div class="comment-list" data-comments-list hidden></div>
         {{ if $comments.utterances.enabled }}
         <div class="utterances-wrap">
           <script

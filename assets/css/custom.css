@@ -804,7 +804,6 @@ body:has(.posts-page) > .min-h-\[148px\] {
 }
 
 .activity-list,
-.comment-list,
 .github-event-list {
   display: grid;
   gap: 0.75rem;
@@ -855,73 +854,6 @@ body:has(.posts-page) > .min-h-\[148px\] {
 .comments-card {
   display: grid;
   gap: 0.8rem;
-}
-
-.issue-summary {
-  display: grid;
-  gap: 0.45rem;
-  padding: 0.8rem;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: var(--soft-surface-muted);
-}
-
-.issue-summary a {
-  color: var(--text) !important;
-  font-weight: 750;
-  text-decoration: none !important;
-}
-
-.issue-summary__meta,
-.reaction-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.issue-summary__meta span,
-.reaction-row span {
-  display: inline-flex;
-  min-height: 1.55rem;
-  align-items: center;
-  padding: 0.15rem 0.45rem;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  color: var(--muted);
-  font-size: 0.82rem;
-}
-
-.comment-item {
-  display: grid;
-  grid-template-columns: 2.4rem minmax(0, 1fr);
-  gap: 0.75rem;
-  padding: 0.8rem;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: var(--soft-surface-muted);
-}
-
-.comment-item img {
-  width: 2.4rem;
-  height: 2.4rem;
-  border-radius: 999px;
-}
-
-.comment-item__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.55rem;
-  color: var(--muted);
-}
-
-.comment-item p {
-  margin: 0.35rem 0 0;
-  color: var(--muted);
-  line-height: 1.6;
-}
-
-.comment-item .reaction-row {
-  margin-top: 0.6rem;
 }
 
 .utterances-wrap {
