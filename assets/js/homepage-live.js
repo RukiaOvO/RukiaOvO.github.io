@@ -97,6 +97,35 @@
     throw new Error("fetch failed");
   };
 
+  const loadVisitorCount = async () => {
+    const badge = root.querySelector("[data-visitor-count-url]");
+    if (!badge) return;
+
+    const countUrl = badge.dataset.visitorCountUrl;
+    const fallbackUrl = badge.dataset.visitorBadgeUrl;
+    const countTarget = badge.querySelector("[data-visitor-count]");
+    const fallbackImage = badge.querySelector("[data-visitor-fallback]");
+    if (!countUrl || !countTarget) return;
+
+    try {
+      const url = new URL(countUrl);
+      url.searchParams.set("t", Date.now());
+      const payload = await fetchJsonIfAvailable(url.toString(), 5000);
+      const count = payload?.count ?? payload?.visitors ?? payload?.value;
+      if (payload?.ok && count !== undefined && count !== null && count !== "") {
+        countTarget.textContent = String(count);
+        countTarget.hidden = false;
+        return;
+      }
+    } catch {
+      // fall back to loading the original badge image below
+    }
+
+    if (fallbackImage && fallbackUrl) {
+      fallbackImage.src = fallbackUrl;
+    }
+  };
+
   const readJsonScript = (id, fallback = []) => {
     const source = document.getElementById(id);
     if (!source) return fallback;
@@ -489,6 +518,7 @@
   });
 
   loadWeather();
+  loadVisitorCount();
   loadFeeds();
   loadSteamStatus();
   loadGitHubEvents();

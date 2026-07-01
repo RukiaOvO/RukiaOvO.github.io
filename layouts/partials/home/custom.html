@@ -32,9 +32,15 @@
         <div class="profile-card__status">
           <p class="profile-card__bio">{{ $profile.bio }}</p>
           {{ with $profile.visitorBadge }}
-            <div class="profile-card__visitor" aria-label="Visitor count">
-              <img class="profile-card__visitor-img profile-card__visitor-img--light" src="{{ .light }}" alt="Visitor count" loading="lazy" referrerpolicy="no-referrer">
-              <img class="profile-card__visitor-img profile-card__visitor-img--dark" src="{{ .dark }}" alt="Visitor count" loading="lazy" referrerpolicy="no-referrer">
+            <div
+              class="profile-card__visitor"
+              data-visitor-count-url="{{ .countUrl }}"
+              data-visitor-badge-url="{{ .url }}"
+              aria-label="Visitor count">
+              {{ partial "icon.html" "eye" }}
+              <span class="profile-card__visitor-label">Views</span>
+              <strong class="profile-card__visitor-count" data-visitor-count hidden></strong>
+              <img class="profile-card__visitor-source" data-visitor-fallback alt="" loading="lazy" referrerpolicy="no-referrer" aria-hidden="true">
             </div>
           {{ end }}
         </div>

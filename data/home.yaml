@@ -13,8 +13,8 @@ profile:
   qq: "1403555427"
   bio: "无风去处是归宿"
   visitorBadge:
-    light: "https://visitor-badge.laobi.icu/badge?page_id=RukiaOvO.RukiaOvO.github.io&left_text=Visitors&left_color=f6f8fa&right_color=58a6ff"
-    dark: "https://visitor-badge.laobi.icu/badge?page_id=RukiaOvO.RukiaOvO.github.io&left_text=Visitors&left_color=161b22&right_color=7ee787"
+    url: "https://visitor-badge.laobi.icu/badge?page_id=RukiaOvO.RukiaOvO.github.io&left_text=Views"
+    countUrl: "https://rukia-activity.1403555427.workers.dev/visitor"
 
 hero:
   title: "Hello, I am Ruk1a."
