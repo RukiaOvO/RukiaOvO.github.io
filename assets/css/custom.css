@@ -926,13 +926,14 @@ body:has(.posts-page) > .min-h-\[148px\] {
 
 .utterances-wrap {
   min-height: 12rem;
-  overflow: hidden;
+  overflow: visible;
   border: 1px solid var(--line);
   border-radius: 12px;
   background: var(--soft-surface-muted);
 }
 
-.utterances-wrap .utterances {
+.utterances-wrap .utterances,
+.utterances-wrap iframe {
   max-width: 100%;
 }
 
@@ -1010,14 +1011,6 @@ body:has(.posts-page) a[href="#the-top"] {
   .activity-page__grid,
   .home-status-grid {
     grid-template-columns: 1fr;
-  }
-
-  .profile-sidebar {
-    order: 2;
-  }
-
-  .profile-main {
-    order: 1;
   }
 
 }
