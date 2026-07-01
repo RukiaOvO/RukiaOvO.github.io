@@ -115,14 +115,30 @@
     const fallbackImage = badge.querySelector("[data-visitor-fallback]");
     if (!countUrl || !countTarget) return;
 
+    const STORAGE_KEY = "profile-visitor-counted";
+    const DISPLAY_KEY = "profile-visitor-display";
+
+    // 同一会话内不重复请求，避免刷新时虚增计数
+    if (sessionStorage.getItem(STORAGE_KEY)) {
+      const cached = sessionStorage.getItem(DISPLAY_KEY);
+      if (cached !== null) {
+        countTarget.textContent = cached;
+        countTarget.hidden = false;
+        return;
+      }
+    }
+
     try {
       const url = new URL(countUrl);
       url.searchParams.set("t", Date.now());
       const payload = await fetchJsonIfAvailable(url.toString(), 5000);
       const count = payload?.count ?? payload?.visitors ?? payload?.value;
       if (payload?.ok && count !== undefined && count !== null && count !== "") {
-        countTarget.textContent = String(count);
+        const display = String(count);
+        countTarget.textContent = display;
         countTarget.hidden = false;
+        sessionStorage.setItem(STORAGE_KEY, "1");
+        sessionStorage.setItem(DISPLAY_KEY, display);
         return;
       }
     } catch {
