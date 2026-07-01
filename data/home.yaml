@@ -73,14 +73,21 @@ steam:
 comments:
   owner: "RukiaOvO"
   repo: "RukiaOvO.github.io"
-  issueNumber: 1
   title: "留言区"
-  description: "这里同步 GitHub Issue 的留言、评论数量和 reactions。登录 GitHub 后可直接在下方留言。"
-  utterances:
+  description: "这里同步 GitHub Discussions 的留言、评论回复和 reactions。登录 GitHub 后可直接在下方留言。"
+  giscus:
     enabled: true
-    issueTerm: "pathname"
-    label: "Comment"
-    theme: "github-light"
+    repoId: "R_kgDOTIGanw"
+    category: "General"
+    categoryId: "DIC_kwDOTIGan84DAQuk"
+    mapping: "pathname"
+    strict: "0"
+    reactionsEnabled: "1"
+    emitMetadata: "0"
+    inputPosition: "bottom"
+    theme: "light"
+    lang: "zh-CN"
+    loading: "lazy"
 
 externalFeeds:
   - label: "B站动态"

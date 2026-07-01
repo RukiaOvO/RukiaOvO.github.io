@@ -2,6 +2,8 @@
 {{ $profile := $home.profile }}
 {{ $github := $home.github }}
 {{ $comments := $home.comments }}
+{{ $giscus := $comments.giscus | default (dict) }}
+{{ $giscusReady := and $giscus.enabled $giscus.repoId $giscus.categoryId }}
 {{ $weather := $home.weather }}
 {{ $steam := $home.steam }}
 {{ $disableImageOptimization := site.Params.disableImageOptimization | default false }}
@@ -187,22 +189,34 @@
       <section id="comments" class="profile-panel comments-card">
         <div class="section-head">
           <div class="section-title">
-            <p>Issue Comments</p>
+            <p>Discussion Comments</p>
             <h2>{{ $comments.title }}</h2>
           </div>
         </div>
-        {{ if $comments.utterances.enabled }}
-        <div class="utterances-wrap">
+        {{ if $giscusReady }}
+        <div class="comments-embed-wrap comments-embed-wrap--giscus">
           <script
-            src="https://utteranc.es/client.js"
-            repo="{{ $comments.owner }}/{{ $comments.repo }}"
-              issue-term="{{ $comments.utterances.issueTerm }}"
-              label="{{ $comments.utterances.label }}"
-              theme="{{ $comments.utterances.theme }}"
-              crossorigin="anonymous"
-              async>
-            </script>
-          </div>
+            src="https://giscus.app/client.js"
+            data-repo="{{ $comments.owner }}/{{ $comments.repo }}"
+            data-repo-id="{{ $giscus.repoId }}"
+            data-category="{{ $giscus.category }}"
+            data-category-id="{{ $giscus.categoryId }}"
+            data-mapping="{{ $giscus.mapping | default "pathname" }}"
+            data-strict="{{ $giscus.strict | default "0" }}"
+            data-reactions-enabled="{{ $giscus.reactionsEnabled | default "1" }}"
+            data-emit-metadata="{{ $giscus.emitMetadata | default "0" }}"
+            data-input-position="{{ $giscus.inputPosition | default "top" }}"
+            data-theme="{{ $giscus.theme | default "preferred_color_scheme" }}"
+            data-lang="{{ $giscus.lang | default "zh-CN" }}"
+            data-loading="{{ $giscus.loading | default "lazy" }}"
+            crossorigin="anonymous"
+            async>
+          </script>
+        </div>
+        {{ else }}
+        <div class="comments-embed-wrap comments-embed-wrap--pending">
+          <p>giscus is not configured yet. Fill in <code>comments.giscus.repoId</code> and <code>comments.giscus.categoryId</code> in <code>data/home.yaml</code>.</p>
+        </div>
         {{ end }}
       </section>
     </main>

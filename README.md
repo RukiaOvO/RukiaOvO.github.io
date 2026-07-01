@@ -48,4 +48,15 @@ Reference: [Cloudflare Workers dashboard guide](https://developers.cloudflare.co
 
 Fallback snapshots in `static/data/` remain in the repo so the page can still render activity data when a live endpoint is unavailable.
 
+## Comments
+
+The homepage comment area is configured in `data/home.yaml` and uses `giscus`, which stores comments in GitHub Discussions and supports replying within discussion threads.
+
+To finish the giscus setup:
+
+1. Enable GitHub Discussions on `RukiaOvO/RukiaOvO.github.io`.
+2. Install the giscus GitHub App for the repository.
+3. Open [giscus.app](https://giscus.app/), choose this repository and discussion category, then copy `repoId` and `categoryId` into `comments.giscus`.
+4. Convert the old utterances issue to a discussion if existing comments should remain attached to the homepage.
+
 The repository is intentionally focused on my own homepage rather than on being a generic starter kit or deployment guide.

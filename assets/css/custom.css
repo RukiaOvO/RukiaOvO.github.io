@@ -917,7 +917,7 @@ body:has(.posts-page) > .min-h-\[148px\] {
   gap: 0.8rem;
 }
 
-.utterances-wrap {
+.comments-embed-wrap {
   min-height: 12rem;
   overflow: visible;
   border: 1px solid var(--line);
@@ -925,8 +925,25 @@ body:has(.posts-page) > .min-h-\[148px\] {
   background: var(--soft-surface-muted);
 }
 
-.utterances-wrap .utterances,
-.utterances-wrap iframe {
+.comments-embed-wrap--giscus {
+  padding: 0.25rem 0.5rem 0.5rem;
+}
+
+.comments-embed-wrap--pending {
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+.comments-embed-wrap--pending p {
+  max-width: 42rem;
+  margin: 0;
+  line-height: 1.65;
+}
+
+.comments-embed-wrap .giscus {
   max-width: 100%;
 }
 
