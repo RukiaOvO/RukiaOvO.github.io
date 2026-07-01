@@ -14,7 +14,7 @@ profile:
   bio: "无风去处是归宿"
   visitorBadge:
     url: "https://visitor-badge.laobi.icu/badge?page_id=RukiaOvO.RukiaOvO.github.io&left_text=Views"
-    countUrl: "https://rukia-activity.1403555427.workers.dev/visitor"
+    countUrl: "https://rukiaovo-github-io.1403555427.workers.dev/visitor"
 
 hero:
   title: "Hello, I am Ruk1a."
@@ -81,14 +81,14 @@ github:
   username: "RukiaOvO"
   heatmapProvider: "https://ghchart.rshah.org"
   heatmapColor: "58a6ff"
-  workerEventsUrl: "https://rukia-activity.1403555427.workers.dev/github"
+  workerEventsUrl: "https://rukiaovo-github-io.1403555427.workers.dev/github"
   eventsLimit: 10
 
 steam:
   steamId: "76561198417009401"
   profileUrl: "https://steamcommunity.com/profiles/76561198417009401/"
-  workerUrl: "https://rukia-steam-status.1403555427.workers.dev/"
-  recentGamesUrl: "https://rukia-steam-status.1403555427.workers.dev/games"
+  workerUrl: "https://rukiaovo-github-io.1403555427.workers.dev/steam"
+  recentGamesUrl: "https://rukiaovo-github-io.1403555427.workers.dev/steam/games"
   source: "cloudflare-worker"
 
 comments:
@@ -139,7 +139,7 @@ externalFeeds:
       - "https://rsshub.rssforever.com/cls/telegraph"
 
 rss:
-  workerFeedUrl: "https://rukia-activity.1403555427.workers.dev/rss"
+  workerFeedUrl: "https://rukiaovo-github-io.1403555427.workers.dev/rss"
   categories:
     - "全部"
     - "B站"
