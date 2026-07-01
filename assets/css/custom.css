@@ -530,21 +530,19 @@ body:has(.posts-page) > .min-h-\[148px\] {
   font-weight: 750;
 }
 
-.info-card,
-.timeline-list {
+.info-card {
   display: grid;
   gap: 0.9rem;
 }
 
-.profile-meta-card {
-  gap: 0.75rem;
+.info-card--grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem 0.85rem;
 }
 
-.meta-tags {
+.timeline-list {
   display: grid;
-  gap: 0.65rem;
-  padding-top: 0.85rem;
-  border-top: 1px solid var(--line);
+  gap: 0.9rem;
 }
 
 .info-row {
@@ -594,8 +592,7 @@ body:has(.posts-page) > .min-h-\[148px\] {
 .title-control {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
-  flex-wrap: wrap;
+  gap: 0.45rem;
 }
 
 .chip-list {
@@ -650,23 +647,6 @@ body:has(.posts-page) > .min-h-\[148px\] {
   grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
 }
 
-.home-status-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-  align-items: stretch;
-}
-
-.inline-panel {
-  min-width: 0;
-}
-
-.home-status-grid > .inline-panel {
-  min-height: 12.25rem;
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
-}
-
 .heatmap-frame {
   overflow: auto hidden;
   border: 1px solid var(--line);
@@ -688,23 +668,28 @@ body:has(.posts-page) > .min-h-\[148px\] {
 
 .weather-select {
   min-height: 2.15rem;
-  width: min(100%, 11rem);
-  min-width: 7.5rem;
-  border: 1px solid rgba(88, 166, 255, 0.28);
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--panel-strong) 74%, rgba(88, 166, 255, 0.08));
+  width: min(100%, 10rem);
+  min-width: 6.5rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--soft-surface);
   color: var(--text);
-  padding: 0 2rem 0 0.75rem;
-  font-size: 0.9rem;
+  padding: 0 1.75rem 0 0.6rem;
+  font-size: 0.88rem;
+  font-weight: 500;
   outline: none;
   line-height: 1.2;
   -webkit-appearance: none;
   appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2357606a' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.45rem center;
 }
 
 .weather-select:focus {
-  border-color: rgba(88, 166, 255, 0.52);
-  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.12);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.15);
 }
 
 .weather-select option {
@@ -724,6 +709,42 @@ body:has(.posts-page) > .min-h-\[148px\] {
   align-items: center;
   min-height: 7.6rem;
   align-self: stretch;
+}
+
+.profile-sidebar .weather-body {
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  gap: 0.85rem;
+  min-height: auto;
+}
+
+.profile-sidebar .weather-icon {
+  width: 4.5rem;
+  height: 4.5rem;
+  font-size: 2.4rem;
+}
+
+.profile-sidebar .weather-body strong {
+  font-size: 2rem;
+}
+
+.profile-sidebar .weather-card .section-title h2 {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.profile-sidebar .weather-card .title-control {
+  flex-wrap: nowrap;
+}
+
+.profile-sidebar .weather-select {
+  width: min(100%, 5.8rem);
+  min-width: 4.5rem;
+  min-height: 1.85rem;
+  font-size: 0.8rem;
+  padding: 0 1.35rem 0 0.45rem;
+  text-align: center;
+  text-align-last: center;
+  background-position: right 0.3rem center;
 }
 
 .weather-icon {
@@ -821,12 +842,11 @@ body:has(.posts-page) > .min-h-\[148px\] {
 
 .steam-status {
   display: grid;
-  grid-template-columns: 1rem minmax(0, 1fr);
-  gap: 0.85rem;
+  grid-template-columns: 0.8rem minmax(0, 1fr);
+  gap: 0.65rem;
   align-items: center;
-  min-height: 7.6rem;
-  align-self: stretch;
-  padding: 0.85rem;
+  min-height: 3.5rem;
+  padding: 0.5rem 0.75rem;
   border: 1px solid var(--line);
   border-radius: 12px;
   background: var(--soft-surface-muted);
@@ -1016,9 +1036,103 @@ body:has(.posts-page) a[href="#the-top"] {
 
   .profile-sidebar,
   .dashboard-grid,
-  .activity-page__grid,
-  .home-status-grid {
+  .home-dashboard,
+  .activity-page__grid {
     grid-template-columns: 1fr;
   }
 
+}
+
+/* ---- Recent posts ---- */
+.recent-post-row {
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--line);
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+.recent-post-row:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.recent-post-row:hover {
+  background: var(--soft-surface);
+  margin: 0 -0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  border-radius: 8px;
+}
+
+.recent-post-row time {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.recent-post-row strong {
+  color: var(--text);
+  font-size: 1.05rem;
+}
+
+.recent-post-row p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+
+
+.steam-game-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.45rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.steam-game-row:first-child {
+  border-top: 0;
+}
+
+.steam-game-icon {
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.steam-game-row strong {
+  display: block;
+  color: var(--text);
+  font-size: 0.88rem;
+}
+
+.steam-game-row span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.78rem;
+  margin-top: 0.1rem;
+}
+
+.steam-games-list .empty-state {
+  margin: 0;
+}
+
+
+.home-dashboard {
+  display: grid;
+  grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+  gap: 1rem;
+}
+
+.home-dashboard > .steam-games-card,
+.home-dashboard > .recent-posts-card {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--soft-surface-muted);
+  padding: 0.85rem;
 }

@@ -52,7 +52,28 @@ weather:
     - label: "上海"
       latitude: 31.2304
       longitude: 121.4737
-    - label: "福建泉州"
+    - label: "北京"
+      latitude: 39.9042
+      longitude: 116.4074
+    - label: "广州"
+      latitude: 23.1292
+      longitude: 113.2644
+    - label: "深圳"
+      latitude: 22.5431
+      longitude: 114.0579
+    - label: "杭州"
+      latitude: 30.2741
+      longitude: 120.1551
+    - label: "成都"
+      latitude: 30.5728
+      longitude: 104.0668
+    - label: "南京"
+      latitude: 32.0603
+      longitude: 118.7969
+    - label: "武汉"
+      latitude: 30.5928
+      longitude: 114.3055
+    - label: "泉州"
       latitude: 24.8741
       longitude: 118.6757
 
@@ -67,6 +88,7 @@ steam:
   steamId: "76561198417009401"
   profileUrl: "https://steamcommunity.com/profiles/76561198417009401/"
   workerUrl: "https://rukia-steam-status.1403555427.workers.dev/"
+  recentGamesUrl: "https://rukia-steam-status.1403555427.workers.dev/games"
   source: "cloudflare-worker"
 
 comments:

@@ -1,0 +1,28 @@
+backend:
+  name: github
+  repo: RukiaOvO/RukiaOvO.github.io
+  branch: main
+  base_url: https://ruk1a-decap-oauth.1403555427.workers.dev
+
+media_folder: "assets/img/posts"
+public_folder: "/img/posts"
+
+locale: "zh_CN"
+
+collections:
+  - name: "posts"
+    label: "帖子"
+    label_singular: "帖子"
+    folder: "content/posts"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    editor:
+      preview: false
+    fields:
+      - { label: "标题", name: "title", widget: "string" }
+      - { label: "日期", name: "date", widget: "datetime", default: "{{now}}" }
+      - { label: "草稿", name: "draft", widget: "boolean", default: false }
+      - { label: "摘要", name: "summary", widget: "text", required: false }
+      - { label: "标签", name: "tags", widget: "list", required: false }
+      - { label: "分类", name: "categories", widget: "list", required: false }
+      - { label: "正文", name: "body", widget: "markdown" }

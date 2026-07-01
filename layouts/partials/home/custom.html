@@ -15,7 +15,8 @@
   class="profile-home"
   data-github-user="{{ $github.username }}"
   data-steam-worker-url="{{ $steam.workerUrl }}"
-  data-github-events-limit="{{ $github.eventsLimit | default 10 }}">
+  data-github-events-limit="{{ $github.eventsLimit | default 10 }}"
+  data-steam-recent-games-url="{{ $steam.recentGamesUrl }}">
   <div class="profile-bg" aria-hidden="true"></div>
 
   {{ partial "site-dock.html" . }}
@@ -75,7 +76,23 @@
         </div>
       </section>
 
-      <section class="glass-card info-card profile-meta-card">
+      <section class="glass-card steam-card">
+        <div class="section-head">
+          <div class="section-title">
+            <p>Steam</p>
+            <h2>Steam 状态</h2>
+          </div>
+        </div>
+        <div class="steam-status" data-steam-status>
+          <span class="status-dot status-dot--unknown"></span>
+          <div>
+            <strong>状态加载中</strong>
+            <p>读取公开 Steam 资料</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="glass-card info-card info-card--grid">
         <div class="info-row">
           <span>{{ partial "icon.html" "code" }}</span>
           <div>
@@ -104,15 +121,32 @@
             <strong>Agent / AI4SE</strong>
           </div>
         </div>
-        <div class="meta-tags">
+      </section>
+
+      <section class="glass-card weather-card" data-weather>
+        <div class="section-head">
           <div class="section-title">
-            <p>Tags</p>
-            <h2>技能标签</h2>
+            <p>Weather</p>
+            <div class="title-control">
+              <h2>今日天气</h2>
+              <select class="weather-select" data-weather-select aria-label="选择天气城市">
+                {{ range $weather.cities }}
+                  <option
+                    value="{{ .latitude }},{{ .longitude }}"
+                    {{ if eq .label $weather.defaultCity }}selected{{ end }}>
+                    {{ .label }}
+                  </option>
+                {{ end }}
+              </select>
+            </div>
           </div>
-          <div class="chip-list">
-            {{ range $home.skills }}
-              <span>{{ . }}</span>
-            {{ end }}
+        </div>
+        <div class="weather-body">
+          <div class="weather-icon" data-weather-icon>☁</div>
+          <div>
+            <strong data-weather-temp>--°C</strong>
+            <p data-weather-desc>天气加载中</p>
+            <span data-weather-detail>--</span>
           </div>
         </div>
       </section>
@@ -140,50 +174,19 @@
         </div>
       </section>
 
-      <section class="profile-panel home-status-grid">
-        <article class="inline-panel weather-card" data-weather>
+      <section class="profile-panel home-dashboard">
+        <section class="steam-games-card">
           <div class="section-head">
             <div class="section-title">
-              <p>Weather</p>
-              <div class="title-control">
-                <h2>今日天气</h2>
-                <select class="weather-select" data-weather-select aria-label="选择天气城市">
-                  {{ range $weather.cities }}
-                    <option
-                      value="{{ .latitude }},{{ .longitude }}"
-                      {{ if eq .label $weather.defaultCity }}selected{{ end }}>
-                      {{ .label }}
-                    </option>
-                  {{ end }}
-                </select>
-              </div>
+              <p>Games</p>
+              <h2>最近游玩</h2>
             </div>
           </div>
-          <div class="weather-body">
-            <div class="weather-icon" data-weather-icon>☁</div>
-            <div>
-              <strong data-weather-temp>--°C</strong>
-              <p data-weather-desc>天气加载中</p>
-              <span data-weather-detail>--</span>
-            </div>
+          <div class="steam-games-list" data-steam-games>
+            <p class="empty-state">加载中</p>
           </div>
-        </article>
-
-        <article class="inline-panel steam-card">
-          <div class="section-head">
-            <div class="section-title">
-              <p>Steam</p>
-              <h2>Steam 状态</h2>
-            </div>
-          </div>
-          <div class="steam-status" data-steam-status>
-            <span class="status-dot status-dot--unknown"></span>
-            <div>
-              <strong>状态加载中</strong>
-              <p>读取公开 Steam 资料</p>
-            </div>
-          </div>
-        </article>
+        </section>
+        {{ partial "home/recent-posts.html" . }}
       </section>
 
       <section id="comments" class="profile-panel comments-card">

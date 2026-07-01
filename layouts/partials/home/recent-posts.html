@@ -1,0 +1,23 @@
+{{ $posts := where .Site.RegularPages "Section" "posts" }}
+{{ $recent := first 5 $posts }}
+
+<section class="recent-posts-card">
+  <div class="section-head">
+    <div class="section-title">
+      <p>Posts</p>
+      <h2>近期帖子</h2>
+    </div>
+    {{ if $recent }}<a href="/posts/">全部 →</a>{{ end }}
+  </div>
+  {{ if $recent }}
+    {{ range $recent }}
+    <a class="recent-post-row" href="{{ .RelPermalink }}">
+      <time>{{ .Date.Format "2006-01-02" }}</time>
+      <strong>{{ .Title }}</strong>
+      {{ with .Summary }}<p>{{ . | plainify | truncate 100 }}</p>{{ end }}
+    </a>
+    {{ end }}
+  {{ else }}
+    <p class="empty-state">暂无帖子</p>
+  {{ end }}
+</section>

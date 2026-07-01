@@ -445,24 +445,14 @@
     const workerUrl = root.dataset.steamWorkerUrl;
     if (!target || !workerUrl) return;
 
-    const renderSteam = (state, summary, meta = "") => {
-      const normalizedState = String(state || "unknown").toLowerCase();
-      const isOnline = ["online", "busy", "away", "snooze", "looking_to_trade", "looking_to_play"].includes(normalizedState);
-      const labelMap = {
-        online: "online",
-        offline: "offline",
-        busy: "busy",
-        away: "away",
-        snooze: "snooze",
-        looking_to_trade: "looking to trade",
-        looking_to_play: "looking to play",
-        unknown: "unknown",
-      };
+    const renderSteam = (title, summary, meta = "") => {
+      const isOnline = summary !== "离线" && summary !== "unknown";
+      const cls = isOnline ? "status-dot--online" : summary === "离线" ? "status-dot--offline" : "status-dot--unknown";
 
       target.innerHTML = `
-        <span class="status-dot ${isOnline ? "status-dot--online" : normalizedState === "offline" ? "status-dot--offline" : "status-dot--unknown"}"></span>
+        <span class="status-dot ${cls}"></span>
         <div>
-          <strong>Steam ${labelMap[normalizedState] || state || "unknown"}</strong>
+          <strong>${escapeHtml(title)}</strong>
           <p>${escapeHtml(summary || "No live Steam activity detected")}${meta ? ` · ${escapeHtml(meta)}` : ""}</p>
         </div>
       `;
@@ -470,11 +460,21 @@
 
     const renderSteamPayload = (payload, meta) => {
       if (!payload) return;
-      renderSteam(
-        payload.onlineState,
-        payload.gameExtraInfo ? `Playing ${payload.gameExtraInfo}` : payload.statusText,
-        meta || (payload.updatedAt ? `Live ${formatTime(payload.updatedAt)}` : "Live")
-      );
+      const name = payload.personaName || "Steam";
+      const status = payload.statusText || "";
+      if (payload.gameExtraInfo) {
+        renderSteam(
+          `${name} 正在玩 ${payload.gameExtraInfo}`,
+          status,
+          meta || (payload.updatedAt ? `Live ${formatTime(payload.updatedAt)}` : "Live")
+        );
+      } else {
+        renderSteam(
+          `${name} ${status}`,
+          payload.gameExtraInfo || "",
+          meta || (payload.updatedAt ? `Live ${formatTime(payload.updatedAt)}` : "Live")
+        );
+      }
     };
 
     const refreshFromSteamWorker = async () => {
@@ -501,6 +501,51 @@
     }
   };
 
+  const loadSteamRecentGames = async () => {
+    const target = root.querySelector("[data-steam-games]");
+    if (!target) return;
+
+    const gamesUrl = root.dataset.steamRecentGamesUrl;
+    if (!gamesUrl) {
+      target.innerHTML = '<p class="empty-state">未配置 Steam 游戏 API</p>';
+      return;
+    }
+
+    try {
+      const url = new URL(gamesUrl);
+      url.searchParams.set("t", Date.now());
+      const data = await fetchJsonIfAvailable(url.toString(), 5000);
+
+      if (!data?.ok || !Array.isArray(data.games)) throw new Error("No games");
+
+      const games = data.games.slice(0, 5);
+      if (!games.length) {
+        target.innerHTML = '<p class="empty-state">最近 2 周没有游戏记录</p>';
+        return;
+      }
+
+      target.innerHTML = games.map((g) => {
+        const icon = g.imgIconUrl
+          ? `https://media.steampowered.com/steamcommunity/public/images/apps/${g.appid}/${g.imgIconUrl}.jpg`
+          : "";
+        const hours = g.playtime2weeks
+          ? `${(g.playtime2weeks / 60).toFixed(1)} 小时`
+          : "";
+        return `
+          <div class="steam-game-row">
+            ${icon ? `<img class="steam-game-icon" src="${icon}" alt="" loading="lazy">` : ""}
+            <div>
+              <strong>${escapeHtml(g.name)}</strong>
+              ${hours ? `<span>最近 2 周 ${hours}</span>` : ""}
+            </div>
+          </div>
+        `;
+      }).join("");
+    } catch {
+      target.innerHTML = '<p class="empty-state">Steam 游戏数据获取失败</p>';
+    }
+  };
+
   applyBeijingTimeTheme();
   window.setInterval(applyBeijingTimeTheme, 60000);
 
@@ -520,5 +565,6 @@
   loadVisitorCount();
   loadFeeds();
   loadSteamStatus();
+  loadSteamRecentGames();
   loadGitHubEvents();
 })();
