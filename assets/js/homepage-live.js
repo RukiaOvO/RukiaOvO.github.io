@@ -15,6 +15,14 @@
     const isDaytime = hour >= 6 && hour < 18;
     document.documentElement.classList.toggle("theme-day", isDaytime);
     document.documentElement.classList.toggle("theme-night", !isDaytime);
+
+    const giscusFrame = document.querySelector("iframe.giscus-frame");
+    if (giscusFrame?.contentWindow) {
+      giscusFrame.contentWindow.postMessage(
+        { giscus: { setConfig: { theme: isDaytime ? "light" : "dark_dimmed" } } },
+        "https://giscus.app"
+      );
+    }
   };
 
   const weatherCodes = {
@@ -495,6 +503,12 @@
 
   applyBeijingTimeTheme();
   window.setInterval(applyBeijingTimeTheme, 60000);
+
+  window.addEventListener("message", (event) => {
+    if (event.origin !== "https://giscus.app") return;
+    if (typeof event.data?.giscus !== "object") return;
+    applyBeijingTimeTheme();
+  });
   refreshGitHubHeatmap();
   scheduleGitHubHeatmapRefresh();
   window.addEventListener("pageshow", refreshGitHubHeatmap);
