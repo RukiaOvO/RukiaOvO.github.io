@@ -7,7 +7,7 @@ backend:
 media_folder: "assets/img/posts"
 public_folder: "/img/posts"
 
-locale: "zh_CN"
+locale: "zh_Hans"
 
 collections:
   - name: "posts"
@@ -16,8 +16,6 @@ collections:
     folder: "content/posts"
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
-    editor:
-      preview: false
     fields:
       - { label: "标题", name: "title", widget: "string" }
       - { label: "日期", name: "date", widget: "datetime", default: "{{now}}" }
