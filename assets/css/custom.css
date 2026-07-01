@@ -406,6 +406,20 @@ body:has(.posts-page) > .min-h-\[148px\] {
   line-height: 1.65;
 }
 
+.profile-card__visitor {
+  min-height: 1.35rem;
+  justify-self: end;
+  display: flex;
+  justify-content: flex-end;
+  max-width: 100%;
+}
+
+.profile-card__visitor img {
+  display: block;
+  max-width: 100%;
+  height: 1.35rem;
+}
+
 .profile-actions {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -928,6 +942,12 @@ body:has(.posts-page) a[href="#the-top"] {
   .profile-dock {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .profile-dock__brand span {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
   }
 
   .profile-sidebar,
