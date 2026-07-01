@@ -13,8 +13,7 @@ The homepage serves as the center of the site: profile, social links, status wid
 - Presents a personal profile with social entry points
 - Highlights selected projects and technical writing
 - Surfaces GitHub activity, weather, Steam status, and comments
-- Supports Chinese and English content paths
-- Keeps the site lean with Hugo templates, local data, and frontend scripts
+- Keeps the site lean with Hugo templates, local data, Cloudflare Workers, and frontend scripts
 
 ## Structure
 
@@ -22,9 +21,7 @@ The homepage serves as the center of the site: profile, social links, status wid
 - `data/home.yaml` - homepage data model and live source settings
 - `layouts/` - Hugo template overrides and page layouts
 - `assets/` - styles, scripts, and image assets
-- `static/data/` - JSON snapshots used by the homepage
-- `scripts/` - helper scripts for syncing data
-- `config/_default/` - site configuration and localization
+- `config/_default/` - site configuration
 - `themes/blowfish/` - Blowfish theme submodule
 
 ## Cloudflare Workers
@@ -45,8 +42,6 @@ Manual setup flow, following the Cloudflare Workers dashboard path:
 6. Run the Hugo build locally before pushing site changes.
 
 Reference: [Cloudflare Workers dashboard guide](https://developers.cloudflare.com/workers/get-started/dashboard/).
-
-Fallback snapshots in `static/data/` remain in the repo so the page can still render activity data when a live endpoint is unavailable.
 
 ## Comments
 

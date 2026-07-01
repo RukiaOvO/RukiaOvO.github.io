@@ -61,7 +61,6 @@ github:
   heatmapProvider: "https://ghchart.rshah.org"
   heatmapColor: "58a6ff"
   workerEventsUrl: "https://rukia-activity.1403555427.workers.dev/github"
-  staticEventsUrl: "/data/github-events.json"
   eventsLimit: 10
 
 steam:
@@ -119,7 +118,6 @@ externalFeeds:
 
 rss:
   workerFeedUrl: "https://rukia-activity.1403555427.workers.dev/rss"
-  staticFeedUrl: "/data/rss-feed.json"
   categories:
     - "全部"
     - "B站"

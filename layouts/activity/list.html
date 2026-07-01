@@ -7,9 +7,7 @@
     class="activity-page"
     data-github-user="{{ $github.username }}"
     data-github-worker-url="{{ $github.workerEventsUrl }}"
-    data-github-events-url="{{ $github.staticEventsUrl | relURL }}"
     data-rss-worker-url="{{ $home.rss.workerFeedUrl }}"
-    data-rss-feed-url="{{ $home.rss.staticFeedUrl | relURL }}"
     data-github-events-limit="{{ $github.eventsLimit | default 10 }}">
     {{ partial "site-dock.html" . }}
 

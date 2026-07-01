@@ -323,12 +323,6 @@
         return;
       }
 
-      const staticEvents = await fetchJsonIfAvailable(root.dataset.githubEventsUrl);
-      if (Array.isArray(staticEvents?.events) && staticEvents.events.length) {
-        renderEvents(staticEvents.events.slice(0, limit));
-        return;
-      }
-
       throw new Error(`GitHub ${response.status}`);
     } catch {
       target.innerHTML = '<p class="empty-state">GitHub API temporarily unavailable</p>';
@@ -398,15 +392,6 @@
       isLoading = false;
       renderItems();
       if (status) status.textContent = "Worker synced";
-      return;
-    }
-
-    const staticFeed = await fetchJsonIfAvailable(root.dataset.rssFeedUrl);
-    if (Array.isArray(staticFeed?.items) && staticFeed.items.length) {
-      items = staticFeed.items;
-      isLoading = false;
-      renderItems();
-      if (status) status.textContent = "RSS synced";
       return;
     }
 
