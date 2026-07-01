@@ -225,6 +225,14 @@ body:has(.posts-page) > .min-h-\[148px\] {
   font-size: 0.9rem;
 }
 
+.post-row:hover {
+  background: var(--soft-surface);
+  margin: 0 -0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  border-radius: 8px;
+}
+
 .profile-bg {
   position: fixed;
   inset: 3.6rem 0 0;

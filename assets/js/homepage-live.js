@@ -445,7 +445,7 @@
     const workerUrl = root.dataset.steamWorkerUrl;
     if (!target || !workerUrl) return;
 
-    const renderSteam = (title, summary, meta = "") => {
+    const renderSteam = (title, summary) => {
       const isOnline = summary !== "离线" && summary !== "unknown";
       const cls = isOnline ? "status-dot--online" : summary === "离线" ? "status-dot--offline" : "status-dot--unknown";
 
@@ -453,27 +453,19 @@
         <span class="status-dot ${cls}"></span>
         <div>
           <strong>${escapeHtml(title)}</strong>
-          <p>${escapeHtml(summary || "No live Steam activity detected")}${meta ? ` · ${escapeHtml(meta)}` : ""}</p>
+          ${summary ? `<p>${escapeHtml(summary)}</p>` : ""}
         </div>
       `;
     };
 
-    const renderSteamPayload = (payload, meta) => {
+    const renderSteamPayload = (payload) => {
       if (!payload) return;
       const name = payload.personaName || "Steam";
       const status = payload.statusText || "";
       if (payload.gameExtraInfo) {
-        renderSteam(
-          `${name} 正在玩 ${payload.gameExtraInfo}`,
-          status,
-          meta || (payload.updatedAt ? `Live ${formatTime(payload.updatedAt)}` : "Live")
-        );
+        renderSteam(`${name} 游戏中: ${payload.gameExtraInfo}`, status);
       } else {
-        renderSteam(
-          `${name} ${status}`,
-          payload.gameExtraInfo || "",
-          meta || (payload.updatedAt ? `Live ${formatTime(payload.updatedAt)}` : "Live")
-        );
+        renderSteam(`${name} ${status}`, "");
       }
     };
 
