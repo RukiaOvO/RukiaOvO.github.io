@@ -76,8 +76,8 @@ comments:
   utterances:
     enabled: true
     issueTerm: "pathname"
-    label: "comment"
-    theme: "preferred-color-scheme"
+    label: "Comment"
+    theme: "github-light"
 
 externalFeeds:
   - label: "B站动态"
