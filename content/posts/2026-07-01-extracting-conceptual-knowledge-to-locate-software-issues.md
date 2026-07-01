@@ -7,6 +7,8 @@ tags:
 categories:
   - 论文研读
 ---
+论文链接：https://arxiv.org/abs/2509.21427
+
 ## 论文主旨
 主要研究如何增强LLM的根据bug/issue定位相关文件或代码的能力，提出了一种类似GraphRAG思想的issue localization增强方案。
 
