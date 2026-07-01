@@ -9,6 +9,8 @@ tags:
 categories:
   - 论文研读
 ---
+论文链接：https://dl.acm.org/doi/abs/10.1145/2568225.2568310
+
 ## 论文主旨
 **发表于2014 ICSE，主要研究self-adaptive system。**
 
