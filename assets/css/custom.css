@@ -194,7 +194,7 @@ body:has(.posts-page) > .min-h-\[148px\] {
   display: grid;
   gap: 0.35rem;
   padding: 1rem 0;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--line-strong);
   color: inherit !important;
   text-decoration: none !important;
 }
@@ -1048,7 +1048,7 @@ body:has(.posts-page) a[href="#the-top"] {
   display: grid;
   gap: 0.3rem;
   padding: 0.85rem 0;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--line-strong);
   color: inherit !important;
   text-decoration: none !important;
 }
