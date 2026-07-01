@@ -24,8 +24,28 @@ The homepage serves as the center of the site: profile, social links, status wid
 - `assets/` - styles, scripts, and image assets
 - `static/data/` - JSON snapshots used by the homepage
 - `scripts/` - helper scripts for syncing data
-- `workers/` - Cloudflare Worker code
 - `config/_default/` - site configuration and localization
 - `themes/blowfish/` - Blowfish theme submodule
+
+## Cloudflare Workers
+
+Cloudflare Workers are managed manually in the Cloudflare dashboard, not from this repository. The site only stores the public endpoint URLs in `data/home.yaml`:
+
+- `github.workerEventsUrl` expects a JSON endpoint with an `events` array.
+- `rss.workerFeedUrl` expects a JSON endpoint with an `items` array.
+- `steam.workerUrl` expects the Steam status JSON payload used by the homepage widget.
+
+Manual setup flow, following the Cloudflare Workers dashboard path:
+
+1. Open Cloudflare Dashboard, then go to Workers & Pages.
+2. Create or edit the Worker that serves the RSS/activity JSON.
+3. Paste and deploy the Worker code in the dashboard editor.
+4. Confirm these routes return JSON: `/rss` for RSS items and `/github` for GitHub events.
+5. Copy the deployed Worker URLs into `data/home.yaml`.
+6. Run the Hugo build locally before pushing site changes.
+
+Reference: [Cloudflare Workers dashboard guide](https://developers.cloudflare.com/workers/get-started/dashboard/).
+
+Fallback snapshots in `static/data/` remain in the repo so the page can still render activity data when a live endpoint is unavailable.
 
 The repository is intentionally focused on my own homepage rather than on being a generic starter kit or deployment guide.

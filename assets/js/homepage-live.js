@@ -277,6 +277,12 @@
 
     try {
       const limit = Number(root.dataset.githubEventsLimit || 10);
+      const workerEvents = await fetchJsonIfAvailable(root.dataset.githubWorkerUrl, 5000);
+      if (Array.isArray(workerEvents?.events) && workerEvents.events.length) {
+        renderEvents(workerEvents.events.slice(0, limit));
+        return;
+      }
+
       const response = await fetchWithTimeout(
         `https://api.github.com/users/${username}/events/public?per_page=${Math.max(limit, 10)}`,
         { headers: { Accept: "application/vnd.github+json" } },
@@ -400,15 +406,19 @@
     const status = root.querySelector("[data-feed-status]");
     if (!target) return;
 
-    const feeds = readJsonScript("profile-feeds");
-    const proxies = readJsonScript("profile-rss-proxies", ["https://api.allorigins.win/raw?url="]);
+    const feedsPayload = readJsonScript("profile-feeds");
+    const proxiesPayload = readJsonScript("profile-rss-proxies");
+    const feeds = Array.isArray(feedsPayload) ? feedsPayload : [];
+    const proxies = Array.isArray(proxiesPayload) && proxiesPayload.length
+      ? proxiesPayload
+      : ["https://api.allorigins.win/raw?url="];
     const filter = root.querySelector("[data-feed-filter]");
     let activeCategory = filter?.querySelector(".is-active")?.dataset.feedCategory || filter?.querySelector("button")?.dataset.feedCategory || "All";
     let items = [];
     let isLoading = true;
 
     const renderItems = () => {
-      const visibleItems = activeCategory === "All" || activeCategory === "鍏ㄩ儴" ? items : items.filter((item) => item.category === activeCategory);
+      const visibleItems = activeCategory === "All" || activeCategory === "全部" ? items : items.filter((item) => item.category === activeCategory);
       target.innerHTML = "";
 
       if (isLoading) {
@@ -439,7 +449,7 @@
       filter.addEventListener("click", (event) => {
         const button = event.target.closest("[data-feed-category]");
         if (!button) return;
-        activeCategory = button.dataset.feedCategory || "鍏ㄩ儴";
+        activeCategory = button.dataset.feedCategory || "全部";
         filter.querySelectorAll("button").forEach((item) => item.classList.remove("is-active"));
         button.classList.add("is-active");
         renderItems();
@@ -447,6 +457,15 @@
     }
 
     renderItems();
+
+    const workerFeed = await fetchJsonIfAvailable(root.dataset.rssWorkerUrl, 5000);
+    if (Array.isArray(workerFeed?.items) && workerFeed.items.length) {
+      items = workerFeed.items;
+      isLoading = false;
+      renderItems();
+      if (status) status.textContent = "Worker synced";
+      return;
+    }
 
     const staticFeed = await fetchJsonIfAvailable(root.dataset.rssFeedUrl);
     if (Array.isArray(staticFeed?.items) && staticFeed.items.length) {

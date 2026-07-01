@@ -1,6 +1,7 @@
 public/
 resources/_gen/
 .hugo_build.lock
+workers/
 .dev.vars*
 .env*
 *.local

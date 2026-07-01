@@ -27,5 +27,5 @@ buildFuture = false
   series = "series"
 
 [outputs]
-  home = ["HTML", "RSS", "JSON"]
+  home = ["HTML", "JSON"]
   section = ["HTML"]
