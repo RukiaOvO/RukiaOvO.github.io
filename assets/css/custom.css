@@ -852,7 +852,7 @@ body:has(.posts-page) > .min-h-\[148px\] {
   display: grid;
   grid-template-columns: 0.8rem minmax(0, 1fr);
   gap: 0.65rem;
-  align-items: start;
+  align-items: center;
   min-height: 3.5rem;
   padding: 0.5rem 0.75rem;
   border: 1px solid var(--line);
@@ -863,6 +863,11 @@ body:has(.posts-page) > .min-h-\[148px\] {
 .steam-status strong,
 .steam-status p {
   margin: 0;
+}
+
+.steam-status > div {
+  align-self: center;
+  min-width: 0;
 }
 
 .steam-status strong {
@@ -877,7 +882,8 @@ body:has(.posts-page) > .min-h-\[148px\] {
 .status-dot {
   width: 0.72rem;
   height: 0.72rem;
-  margin-top: 0.32rem;
+  align-self: center;
+  justify-self: start;
   border-radius: 999px;
   background: var(--muted-2);
   box-shadow: 0 0 0 4px rgba(139, 148, 158, 0.14);
