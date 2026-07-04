@@ -461,9 +461,15 @@
     const workerUrl = root.dataset.steamWorkerUrl;
     if (!target || !workerUrl) return;
 
-    const renderSteam = (title, summary) => {
-      const isOnline = summary !== "离线" && summary !== "unknown";
-      const cls = isOnline ? "status-dot--online" : summary === "离线" ? "status-dot--offline" : "status-dot--unknown";
+    const renderSteam = (title, summary, state = "unknown", personaState) => {
+      const normalizedState = String(state || "unknown").toLowerCase();
+      const isOffline = normalizedState === "offline" || Number(personaState) === 0;
+      const isUnknown = normalizedState === "unknown";
+      const cls = isOffline
+        ? "status-dot--offline"
+        : isUnknown
+          ? "status-dot--unknown"
+          : "status-dot--online";
 
       target.innerHTML = `
         <span class="status-dot ${cls}"></span>
@@ -479,9 +485,9 @@
       const name = payload.personaName || "Steam";
       const status = payload.statusText || "";
       if (payload.gameExtraInfo) {
-        renderSteam(`${name} 游戏中: ${payload.gameExtraInfo}`, status);
+        renderSteam(`${name} 游戏中: ${payload.gameExtraInfo}`, status, payload.onlineState, payload.personaState);
       } else {
-        renderSteam(`${name} ${status}`, "");
+        renderSteam(`${name} ${status}`.trim(), "", payload.onlineState, payload.personaState);
       }
     };
 
