@@ -1,9 +1,18 @@
 public/
+.public-assets.json
+node_modules/
+.next/
+.vercel/
+coverage/
+test-results/
+playwright-report/
+*.tsbuildinfo
 resources/_gen/
 .hugo_build.lock
 workers/
 .dev.vars*
 .env*
+!.env.example
 *.local
 *.secret
 *.secrets
@@ -16,3 +25,4 @@ wrangler.json
 .wrangler/
 .mf/
 .cloudflare/
+.vercel

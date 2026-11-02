@@ -1,5 +1,24 @@
 # RukiaOvO.github.io
 
+## Next.js 重写进行中
+
+**当前方向（2026-11-02）：独立设计部署到 Vercel 的新主页，改良原站场景，不进行全功能复刻或旧站代码重构。** 以 [新主页产品基线](docs/new-homepage-product-brief.md) 为准，以下迁移记录仅说明已经完成的工程工作。
+
+新前台使用 Next.js App Router + TypeScript + Tailwind CSS。已实现重新设计的首页、项目、关于、文章阅读、GitHub/RSS 动态、主题及 SEO。新站配置位于 `data/site.ts`，内容继续使用 Markdown；发布入口采用 GitHub 分支与 Vercel Preview。当前交付和部署状态见 [新站实现记录](docs/new-site-delivery.md)。
+
+```sh
+npm ci
+npm run dev
+```
+
+- [需求与阶段计划](docs/homepage-rewrite-plan.md)
+- [迁移清单、接口草案与待确认事项](docs/migration-inventory.md)
+- [Next.js 开发、测试与 Vercel 配置](docs/nextjs-development.md)
+- [本轮实施进度](docs/implementation-progress.md)
+- [未闭环事项、所需资源与修复计划](docs/closure-and-repair-plan.md)
+
+以下为原 Hugo 系统的说明，供现有生产站点维护与迁移对照。
+
 使用 Hugo + GitHub Pages 构建的个人主页。
 
 - 基于 [Blowfish](https://github.com/nunocoracao/blowfish) 主题并通过自定义模板、样式和前端脚本实现了 GitHub Profile 风格的仪表盘布局。
