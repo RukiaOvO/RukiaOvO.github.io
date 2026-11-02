@@ -7,6 +7,8 @@ const slug = "2026-07-01-agentspec-customizable-runtime-enforcement-for-safe-and
 test.beforeEach(async ({ page }) => {
   await page.route(/https:\/\/(ghchart\.rshah\.org|giscus\.app)\//, (route) => route.abort());
   await page.route("**/api/activity/**", (route) => route.fulfill({ status: 503, json: { ok: false } }));
+  await page.route("https://api.open-meteo.com/**", (route) => route.fulfill({ json: { current: { temperature_2m: 18, weather_code: 1, wind_speed_10m: 5 }, daily: { temperature_2m_max: [20], temperature_2m_min: [12] } } }));
+  await page.route("https://rukiaovo-github-io.1403555427.workers.dev/**", (route) => route.fulfill({ json: route.request().url().includes("/games") ? { ok: true, games: [] } : { ok: true, personaName: "Rukia", statusText: "在线", onlineState: "online", personaState: 1 } }));
 });
 
 test("homepage remains readable when third parties fail; themes persist", async ({ page }) => {
@@ -15,18 +17,15 @@ test("homepage remains readable when third parties fail; themes persist", async 
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("露琪亚");
   await expect(page.getByRole("heading", { name: /AgentSpec:/ })).toBeVisible();
-  await page.locator(".home-bottom").scrollIntoViewIfNeeded();
-  await expect(page.getByText("暂时无法获取动态，请稍后重试。")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "天气" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "最近游玩" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "精选项目" })).toHaveCount(0);
+  await expect(page.getByText("QUICK ACCESS")).toHaveCount(0);
+  await expect(page.getByText("最近的开发足迹")).toHaveCount(0);
   await page.getByLabel("外观主题").selectOption("dark");
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await page.reload();
   await expect(page.getByLabel("外观主题")).toHaveValue("dark");
-  await page.goto("/about/");
-  await page.locator(".about-contributions").scrollIntoViewIfNeeded();
-  await expect(page.getByText("贡献记录暂时无法加载。")).toBeVisible();
-  await page.getByRole("button", { name: "加载评论", exact: true }).click();
-  await expect(page.getByText("评论暂时无法加载，请稍后重试。")).toBeVisible();
-  await expect(page.locator('script[src="https://giscus.app/client.js"]')).toHaveAttribute("data-mapping", "pathname");
   expect(errors).toEqual([]);
 });
 
@@ -56,7 +55,7 @@ test("search, taxonomy redirects, article TOC, images and metadata", async ({ pa
 });
 
 test("content workbench, pages, resources, sitemap, RSS and 404 routes", async ({ request }) => {
-  for (const path of ["/", "/posts/", "/projects/", "/about/", "/activity/", "/admin/", "/img/avatar.jpg", "/img/posts/self-adaptation-fig5.png", "/sitemap.xml", "/robots.txt", "/posts/index.xml"]) {
+  for (const path of ["/", "/posts/", "/activity/", "/admin/", "/img/avatar.jpg", "/img/posts/self-adaptation-fig5.png", "/sitemap.xml", "/robots.txt", "/posts/index.xml"]) {
     expect((await request.get(path)).status(), path).toBe(200);
   }
   const admin = await (await request.get("/admin/")).text();
@@ -83,6 +82,8 @@ test("content workbench, pages, resources, sitemap, RSS and 404 routes", async (
   expect(await feed.text()).toContain("AgentSpec:");
   expect((await request.get("/posts/nonexistent/" )).status()).toBe(404);
   expect((await request.get("/not-a-page/" )).status()).toBe(404);
+  expect((await request.get("/projects/" )).status()).toBe(404);
+  expect((await request.get("/about/" )).status()).toBe(404);
   const invalid = await request.get("/api/activity/?kind=invalid");
   expect(invalid.status()).toBe(400);
   expect((await invalid.json()).error.code).toBe("INVALID_QUERY");
@@ -122,7 +123,7 @@ test("Markdown editor inserts an uploaded image into the same article draft PR",
 test("mobile layouts fit the viewport and keyboard navigation reaches main content", async ({ page }) => {
   for (const width of [320, 375, 768, 1440]) {
     await page.setViewportSize({ width, height: 900 });
-    for (const path of ["/", "/posts/", `/posts/${slug}/`, "/activity/", "/projects/", "/about/", "/admin/"]) {
+    for (const path of ["/", "/posts/", `/posts/${slug}/`, "/activity/", "/admin/"]) {
     await page.goto(path);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), path).toBe(true);
     }
@@ -163,7 +164,7 @@ test("activity retries a failed request and handles successful empty data", asyn
     return requests === 1 ? route.fulfill({ status: 503, json: { ok: false } }) : route.fulfill({ json: { ok: true, data: { items: [], sources: [{ id: "github", label: "GitHub", state: "ok", updatedAt: "2026-11-01T12:00:00Z" }] } } });
   });
   await page.goto("/");
-  await page.locator(".home-bottom").scrollIntoViewIfNeeded();
+  await page.locator(".dashboard-content").scrollIntoViewIfNeeded();
   await page.getByRole("button", { name: "重新加载", exact: true }).click();
   await expect(page.getByText("近期暂无公开内容。")).toBeVisible();
 });

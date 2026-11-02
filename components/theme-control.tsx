@@ -40,7 +40,7 @@ export function ThemeControl() {
       applyTheme(next);
       window.dispatchEvent(new Event("theme-preference"));
     }}>
-      <option value="auto">◐ 北京时间</option><option value="light">☀ 浅色</option><option value="dark">☾ 深色</option>
+      <option value="auto">◐ 自动</option><option value="light">☀ 浅色</option><option value="dark">☾ 深色</option>
     </select>
   </label>;
 }

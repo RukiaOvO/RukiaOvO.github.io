@@ -379,6 +379,29 @@ img { max-width: 100%; height: auto; }
 .dashboard-links h2 { font-size: 18px; margin-bottom: 12px; }
 .dashboard-links > a { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid var(--border); font-size: 13px; }
 .dashboard-links > a span { color: var(--muted); }
+.dashboard-live { display: grid; gap: 16px; }
+.live-card { padding: 18px; }
+.live-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.live-heading h2 { margin: 0; font-size: 17px; }
+.live-heading a { color: var(--accent); font-size: 11px; }
+.live-heading select { max-width: 88px; padding: 5px 7px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--text); font-size: 11px; }
+.weather-value, .steam-value { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.weather-value > span { font-size: 32px; line-height: 1; }
+.weather-value strong { font-size: 24px; }
+.weather-value p, .steam-value p { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+.weather-value small { display: block; margin-top: 7px; color: var(--muted); font-size: 10px; line-height: 1.5; }
+.steam-value strong { display: block; overflow-wrap: anywhere; font-size: 12px; }
+.status-dot { width: 9px; height: 9px; flex: 0 0 auto; border-radius: 50%; background: var(--muted); }
+.status-dot--online { background: #2da44e; box-shadow: 0 0 0 3px #2da44e22; }
+.status-dot--offline { background: var(--muted); }
+.steam-games { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border); }
+.steam-games h3 { margin: 0 0 8px; font-size: 12px; }
+.steam-game-row { display: flex; align-items: center; gap: 8px; padding: 7px 0; min-width: 0; }
+.steam-game-row img { width: 32px; height: 32px; object-fit: cover; border-radius: 4px; }
+.steam-game-row strong, .steam-game-row span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.steam-game-row strong { font-size: 11px; }
+.steam-game-row span { margin-top: 2px; color: var(--muted); font-size: 10px; }
+.live-state { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
 .dashboard-content { min-width: 0; padding: 24px; background: var(--panel); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow); backdrop-filter: blur(18px); }
 .dashboard-section { padding: 24px 0; border-top: 1px solid var(--border); min-width: 0; }
 .dashboard-section:first-child { padding-top: 0; border-top: 0; }

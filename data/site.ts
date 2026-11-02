@@ -7,7 +7,7 @@ export const siteContent = {
     research: "Agent / AI4SE", introduction: "在复旦学习，关注软件工程、Agent 与 AI4SE。这里整理我的工程实践、论文阅读，以及沿途的思考。",
   },
   navigation: [{ label: "首页", href: "/" }, { label: "文章", href: "/posts/" },
-    { label: "项目", href: "/projects/" }, { label: "动态", href: "/activity/" }, { label: "关于", href: "/about/" }],
+    { label: "动态", href: "/activity/" }],
   social: [
     { label: "GitHub", href: "https://github.com/RukiaOvO" },
     { label: "Email", href: "mailto:1403555427@qq.com" },
@@ -32,6 +32,25 @@ export const siteContent = {
       href: "https://github.com/RukiaOvO/RukiaOvO.github.io", tags: ["Next.js", "TypeScript", "Web"], visual: "notes" },
   ],
   github: { username: "RukiaOvO", heatmapProvider: "https://ghchart.rshah.org", heatmapColor: "58a6ff" },
+  weather: {
+    defaultCity: "上海",
+    cities: [
+      { label: "上海", latitude: 31.2304, longitude: 121.4737 },
+      { label: "北京", latitude: 39.9042, longitude: 116.4074 },
+      { label: "广州", latitude: 23.1292, longitude: 113.2644 },
+      { label: "深圳", latitude: 22.5431, longitude: 114.0579 },
+      { label: "杭州", latitude: 30.2741, longitude: 120.1551 },
+      { label: "成都", latitude: 30.5728, longitude: 104.0664 },
+      { label: "南京", latitude: 32.0603, longitude: 118.7969 },
+      { label: "武汉", latitude: 30.5928, longitude: 114.3055 },
+      { label: "泉州", latitude: 24.8741, longitude: 118.6757 },
+    ],
+  },
+  steam: {
+    profileUrl: "https://steamcommunity.com/profiles/76561198417009401/",
+    workerUrl: "https://rukiaovo-github-io.1403555427.workers.dev/steam",
+    recentGamesUrl: "https://rukiaovo-github-io.1403555427.workers.dev/steam/games",
+  },
   comments: {
     owner: "RukiaOvO", repo: "RukiaOvO.github.io", title: "留下一点想法", description: "关于文章、项目，或任何想聊的话题。欢迎交流。",
     giscus: { enabled: true, repoId: "R_kgDOTIGanw", category: "General", categoryId: "DIC_kwDOTIGan84DAQuk",

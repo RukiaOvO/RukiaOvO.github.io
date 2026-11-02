@@ -74,7 +74,12 @@ export async function getEditorPullRequests(token: string): Promise<GitHubPull[]
 export async function getEditorDrafts(token: string) {
   const pulls = (await getEditorPullRequests(token)).slice(0, 30);
   return (await Promise.all(pulls.map(async (pull) => {
-    const files = await github<GitHubChangedFile[]>(token, `/pulls/${pull.number}/files?per_page=100`);
+    let files: GitHubChangedFile[];
+    try { files = await github<GitHubChangedFile[]>(token, `/pulls/${pull.number}/files?per_page=100`); }
+    catch (error) {
+      if (error instanceof GitHubError && error.status === 404) return { pull, files: [] };
+      throw error;
+    }
     return { pull, files: files.filter((file) => file.status !== "removed" && file.filename.startsWith("content/posts/") && validArticleFile(file.filename.slice("content/posts/".length))) };
   }))).filter(({ files }) => files.length > 0);
 }
