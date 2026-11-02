@@ -4,15 +4,14 @@
 
 部署进度更新：Vercel 长期项目 `rukiaovo-homepage` 已建立并连接 `codex/vercel-site`，默认域名 https://rukiaovo-homepage.vercel.app 已在线，真实前台与 API 验收通过。OAuth、最终索引开关和发布链路验收的剩余工作见 [生产部署记录](production-deployment.md)。下表为本轮部署前的待办基线。
 
-最新追加：已将新站布局调整为接近旧站的个人资料侧栏与功能主栏；Decap CMS、GitHub OAuth 回调和文章/图片写入配置已实现，仍需 OAuth App、Vercel 生产环境变量及真实账号验收。Vercel 项目名预选 `rukiaovo-homepage`，默认 hostname `rukiaovo-homepage.vercel.app` 待账号确认可用。ClouDNS 自有域名可以后续绑定，DDNS 不用于 Vercel 站点记录。详见 [布局、在线写作与域名方案](layout-publishing-domain.md)。
+最新追加：用户要求新版工作台保留熟悉的 Markdown/Git 写作习惯，并替换 Decap 媒体库流程。站内编辑器已本地实现，文章与图片进入同一草稿 PR；既有 OAuth 配置继续复用。待部署和真实账号验收图片上传、正文引用与合并后路径。既有 Decap PR 不会由本工具修改。Vercel 和 ClouDNS 背景见 [布局、在线写作与域名方案](layout-publishing-domain.md)。
 
 本节为当前任务，后文旧清单仅为历史盘点。产品方向已调整为独立设计新主页、改良原场景，部署平台为 Vercel；不要求复刻所有 Hugo/Worker 功能。
 
 | 优先级 | 尚未闭环 | 所需资源 | 后续动作与验收 |
 | --- | --- | --- | --- |
-| P0 | Vercel 长期项目和账号归属 | 用户登录自己的 Vercel 账号 | 认领匿名临时项目，或账号内新建 Next.js 项目；取得长期域名，移除临时 noindex 设置，重新检查 canonical、RSS、sitemap、页面和 API |
-| P0 | Git 提交到 Preview/Production 的持续发布链路 | Vercel 的 GitHub 仓库授权、生产分支配置 | 将已验证的新站提交到独立分支，连接 Vercel；验证 PR Preview → 合并 → 生产部署 → 回滚；旧 Hugo 的发布分支单独管理 |
-| P0 | CMS OAuth 与在线发布实测 | Vercel 生产域名、GitHub OAuth App、仓库写权限 | 配置 Client ID/Secret 与精确回调 URL；验收登录、文章编辑、图片上传、PR/部署、失败提示和密钥隔离 |
+| P0 | 新 Markdown 工作台生产发布与验收 | 当前分支推送、已连接 Vercel 项目、现有 OAuth 和仓库写权限 | 等待生产部署后确认登录；新建草稿并上传图片，核对文章和图片位于同一个 PR、Markdown 图片引用可访问，合并后生产页面显示正确 |
+| P1 | Vercel Preview 与回滚流程复核 | 已有 Vercel GitHub 集成 | 用本次部署核对 PR Preview → 合并 → Production；保留旧 Hugo `main` 发布链路，确认 Vercel 部署可回滚 |
 | P1 | Giscus 真实登录与评论/回复 | GitHub 登录用户、仓库 Discussions 和 Giscus App 权限 | 验证真实线程加载、主题切换、登录和评论；测试写入须明确指定测试讨论，不冒用身份发言 |
 | P2 | 跨实例共享限流 | 可选 Upstash REST URL/Token | 配置服务端变量；验证多个实例共享 60 次/分钟额度、429 与存储失败 503。未配置时仅有实例内限制 |
 | P2 | 多浏览器、弱网与性能基线 | 长期预览域名；其他浏览器运行环境 | 在稳定部署上补充 Safari/Firefox、慢网和 Lighthouse 记录；已有 Chrome 桌面/移动回归 |
@@ -21,7 +20,7 @@
 
 天气、Steam、访客数字与 Cron 均为后续可选增强，不属于首版发布阻塞。旧 Worker 源码缺失不再阻塞新站。
 
-执行顺序：先确认 Vercel 候选项目名可用并连接 Git 分支，再配置 OAuth App/环境变量并做在线编辑验收，随后验证评论，最后按需要启用共享限流与可选增强。账号登录需要用户本人完成；代码、配置和部署准备由本任务处理。
+执行顺序：推送已验收的新编辑器并等待 Vercel 生产部署；随后通过用户已登录的 GitHub 账号实测文章、图片和 PR；最后验证评论，按需处理共享限流与其他增强。OAuth App 和环境变量已经配置，无需重新创建或索取密钥。
 
 ## 历史盘点（已被上方清单取代）
 

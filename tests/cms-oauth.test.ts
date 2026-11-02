@@ -2,94 +2,86 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { GET as authGet } from "../app/api/auth/route";
 import { GET as callbackGet } from "../app/api/auth/callback/route";
-import { GET as configGet } from "../app/api/cms/config/route";
+import { GET as sessionGet } from "../app/api/editor/session/route";
+import { POST as savePost } from "../app/api/editor/articles/save/route";
+import { POST as imagePost } from "../app/api/editor/images/route";
 
 const envKeys = ["GITHUB_OAUTH_CLIENT_ID", "GITHUB_OAUTH_CLIENT_SECRET", "CMS_OAUTH_BASE_URL", "CMS_OAUTH_REDIRECT_URI"] as const;
+const baseUrl = "https://rukiaovo-homepage.vercel.app";
+function setConfig() {
+  Object.assign(process.env, { GITHUB_OAUTH_CLIENT_ID: "client", GITHUB_OAUTH_CLIENT_SECRET: "secret", CMS_OAUTH_BASE_URL: baseUrl, CMS_OAUTH_REDIRECT_URI: `${baseUrl}/api/auth/callback?provider=github` });
+}
 
-test("CMS OAuth routes validate state and repository write permission", async () => {
+test("GitHub OAuth creates an HttpOnly server session without exposing the token to the page", async () => {
   const previousEnv = Object.fromEntries(envKeys.map((key) => [key, process.env[key]]));
   const originalFetch = globalThis.fetch;
-  Object.assign(process.env, {
-    GITHUB_OAUTH_CLIENT_ID: "test-client-id",
-    GITHUB_OAUTH_CLIENT_SECRET: "test-client-secret",
-    CMS_OAUTH_BASE_URL: "https://rukiaovo-homepage.vercel.app",
-    CMS_OAUTH_REDIRECT_URI: "https://rukiaovo-homepage.vercel.app/api/auth/callback?provider=github",
-  });
-
+  setConfig();
   try {
-    const cmsConfig = await configGet();
-    assert.equal(cmsConfig.status, 200);
-    assert.match(await cmsConfig.text(), /branch: codex\/vercel-site/);
-
-    const auth = await authGet(new Request("https://rukiaovo-homepage.vercel.app/api/auth/?provider=github"));
-    assert.equal(auth.status, 302);
-    const authorize = new URL(auth.headers.get("location") ?? "");
-    assert.equal(authorize.origin, "https://github.com");
-    assert.equal(authorize.searchParams.get("scope"), "public_repo");
-    assert.equal(authorize.searchParams.get("redirect_uri"), "https://rukiaovo-homepage.vercel.app/api/auth/callback?provider=github");
-    const state = authorize.searchParams.get("state");
-    assert.match(state ?? "", /^[A-Za-z0-9_-]{43}$/);
-    const cookie = auth.headers.get("set-cookie")?.match(/rukia_cms_oauth_state=([^;]+)/)?.[1];
-    assert.equal(cookie, state);
-
-    const denied = await callbackGet(new Request("https://rukiaovo-homepage.vercel.app/api/auth/callback/?provider=github&error=access_denied"));
-    assert.equal(denied.status, 200);
-    assert.equal(denied.headers.get("cross-origin-opener-policy"), "unsafe-none");
-    assert.match(await denied.text(), /authorization:github:error:/);
-    assert.match(denied.headers.get("set-cookie") ?? "", /Max-Age=0/);
-
     let upstreamCalls = 0;
     globalThis.fetch = async (input) => {
       upstreamCalls++;
-      const url = String(input);
-      if (url === "https://github.com/login/oauth/access_token") return new Response(JSON.stringify({ access_token: "test-access-token" }), { headers: { "content-type": "application/json" } });
-      if (url === "https://api.github.com/repos/RukiaOvO/RukiaOvO.github.io") return new Response(JSON.stringify({ permissions: { push: true } }), { headers: { "content-type": "application/json" } });
-      throw new Error(`Unexpected OAuth upstream: ${url}`);
+      if (String(input) === "https://github.com/login/oauth/access_token") return Response.json({ access_token: "temporary-access-token", expires_in: 3600 });
+      if (String(input) === "https://api.github.com/repos/RukiaOvO/RukiaOvO.github.io") return Response.json({ permissions: { push: true } });
+      throw new Error(`Unexpected OAuth upstream: ${String(input)}`);
     };
-    const invalidState = await callbackGet(new Request(`https://rukiaovo-homepage.vercel.app/api/auth/callback/?provider=github&code=temporary&state=${state}`, { headers: { cookie: "rukia_cms_oauth_state=not-the-state" } }));
-    assert.equal(invalidState.status, 200);
-    assert.match(await invalidState.text(), /OAuth state validation failed/);
+    const start = await authGet(new Request(`${baseUrl}/api/auth/?provider=github&return_to=%2Fadmin%2F`));
+    assert.equal(start.status, 302);
+    const authorize = new URL(start.headers.get("location") ?? "");
+    assert.equal(authorize.origin, "https://github.com");
+    assert.equal(authorize.searchParams.get("scope"), "public_repo");
+    assert.equal(authorize.searchParams.get("redirect_uri"), `${baseUrl}/api/auth/callback?provider=github`);
+    const state = authorize.searchParams.get("state");
+    assert.match(state ?? "", /^[A-Za-z0-9_-]{43}$/);
+    const stateCookie = start.headers.get("set-cookie")?.match(/rukia_editor_oauth_state=([^;]+)/)?.[1];
+    assert.equal(stateCookie, state);
+
+    const rejected = await callbackGet(new Request(`${baseUrl}/api/auth/callback?provider=github&code=code&state=${state}`, { headers: { cookie: "rukia_editor_oauth_state=invalid" } }));
+    assert.equal(rejected.status, 303);
+    assert.match(rejected.headers.get("location") ?? "", /auth_error=state/);
     assert.equal(upstreamCalls, 0);
 
-    const success = await callbackGet(new Request(`https://rukiaovo-homepage.vercel.app/api/auth/callback/?provider=github&code=temporary&state=${state}`, { headers: { cookie: `rukia_cms_oauth_state=${cookie}` } }));
-    const successHtml = await success.text();
-    assert.equal(success.status, 200);
-    assert.equal(success.headers.get("cross-origin-opener-policy"), "unsafe-none");
-    assert.match(successHtml, /authorization:github:success:/);
-    assert.match(successHtml, /test-access-token/);
+    const callback = await callbackGet(new Request(`${baseUrl}/api/auth/callback?provider=github&code=code&state=${state}`, { headers: { cookie: `rukia_editor_oauth_state=${state}; rukia_editor_return_to=%2Fadmin%2F` } }));
+    assert.equal(callback.status, 303);
+    assert.equal(callback.headers.get("location"), `${baseUrl}/admin/?auth=success`);
+    const cookies = callback.headers.get("set-cookie") ?? "";
+    assert.match(cookies, /__Secure-rukia_editor_session=temporary-access-token/);
+    assert.match(cookies, /Path=\/api\/editor/);
+    assert.match(cookies, /HttpOnly/);
+    assert.match(cookies, /Secure/);
+    assert.match(cookies, /SameSite=lax/);
+    assert.equal((await callback.text()).includes("temporary-access-token"), false);
     assert.equal(upstreamCalls, 2);
 
-    globalThis.fetch = async (input) => {
-      if (String(input) === "https://github.com/login/oauth/access_token") return new Response(JSON.stringify({ access_token: "read-only-token" }), { headers: { "content-type": "application/json" } });
-      return new Response(JSON.stringify({ permissions: { push: false } }), { headers: { "content-type": "application/json" } });
-    };
-    const noWriteAccess = await callbackGet(new Request(`https://rukiaovo-homepage.vercel.app/api/auth/callback/?provider=github&code=temporary&state=${state}`, { headers: { cookie: `rukia_cms_oauth_state=${cookie}` } }));
-    const noWriteHtml = await noWriteAccess.text();
-    assert.match(noWriteHtml, /does not have write access/);
-    assert.doesNotMatch(noWriteHtml, /read-only-token/);
-
-    for (const error of ["incorrect_client_credentials", "redirect_uri_mismatch", "bad_verification_code", "unrecognized_upstream_error", "__proto__"]) {
-      let exchangeCalls = 0;
-      globalThis.fetch = async () => {
-        exchangeCalls++;
-        return Response.json({ error, error_description: "private-upstream-detail", access_token: "must-not-leak" });
-      };
-      const rejected = await callbackGet(new Request(`https://rukiaovo-homepage.vercel.app/api/auth/callback/?provider=github&code=temporary&state=${state}`, { headers: { cookie: `rukia_cms_oauth_state=${cookie}` } }));
-      const rejectedHtml = await rejected.text();
-      assert.match(rejectedHtml, /authorization:github:error:/);
-      assert.doesNotMatch(rejectedHtml, /private-upstream-detail|must-not-leak/);
-      assert.match(rejectedHtml, new RegExp(["unrecognized_upstream_error", "__proto__"].includes(error) ? "GitHub did not return an authorization token" : error));
-      assert.equal(exchangeCalls, 1);
-    }
-
-    process.env.CMS_OAUTH_REDIRECT_URI = "https://attacker.example/api/auth/callback?provider=github";
-    assert.equal((await configGet()).status, 503);
-    assert.equal((await authGet(new Request("https://rukiaovo-homepage.vercel.app/api/auth/?provider=github"))).status, 503);
+    const noSession = await sessionGet(new Request(`${baseUrl}/api/editor/session`));
+    assert.deepEqual(await noSession.json(), { authenticated: false, configured: true });
   } finally {
     globalThis.fetch = originalFetch;
-    for (const key of envKeys) {
-      if (previousEnv[key] === undefined) delete process.env[key];
-      else process.env[key] = previousEnv[key];
-    }
+    for (const key of envKeys) { if (previousEnv[key] === undefined) delete process.env[key]; else process.env[key] = previousEnv[key]!; }
+  }
+});
+
+test("editor mutations require same-origin requests and reject invalid metadata or image data", async () => {
+  const previousEnv = Object.fromEntries(envKeys.map((key) => [key, process.env[key]]));
+  const originalFetch = globalThis.fetch;
+  setConfig();
+  try {
+    let upstreamCalls = 0;
+    globalThis.fetch = async () => { upstreamCalls++; throw new Error("Unexpected GitHub call"); };
+    const cookie = "__Secure-rukia_editor_session=test-token";
+    const wrongOrigin = await savePost(new Request(`${baseUrl}/api/editor/articles/save`, { method: "POST", headers: { cookie, origin: "https://attacker.example", "content-type": "application/json" }, body: "{}" }));
+    assert.equal(wrongOrigin.status, 403);
+    const invalidArticle = await savePost(new Request(`${baseUrl}/api/editor/articles/save`, { method: "POST", headers: { cookie, origin: baseUrl, "content-type": "application/json" }, body: JSON.stringify({ file: "bad.md", title: "", date: "not-a-date", draft: true, summary: "", tags: [], categories: [], content: "" }) }));
+    assert.equal(invalidArticle.status, 400);
+
+    const form = new FormData();
+    form.set("file", "article-20261102-010101.md");
+    form.set("branch", "cms-editor/abcdef123456-abcdef12");
+    form.set("image", new File(["not an image"], "bad.svg", { type: "image/svg+xml" }));
+    const invalidImage = await imagePost(new Request(`${baseUrl}/api/editor/images`, { method: "POST", headers: { cookie, origin: baseUrl }, body: form }));
+    assert.equal(invalidImage.status, 415);
+    assert.equal(upstreamCalls, 0);
+  } finally {
+    globalThis.fetch = originalFetch;
+    for (const key of envKeys) { if (previousEnv[key] === undefined) delete process.env[key]; else process.env[key] = previousEnv[key]!; }
   }
 });

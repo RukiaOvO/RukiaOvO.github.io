@@ -13,13 +13,13 @@
 
 ## 在线写作与上传
 
-Vercel 承载网站和服务端接口，本身不提供文章编辑后台。新站 `/admin/` 已准备 Decap CMS：配置 OAuth 环境变量后显示站内编辑器，内容和图片通过 GitHub 写回独立新站分支；未配置时退回 GitHub 网页写作与上传入口。
+新站 `/admin/` 已改为站内 Markdown 工作台，不再加载 Decap CMS。登录后可以编辑文章 metadata 和 Markdown 正文、上传图片并自动插入正文。文章和图片写入同一文章专属草稿分支，保存后创建/更新 GitHub Pull Request；合并到新站分支后由 Vercel 自动部署。
 
-当前代码配置：文章写入 `content/posts`，图片写入 `static/img/posts`，Decap 使用 editorial workflow 在 `codex/vercel-site` 建立内容变更；Vercel 需绑定该分支后才会生成 Preview/部署。OAuth 回调使用同一生产源下 `/api/auth/callback?provider=github`。OAuth 代码检查 state、GitHub 仓库写权限，并在 callback 中通过同源 `postMessage` 将授权交回 Decap。
+当前代码配置：文章保存到 `content/posts`，图片保存到 `static/img/posts`，正文统一引用 `/img/posts/<唯一文件名>`；图片路径和文章内容由同一草稿分支提交，避免 Decap 媒体库中重复的草稿/普通条目。OAuth 回调为同源 `/api/auth/callback?provider=github`，服务端校验 state 和目标仓库写权限；访问 Token 仅保存在 HttpOnly Cookie 中，不暴露给前端脚本。
 
-尚待完成的是账号配置和真实账号验收：创建 GitHub OAuth App，将 Client Secret 仅保存在 Vercel Production 环境变量；确保登录用户对 `RukiaOvO/RukiaOvO.github.io` 有写权限；将 Vercel 生产分支设为 `codex/vercel-site`。授权使用 GitHub OAuth 的 `public_repo` 权限，GitHub 会按其授权页面说明授予该用户对公开仓库的访问能力；登录前应核对授权范围，并可随时在 GitHub 撤销应用授权。本站额外验证目标仓库是否有 push 权限。访问 token 由服务端交换，短暂交给 Decap 编辑会话，不写入公开页面或仓库；文章和媒体持久保存在 GitHub，而非 Vercel 函数临时文件系统。
+OAuth App 和 Vercel Production Secret 已由用户配置，既有回调无需调整。用户已确认上一版可以登录和保存文章，图片工作流存在重复条目和引用失效；新版代码已本地实现，真实生产账号验收待部署后完成。授权使用 GitHub OAuth 的 `public_repo` 权限，站点额外检查仓库 push 权限。文章和图片持久保存在 GitHub，不使用 Vercel 函数临时文件系统。
 
-准确配置步骤与变量名见 [新旧主页对比与部署流程](new-old-comparison-and-rollout.md)。站内 CMS 验收仍需真实账号完成登录、新建/编辑/图片上传、预览与发布；当前仅完成本地代码和自动化模拟测试。
+准确配置步骤与变量名见 [新旧主页对比与部署流程](new-old-comparison-and-rollout.md)。新版编辑器需在 Vercel 部署后由用户账号确认 PR 内文章和图片位于同一分支、正文引用可访问、图片不再重复出现。
 
 ## ClouDNS 域名
 

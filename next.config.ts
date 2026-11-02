@@ -12,13 +12,11 @@ const config: NextConfig = {
     return [
       { source: "/posts/page/:page", destination: "/posts/?page=:page", permanent: true },
       { source: "/admin/index.html", destination: "/admin/", permanent: true },
+      { source: "/admin/editor", destination: "/admin/", permanent: true },
     ];
   },
-  async headers() {
-    return [{ source: "/admin/:path*", headers: [{ key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" }] }];
-  },
   async rewrites() {
-    return { beforeFiles: [{ source: "/admin/config.yml", destination: "/api/cms/config" }] };
+    return { beforeFiles: [{ source: "/admin/config.yml", destination: "/api/editor/disabled-config" }] };
   },
 };
 export default config;

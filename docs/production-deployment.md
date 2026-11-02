@@ -2,6 +2,8 @@
 
 更新：2026-11-02（北京时间）。本记录区分实际完成的部署与仍需真实账号验收的写作流程。
 
+最新状态：用户已实际验收旧版可登录和保存文章，但图片在 Decap 媒体库中出现重复条目、插入引用无法显示。当前工作是替换该编辑器；下方早期 Decap 线上记录用于追溯历史，最新代码尚待推送部署。
+
 ## 已完成
 
 - Vercel 个人账号作用域：`rukiaovo`；项目：`rukiaovo-homepage`。
@@ -35,7 +37,7 @@ GitHub OAuth App 参数：
 
 完整 OAuth 配置已在部署 `dpl_7cB26zf7ifjsaoyMHGV9WWekW6i3`（提交 `9396f79`）验证：`/admin/config.yml` 返回 200 YAML，分支与图片目录正确；授权接口返回 302，回调和 `public_repo` 范围正确；无效 state 被拒绝；真实 Decap 脚本正常加载并显示中文 GitHub 登录按钮，浏览器无脚本异常。编辑器独立文档 `/admin/editor/` 嵌入 `/admin/`，避免 Decap 与 Next.js 的 React 初始化冲突。
 
-真实用户登录、草稿保存、图片上传与审核发布仍待本人账号验收。Git 自动生产发布已通过本任务的后续提交验证，不代表 CMS 写作流程已经验收。
+用户已确认旧版真实登录和草稿保存成功；图片上传与插入失败，正是替换编辑器的原因。新版本的生产写入验收待部署后执行。
 
 首次真实授权反馈停留在 “Returning to Decap CMS…”：跨来源授权返回时，回调页的 COOP 隔离策略切断了 `window.opener`。Chrome 跨来源弹窗对照实测复现；回调页改为 `unsafe-none` 后成功交还消息并关闭弹窗。编辑器保留 `same-origin-allow-popups`，state、目标 origin、消息来源和仓库写权限校验不变。修复发布后仍需本人重新授权验证。
 
@@ -43,7 +45,16 @@ GitHub OAuth App 参数：
 
 ## 后续运维
 
-- 内容由 Decap CMS 写回 `codex/vercel-site`，图片保存到 `static/img/posts`，通过 Git 集成发布。
+- 当前生产部署在更新前仍使用旧编辑器；新版部署后文章和图片写入同一个 `cms-editor/*` PR，再合并到 `codex/vercel-site` 发布。
 - ClouDNS 自定义域名暂未绑定；后续使用 Vercel Domains 提供的实际 DNS 记录，不启用网站记录的 DDNS 更新。
 - 回滚应选择经过验收的历史 Vercel 部署，并同步处理 Git 中引发故障的变更；目前尚未做回滚演练。
 - Giscus 登录与评论写入、共享限流、多浏览器性能评估仍按后续计划执行。
+
+## 2026-11-02：替换在线编辑器
+
+用户反馈旧 Decap 流程会把上传图片显示成重复媒体条目，插入后文章无法显示图片。新版在本地完成了轻量 Markdown 工作台：OAuth 同页回调、HttpOnly 服务端会话、文章列表和 metadata 编辑、图片单次上传并插入 Markdown、每篇文章单独的草稿分支和 PR。图片通过唯一文件名写入 `static/img/posts/`，文章和图片共享 PR，保存后 Vercel 通过仓库集成发布。
+
+- OAuth App、Production `GITHUB_OAUTH_CLIENT_ID` / `GITHUB_OAUTH_CLIENT_SECRET`、回调地址均沿用已有配置，不需用户重建或发送密钥。
+- 已移除新站 Decap 配置 API和编辑器路由，并将 `/admin/config.yml` 旧静态地址明确封锁为 404；旧 Hugo 的 `static/admin/` 源文件保留，不会影响 Next.js 编辑器。
+- 本地单元测试、lint、TypeScript 和 Next.js 生产构建通过。生产部署和真实用户图片上传/保存/页面展示验收需在本次代码推送后进行；在完成前，不将新版标记为线上可用。
+- 现有 Decap PR #4 / #5 不会由新版自动修改、关闭、合并或删除。新版只管理 `cms-editor/*` 分支。

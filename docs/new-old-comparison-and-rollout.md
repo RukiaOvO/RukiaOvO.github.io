@@ -2,14 +2,14 @@
 
 更新：2026-11-02。按当前本地代码核对；“旧站”表示仓库中的 Hugo 实现/配置，不代表本轮重新验证了所有旧外部服务。
 
-部署进度更新：`codex/vercel-site` 已推送，已创建个人账号下的 `rukiaovo-homepage`，生产地址为 https://rukiaovo-homepage.vercel.app ，云端构建、Git 自动生产发布、前台及 CMS 登录页线上验收已通过。OAuth 密钥已配置，临时 noindex 已关闭并等待本次部署生效；真实在线写作仍待本人账号验收。以下“尚未推送/仅本地/长期项目待配置”描述为部署前盘点；最新事实以 [生产部署记录](production-deployment.md) 为准。
+部署进度更新：`codex/vercel-site` 已推送，个人 Vercel 项目为 `rukiaovo-homepage`，生产地址为 https://rukiaovo-homepage.vercel.app，仓库生产集成与 OAuth App 已配置。用户已确认旧版能登录和保存草稿，但 Decap 图片库操作有重复条目和图片引用失效问题。站内 Markdown 编辑器替代方案目前完成本地实现和自动化检查；待推送部署及真实生产账号图片验收，部署状态以 [生产部署记录](production-deployment.md) 为准。
 
 ## 当前交付边界
 
 - 新站当前是与旧主页相近的蓝灰色、半透明卡片、侧栏与主栏布局，已在本地构建并通过浏览器回归。
 - 新工程文件仍在本地工作区，尚未提交、推送到 GitHub。
 - 之前的 Vercel 匿名临时部署验证了上一轮视觉版本和真实接口；不是长期生产项目，也没有完成 Git 自动发布。最新布局尚未重新部署。
-- `/admin/` 的 Decap CMS 与 GitHub OAuth 回调代码已实现，未配置账号变量时使用 GitHub 网页备用入口；真实 OAuth、上传和发布仍待账号验收。
+- `/admin/` 已从 Decap CMS 切换到站内 Markdown 编辑器：图片直接上传并插入正文，文章和图片保存在同一文章草稿 PR。新版尚待生产部署和真实账号图片验收。
 
 ## 新旧对比
 
@@ -31,7 +31,7 @@
 | Steam | 在线状态、最近游玩，依赖旧 Worker | 尚未接入；保留个人 Steam 链接，链接不等于实时状态 |
 | 访问统计 | 访客徽章/Worker 累计 | 尚未实现统计、没有迁移历史计数；后续可评估 Vercel Analytics |
 | 留言与评论 | Giscus / GitHub Discussions | 配置与 pathname 映射沿用；点击加载、主题同步、超时/重试；真实登录发言待验收 |
-| 在线写作 | Decap CMS 配置指向旧 Worker OAuth 和 main | 新站 Decap CMS 接入新 OAuth，编辑文章/图片写回 `codex/vercel-site`；本地实现完成，OAuth App 和线上验收未闭环 |
+| 在线写作 | 旧站 Decap 配置和 main 分支 | 新站站内 Markdown 工作台；GitHub OAuth 会话只在服务端，文章/图片共用 `cms-editor/*` PR；新版待生产部署和实账号验收 |
 | 发布链路 | 推送 main 触发 Hugo / Pages | 已有 Next.js CI 文件，但未推送；Vercel Git 集成、长期生产分支和回滚待配置 |
 | 接口可靠性 | 旧 JS / Worker 实现，Worker 源码不在仓库 | 明确响应格式、参数白名单、7秒上游超时、响应大小限制、成功缓存、实例内限流；共享限流可选 |
 | 域名 | 当前 GitHub Pages 地址；平台也支持自定义域名 | 长期 vercel.app 或 ClouDNS 管理的自定义域名；不把 github.io 子域名迁到 Vercel |
@@ -43,7 +43,7 @@
 
 执行前必须处理两个当前事实：
 
-1. 新站 `/admin/` 和 Decap 配置已指向 `codex/vercel-site`；需在 Vercel 生产项目绑定同一分支，旧 Hugo workflow 继续只监听 `main`。
+1. 新站 `/admin/` 使用站内工作台，Pull Request base 为 `codex/vercel-site`；Vercel 生产项目继续绑定该分支，旧 Hugo workflow 只监听 `main`。
 2. 新 `.github/workflows/nextjs.yml` 仅监听 `codex/vercel-site`，因此旧 Pages 部署不会接管新站代码。
 
 这是后续实施方案，本次整理没有创建/切换分支、提交、推送或修改线上配置。两分支在后续独立演进时，内容不会自动同步；需要双站同时更新时应明确安排同步。
@@ -110,18 +110,17 @@ GitHub OAuth App 配置：Homepage URL 填 Vercel 生产源，Authorization call
 
 ClouDNS 的职责是解析域名；Vercel 的职责是托管网站。无需家中服务器、公网固定 IP、端口转发或动态 IP 更新客户端。
 
-## 步骤 6：在线写作、图片和 CMS
+## 步骤 6：在线写作、图片与发布
 
-先接通 GitHub 网页方式：从新站工作台进入正确生产分支的新建/上传入口，填写 Markdown 元信息与正文、上传图片，创建内容分支与 PR；检查 Preview 后合并，确认正式页面与图片更新。
+新版工作台使用现有 GitHub OAuth App 和 Production Secret，不需要创建新应用或再次填写密钥。回调仍为 `https://rukiaovo-homepage.vercel.app/api/auth/callback?provider=github`。代码推送并部署后：
 
-站内 Decap CMS 前台、文章/图片集合、`codex/vercel-site` 编辑流程和服务端 GitHub OAuth 已在代码中实现。完成真实启用还需要：
+1. 打开 `/admin/` 并使用 GitHub 登录。
+2. 新建文章，填写标题、日期、摘要和正文；草稿复选框默认打开。
+3. 点击“上传并插入图片”。图片上传后自动插入 Markdown；新文章和图片写进同一 `cms-editor/*` 分支。
+4. 保存后从编辑器打开草稿 PR，核对 `content/posts/*.md` 与 `static/img/posts/*` 都在同一个 PR，正文引用 `/img/posts/<唯一文件名>`。
+5. 合并 PR 后确认 Vercel 生产文章和图片路径均正常。不要对现有 Decap PR 做任何自动合并或关闭。
 
-1. 在 Vercel 项目上确认生产分支为 `codex/vercel-site`，使用 HTTPS 稳定生产域名。
-2. 创建 GitHub OAuth App；Homepage URL 填生产源，Authorization callback URL 精确填写 `https://<生产域名>/api/auth/callback?provider=github`。
-3. 在 Vercel Production 配置 `GITHUB_OAUTH_CLIENT_ID`、`GITHUB_OAUTH_CLIENT_SECRET`、`CMS_OAUTH_BASE_URL=https://<生产域名>` 和对应的 `CMS_OAUTH_REDIRECT_URI`。Secret 不进入仓库或前端变量。
-4. 登录 `/admin/`，验收新建/编辑、草稿、图片上传、PR 审阅与发布；内容保存到 GitHub 仓库，未来日期文章到时需要重新构建。
-
-OAuth 使用 `public_repo` 权限；登录授权前应核对 GitHub 显示的授权范围。自动化模拟已验证 state、popup 消息、拒绝授权、目标仓库写权限、缺少配置回退和 callback 路由；真实 GitHub 登录和内容提交尚待账号验收。
+本地回归已覆盖同一个模拟 PR 中的 Markdown 和 PNG 提交、图片引用插入、OAuth state/HttpOnly Cookie、同源校验和上传 MIME 检查；线上真实 GitHub 写入与图片展示待部署后确认。
 
 ## 步骤 7：评论与可选服务
 

@@ -60,28 +60,21 @@ test("content workbench, pages, resources, sitemap, RSS and 404 routes", async (
     expect((await request.get(path)).status(), path).toBe(200);
   }
   const admin = await (await request.get("/admin/")).text();
-  expect((await request.get("/admin/")).headers()["cross-origin-opener-policy"]).toBe("same-origin-allow-popups");
-  const cmsConfig = await request.get("/admin/config.yml");
-  if (cmsConfig.status() === 503) {
-    expect(admin).toContain("内容工作台");
-    expect(admin).not.toContain("decap-cms.js");
-    expect((await request.get("/api/auth/?provider=github", { maxRedirects: 0 })).status()).toBe(503);
-    expect((await request.get("/api/auth/callback/?provider=github&error=access_denied", { maxRedirects: 0 })).status()).toBe(503);
-    const writeLink = new URL((await admin.match(/href="([^"]+\/new\/codex%2Fvercel-site\/content\/posts)"/)?.[1]) ?? "https://invalid.example");
-    expect(writeLink.pathname).toContain("codex%2Fvercel-site");
-  } else {
-    expect(cmsConfig.status()).toBe(200);
-    const cmsYaml = await cmsConfig.text();
-    expect(cmsYaml).toContain("branch: codex/vercel-site");
-    expect(cmsYaml).toContain("editorial_workflow");
-    expect(admin).toContain('src="/admin/editor/"');
-    const editor = await request.get("/admin/editor/");
-    expect(editor.status()).toBe(200);
-    expect(await editor.text()).toContain("decap-cms.js");
-    expect(editor.headers()["x-frame-options"]).toBe("SAMEORIGIN");
+  expect(admin).toContain("内容工作台");
+  expect(admin).not.toContain("decap-cms.js");
+  expect(admin).not.toContain('src="/admin/editor/"');
+  expect((await request.get("/admin/editor/")).status()).toBe(200);
+  expect((await request.get("/admin/config.yml")).status()).toBe(404);
+  const editorSession = await request.get("/api/editor/session");
+  expect(editorSession.status()).toBe(200);
+  const sessionData = await editorSession.json();
+  if (sessionData.configured) {
     const authStart = await request.get("/api/auth/?provider=github", { maxRedirects: 0 });
     expect(authStart.status()).toBe(302);
     expect(authStart.headers().location).toContain("https://github.com/login/oauth/authorize?");
+  } else {
+    expect(admin).toContain("正在连接内容工作台");
+    expect((await request.get("/api/auth/?provider=github", { maxRedirects: 0 })).status()).toBe(503);
   }
   const sitemap = await (await request.get("/sitemap.xml")).text();
   expect(sitemap).toContain(`/posts/${slug}/`);
@@ -96,10 +89,40 @@ test("content workbench, pages, resources, sitemap, RSS and 404 routes", async (
   expect((await request.get("/api/activity/?url=https://example.com")).status()).toBe(400);
 });
 
+test("Markdown editor inserts an uploaded image into the same article draft PR", async ({ page }) => {
+  const savedBodies: Record<string, unknown>[] = [];
+  await page.route("**/api/editor/session", (route) => route.fulfill({ json: { authenticated: true, configured: true, user: { login: "editor", name: "Editor" } } }));
+  await page.route("**/api/editor/articles", (route) => route.fulfill({ json: { articles: [] } }));
+  await page.route("**/api/editor/articles/save", async (route) => {
+    const body = route.request().postDataJSON() as Record<string, unknown>;
+    savedBodies.push(body);
+    const article = { ...body, file: "article-20261102-010101.md", summary: "", tags: [], categories: [] };
+    return route.fulfill({ json: { ok: true, file: article.file, branch: "cms-editor/abcdef123456-abcdef12", pullNumber: 42, pullUrl: "https://github.com/RukiaOvO/RukiaOvO.github.io/pull/42", article } });
+  });
+  await page.route("**/api/editor/images", async (route) => {
+    expect(route.request().method()).toBe("POST");
+    expect(route.request().postData() ?? "").toContain("name=\"branch\"");
+    expect(route.request().postData() ?? "").toContain("cms-editor/abcdef123456-abcdef12");
+    return route.fulfill({ json: { ok: true, branch: "cms-editor/abcdef123456-abcdef12", name: "test-image.png", path: "/img/posts/test-image.png", markdown: "![](/img/posts/test-image.png)" } });
+  });
+  await page.goto("/admin/");
+  await page.getByLabel("标题").fill("图片上传验收");
+  await page.locator("#article-markdown").fill("正文开头");
+  await page.locator('input[type="file"]').setInputFiles({ name: "test.png", mimeType: "image/png", buffer: Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/GqkAAAAASUVORK5CYII=", "base64") });
+  await expect(page.locator("#article-markdown")).toHaveValue(/!\[\]\(\/img\/posts\/test-image\.png\)/);
+  await expect(page.getByText("图片已上传并插入正文", { exact: false })).toBeVisible();
+  await page.getByRole("button", { name: "保存草稿 PR" }).click();
+  await expect(page.getByText("已保存到草稿 PR #42。", { exact: true })).toBeVisible();
+  expect(savedBodies).toHaveLength(2);
+  expect(savedBodies[1].content).toContain("/img/posts/test-image.png");
+  expect(savedBodies[1].branch).toBe("cms-editor/abcdef123456-abcdef12");
+  expect(savedBodies[0].draft).toBe(true);
+});
+
 test("mobile layouts fit the viewport and keyboard navigation reaches main content", async ({ page }) => {
   for (const width of [320, 375, 768, 1440]) {
     await page.setViewportSize({ width, height: 900 });
-    for (const path of ["/", "/posts/", `/posts/${slug}/`, "/activity/", "/projects/", "/about/"]) {
+    for (const path of ["/", "/posts/", `/posts/${slug}/`, "/activity/", "/projects/", "/about/", "/admin/"]) {
     await page.goto(path);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), path).toBe(true);
     }

@@ -4,7 +4,7 @@
 
 ## 最新布局调整
 
-用户补充要求风格与旧主页相似后，已将本地新站改为蓝灰色 GitHub Profile 仪表盘：浮动导航、左侧头像/资料/技能、右侧热力图/文章/项目/动态/留言；手机单列。工作台提供 Decap CMS OAuth 接入和 GitHub 网页备用写作/图片上传入口。相关边界及 ClouDNS 官方接入依据见 [layout-publishing-domain.md](layout-publishing-domain.md)。
+用户补充要求风格与旧主页相似后，已将新站调整为蓝灰色 GitHub Profile 仪表盘：顶部导航、左侧个人资料、右侧热力图/文章/项目/动态/留言；手机单列。用户随后决定替换 Decap CMS：新版 `/admin/` 使用 Markdown 编辑器、GitHub OAuth HttpOnly 会话，文章和图片在同一文章专属分支中保存为 PR。相关边界及 ClouDNS 接入依据见 [layout-publishing-domain.md](layout-publishing-domain.md)。
 
 此轮生产构建、lint、类型检查及 6 项浏览器回归通过，覆盖 320/375/768/1440px 无溢出。当前布局在本地 3200 预览；下文临时部署记录对应上一轮视觉版本，不代表新布局已重新上线。
 
@@ -18,17 +18,18 @@
 - 外部请求包含 7 秒超时、2 MB 响应上限、结构校验和协议限制。XML 禁止文档级 DTD/实体声明，但允许 CDATA 中的 HTML 示例，输出仅作为文本显示。
 - GitHub 缓存 5 分钟、RSS 缓存 15 分钟，使用 Next.js Data Cache 按需更新。API 响应有短期 CDN 缓存；只缓存经验证的成功快照。数据源状态展示上次获取时间。
 - API 设置每分钟 60 次的实例内限流；可通过 Upstash REST 环境变量切换成共享原子计数。未配置共享存储时不声称实现了跨实例限流。配置后存储异常会返回 503，不默默绕过。
-- `/admin/` 支持 Decap CMS 与 GitHub OAuth；缺少完整配置时退回 Markdown/Git 发布工作台。回调校验 state 和目标仓库 push 权限；popup 消息协议、安全响应头及分支链接均有自动化覆盖。
-- Next.js 使用 beforeFiles rewrite 将 `/admin/config.yml` 指向动态 CMS 配置，避免 Hugo 遗留的 `static/admin/config.yml` 覆盖新路由。
+- `/admin/` 使用站内 Markdown 工作台，可列出文章、编辑标题/日期/摘要/标签/分类/正文、标记草稿，并保存到 GitHub 草稿 PR。GitHub Token 只在服务端 HttpOnly Cookie 中；保存和上传校验同源请求。
+- 图片直接上传到该文章的草稿分支，自动写入 Markdown 正文；图片使用唯一名称，不经过独立媒体库，也不会生成空的图片条目。上传支持 PNG、JPEG、GIF、WebP，最大 4 MB。
+- OAuth 使用 GitHub 单页授权返回，不把 Token 返回给浏览器 JavaScript。Next.js 移除 Decap 配置 API和编辑器路由，并将旧 `/admin/config.yml` 地址封锁为 404；`static/admin/` 仍是旧 Hugo 来源文件，新站不再加载。
 - 资源同步只管理图片，通过清单删除失效的受管文件，不删除不相关文件；构建拒绝 Hugo 的 `public/index.html` 冲突。
 - canonical 使用 `SITE_URL` 或 Vercel 生产域名，本地使用 localhost。临时预览可设置 `SITE_NOINDEX=true`。
 
 ## 验证
 
 - 生产构建、lint、TypeScript 通过。
-- 14 项单元测试通过：文章处理、筛选、目录锚点、资源同步、GitHub/RSS 校验、安全链接、去重、空数据、上游超时/错误/大小限制。
+- 17 项单元测试通过：文章处理、筛选、目录锚点、资源同步、GitHub/RSS 校验、安全链接、去重、空数据、上游超时/错误/大小限制、OAuth 会话、编辑接口输入检查，以及文章和图片同 PR 写入。
 - 6 项浏览器回归通过：导航与内容、主题持久化、第三方失败降级、文章/资源/SEO、RSS 来源筛选及分页、请求失败重试。
-- 本轮 CMS 补充：15 项单测、lint、类型检查、生产构建通过；6 项浏览器回归在未配置与临时测试配置两种路径通过。OAuth 客户端/密钥未创建，未进行真实 GitHub 写入。
+- 新编辑器当前本地单测（17 项）、lint、TypeScript、生产构建和 7 项 Playwright 浏览器回归已通过；真实 GitHub 写入与生产上线需等此版本部署后再验收。图片路径、同一 PR 写入及生产图片访问仍需真实账号端到端确认。
 - 在 320、375、768、1440px 检查主要页面，无横向溢出；已查看桌面/手机首页截图。
 - Vercel 真实 API 返回 GitHub 9 条公开活动、RSS 90 条内容；IT之家、GitHub Blog、Hacker News 三个来源均成功。GitHub Blog 的 CDATA 示例解析问题已修复并覆盖回归。
 - 浏览器自动测试对失败、空、部分失败等使用夹具；真实上游读取另行执行，不混淆模拟成功与真实成功。

@@ -1,6 +1,6 @@
 # Next.js 开发与验收
 
-> 当前开发说明以 [new-site-delivery.md](new-site-delivery.md) 为准。新站现使用 Node.js 24、独立 `data/site.ts`、GitHub/RSS 服务端接口和 Markdown/Git 发布工作台；可选 Decap CMS 通过独立 OAuth 回调接入。
+> 当前开发说明以 [new-site-delivery.md](new-site-delivery.md) 为准。新站使用 Node.js 24、独立 `data/site.ts`、GitHub/RSS 服务端接口和站内 Markdown 工作台。
 
 ## 启动
 
@@ -17,7 +17,7 @@ npm run dev
 
 ## 内容发布
 
-编辑 `content/posts/*.md` 和新站独立配置 `data/site.ts`。`/admin/` 在 OAuth 环境变量齐全时加载 Decap CMS，否则显示 GitHub 网页写作/上传入口。文章与图片写回 `codex/vercel-site` 分支；正文图片放在 `static/img/posts/`。
+编辑 `content/posts/*.md` 和新站独立配置 `data/site.ts`。在 `/admin/` 使用 GitHub OAuth 登录后，可创建或编辑 Markdown 文章，上传图片并直接插入正文。每篇文章与其图片放在同一 `cms-editor/*` 草稿分支，保存时创建或更新指向 `codex/vercel-site` 的 Pull Request。合并后 Vercel 自动构建发布；旧 `static/admin/config.yml` 仅供 Hugo 保留，不会由新站加载。
 
 - Markdown frontmatter：`title`、`date` 必填；`draft` 为布尔值；`summary`、`description`、`tags`、`categories` 可选。
 - 默认以文件名生成 slug；可选显式 `slug` 仅接受字母、数字、下划线、连字符。不要重命名已有文章文件，避免断开 URL 与评论关联。
@@ -58,6 +58,6 @@ canonical 优先取 `SITE_URL`，否则使用 `VERCEL_PROJECT_PRODUCTION_URL` / 
 
 已完成 Vercel 匿名临时部署和线上探测，实际地址、有效期、验证边界见 [交付记录](new-site-delivery.md)。长期账号项目与 Git 发布仍按 [闭环计划](closure-and-repair-plan.md) 推进。临时部署必须设置 `SITE_NOINDEX=true`；正式稳定部署移除该变量，复核 SEO。
 
-可选站内 CMS 的变量为 `GITHUB_OAUTH_CLIENT_ID`、`GITHUB_OAUTH_CLIENT_SECRET`、`CMS_OAUTH_BASE_URL` 和 `CMS_OAUTH_REDIRECT_URI`。正式回调必须是同源 HTTPS 地址 `https://<生产域名>/api/auth/callback?provider=github`；Client Secret 只保存在 Vercel 服务端环境。具体设置步骤见 [对比与上线步骤](new-old-comparison-and-rollout.md)。
+站内编辑器使用 `GITHUB_OAUTH_CLIENT_ID`、`GITHUB_OAUTH_CLIENT_SECRET`、`CMS_OAUTH_BASE_URL` 和 `CMS_OAUTH_REDIRECT_URI`。正式回调必须是同源 HTTPS 地址 `https://<生产域名>/api/auth/callback?provider=github`；Client Secret 只保存在 Vercel 服务端环境。OAuth App 与 Secret 已由用户配置，无需重建。部署新编辑器后需登录实测文章 PR、图片上传和插入结果。具体部署边界见 [生产部署记录](production-deployment.md)。
 
 构建使用 Webpack，显式将 Markdown 加入服务端文件追踪。正常发布优先通过 Vercel Git 集成在 Linux 构建；Windows CLI 65.9.0 临时部署的路径和 trace 问题及本次处理记录见交付文档。
