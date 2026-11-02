@@ -40,6 +40,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ kin
     if (direct) return NextResponse.json(direct, { headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } });
     const url = new URL(endpoint);
     url.searchParams.set("t", new URL(_request.url).searchParams.get("t") || String(Date.now()));
+    if (kind === "games") url.searchParams.set("count", "5");
     const upstream = await fetch(url, { cache: "no-store", signal: AbortSignal.timeout(8000), redirect: "error" });
     if (!upstream.ok) return NextResponse.json({ error: "Steam service is temporarily unavailable." }, { status: 502, headers: { "Cache-Control": "no-store" } });
     const data: unknown = await upstream.json();
