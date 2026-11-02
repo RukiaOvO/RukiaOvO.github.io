@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { site } from "@/lib/site";
 import { isCmsOAuthConfigured } from "@/lib/cms-oauth";
 
@@ -9,7 +8,7 @@ export default function Admin() {
   const repo = `https://github.com/${site.comments.owner}/${site.comments.repo}`;
   const branch = "codex/vercel-site";
   const branchPath = encodeURIComponent(branch);
-  if (isCmsOAuthConfigured()) return <div className="cms-screen"><Script src="https://cdn.jsdelivr.net/npm/decap-cms@3.17.3/dist/decap-cms.js" strategy="afterInteractive" /><div id="nc-root" /></div>;
+  if (isCmsOAuthConfigured()) return <iframe title="文章与图片编辑器" src="/admin/editor/" style={{ width: "100%", height: "85vh", minHeight: 600, border: 0 }} />;
   return <><header className="page-intro"><p className="eyebrow">WRITE & PUBLISH</p><h1>内容工作台<span className="accent">。</span></h1><p>用 Markdown 在 GitHub 编写，再由 Vercel 构建发布。</p></header>
     <section className="panel prose"><h2>站内 CMS 配置待完成</h2><p>Decap CMS 已准备接入，但尚未配置 GitHub OAuth App 与长期 Vercel 项目环境变量。完成 OAuth 设置后，此页面会显示登录编辑器。</p>
       <h2>现在用 GitHub 网页写作</h2><p>使用有仓库写入权限的 GitHub 账号，创建文章或上传图片到新站分支 <code>{branch}</code>，再发起 Pull Request。合并到该分支后 Vercel 会自动发布。</p>

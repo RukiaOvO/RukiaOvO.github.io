@@ -37,6 +37,8 @@ test("search, taxonomy redirects, article TOC, images and metadata", async ({ pa
   await expect(page.locator(".post-card")).toHaveCount(filterPosts(await getPosts(), { q: "AgentSpec" }).posts.length);
   await page.getByRole("link", { name: /AgentSpec:/ }).click();
   await expect(page).toHaveURL(new RegExp(`/posts/${slug}/$`));
+  // App Router can briefly retain the previous page's metadata during navigation.
+  await expect(page.locator('link[rel="canonical"]')).toHaveCount(1);
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", absoluteUrl(`/posts/${slug}/`));
   await expect(page.getByRole("complementary", { name: "文章目录" })).toBeVisible();
   const imageUrls = await page.locator(".prose img").evaluateAll((images) => images.map((img) => (img as HTMLImageElement).src));
@@ -72,7 +74,11 @@ test("content workbench, pages, resources, sitemap, RSS and 404 routes", async (
     const cmsYaml = await cmsConfig.text();
     expect(cmsYaml).toContain("branch: codex/vercel-site");
     expect(cmsYaml).toContain("editorial_workflow");
-    expect(admin).toContain("decap-cms.js");
+    expect(admin).toContain('src="/admin/editor/"');
+    const editor = await request.get("/admin/editor/");
+    expect(editor.status()).toBe(200);
+    expect(await editor.text()).toContain("decap-cms.js");
+    expect(editor.headers()["x-frame-options"]).toBe("SAMEORIGIN");
     const authStart = await request.get("/api/auth/?provider=github", { maxRedirects: 0 });
     expect(authStart.status()).toBe(302);
     expect(authStart.headers().location).toContain("https://github.com/login/oauth/authorize?");
