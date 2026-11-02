@@ -28,7 +28,7 @@ h1, h2, h3, p { margin-top: 0; }
 h1, h2, h3 { line-height: 1.4; font-weight: 650; }
 h2 { font-size: 21px; letter-spacing: -.02em; margin-bottom: 18px; }
 img { max-width: 100%; height: auto; }
-.site-header { position: sticky; top: 0; z-index: 20; background: var(--panel); backdrop-filter: blur(18px); border-bottom: 1px solid var(--border); }
+.site-header { position: static; background: var(--panel); backdrop-filter: blur(18px); border-bottom: 1px solid var(--border); }
 .header-inner, .site-main, .site-footer { width: min(1140px, calc(100% - 64px)); margin-inline: auto; }
 .header-inner { display: flex; align-items: center; min-height: 82px; gap: 42px; }
 .wordmark { font-size: 28px; font-weight: 800; letter-spacing: -2px; }
@@ -36,8 +36,10 @@ img { max-width: 100%; height: auto; }
 .header-inner nav { display: flex; gap: 8px; margin-left: auto; }
 .header-inner nav a { padding: 9px 19px; border-radius: 9px; color: var(--muted); }
 .header-inner nav a[aria-current="page"] { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
-.theme-control select { border: 1px solid var(--border); border-radius: 9px; background: var(--bg); color: var(--text); color-scheme: inherit; padding: 8px 10px; font-size: 12px; max-width: 130px; }
-.theme-control select option { background: var(--bg); color: var(--text); }
+.theme-control { display: inline-flex; flex: 0 0 auto; padding: 3px; gap: 2px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg); }
+.theme-option { border: 0; border-radius: 7px; background: transparent; color: var(--muted); padding: 6px 9px; font-size: 12px; line-height: 1.4; white-space: nowrap; }
+.theme-option:hover { color: var(--text); background: var(--accent-soft); }
+.theme-option[aria-pressed="true"] { background: var(--accent); color: #fff; font-weight: 600; box-shadow: 0 1px 3px #0002; }
 .site-main { min-height: 70vh; padding-bottom: 60px; }
 .hero { display: grid; grid-template-columns: 1fr auto; align-items: center; padding: 74px 0 57px; gap: 56px; }
 .eyebrow { color: var(--muted); font-size: 10px; font-weight: 650; letter-spacing: .19em; margin-bottom: 12px; line-height: 1.6; }
@@ -186,7 +188,7 @@ img { max-width: 100%; height: auto; }
   .wordmark { font-size: 24px; }
   .header-inner nav { gap: 0; }
   .header-inner nav a { padding: 7px 10px; font-size: 13px; }
-  .theme-control select { max-width: 110px; padding: 6px 4px; font-size: 11px; }
+  .theme-option { padding: 6px 8px; font-size: 11px; }
   .hero { padding: 44px 0 32px; }
   .hero h1 { font-size: 37px; }
   .hero-description { font-size: 13px; }
@@ -357,7 +359,7 @@ img { max-width: 100%; height: auto; }
 
 /* Profile dashboard: familiar sidebar and glass panels, shared by the new site. */
 .header-inner, .site-main, .site-footer { width: min(1420px, calc(100% - 32px)); }
-.site-header { top: 12px; width: min(1420px, calc(100% - 32px)); margin: 16px auto; border: 1px solid var(--border); border-radius: 14px; background: var(--panel); box-shadow: var(--shadow); }
+.site-header { width: min(1420px, calc(100% - 32px)); margin: 16px auto; border: 1px solid var(--border); border-radius: 14px; background: var(--panel); box-shadow: var(--shadow); }
 .header-inner { width: 100%; min-height: 76px; padding: 14px 22px; gap: 24px; }
 .dock-brand { display: grid; gap: 4px; min-width: 0; line-height: 1.4; }
 .dock-brand strong { font-size: 20px; letter-spacing: -.025em; }
@@ -530,7 +532,7 @@ img { max-width: 100%; height: auto; }
   .header-inner .theme-control { order: 1; }
   .header-inner nav { order: 2; width: 100%; justify-content: space-between; margin: 0; }
   .header-inner nav a { padding: 5px 12px; }
-  .site-header { top: 8px; margin-block: 12px; }
+  .site-header { margin-block: 12px; }
   .dashboard-section .post-card h2 { font-size: 16px; }
   .dashboard-section .section-heading h2 { font-size: 19px; }
 }
@@ -538,7 +540,7 @@ img { max-width: 100%; height: auto; }
   .header-inner, .dashboard-content, .dashboard-sidebar .panel { padding: 16px; }
   .header-inner nav a { padding-inline: 8px; font-size: 12px; }
   .dock-brand strong { font-size: 15px; }
-  .theme-control select { max-width: 110px; padding-inline: 6px; }
+  .theme-option { padding-inline: 7px; }
   .dashboard-profile { grid-template-columns: 72px minmax(0, 1fr); gap: 14px; }
   .dashboard-avatar { width: 72px; height: 72px; }
 }

@@ -28,7 +28,7 @@ export default async function Posts({ searchParams }: Props) {
     return `/posts/?${query}`;
   }
   return <>
-    <header className="page-intro"><p className="eyebrow">THE NOTEBOOK</p><h1>{site.posts.title}<span className="accent">.</span></h1><p>{site.posts.description}</p></header>
+    <header className="page-intro"><p className="eyebrow">THE NOTEBOOK</p><h1>{site.posts.title}</h1><p>{site.posts.description}</p></header>
     <section className="panel" aria-label="搜索与筛选">
       <form key={JSON.stringify(filters)} action="/posts/" method="get" className="filters">
         <label className="search-field">搜索帖子<input type="search" name="q" placeholder="搜索标题、摘要或标签…" defaultValue={filters.q} /></label>
