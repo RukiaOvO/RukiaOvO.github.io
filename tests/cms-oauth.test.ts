@@ -60,6 +60,27 @@ test("GitHub OAuth creates an HttpOnly server session without exposing the token
   }
 });
 
+test("authenticated editor session reads the GitHub user endpoint outside the repository API", async () => {
+  const previousEnv = Object.fromEntries(envKeys.map((key) => [key, process.env[key]]));
+  const originalFetch = globalThis.fetch;
+  setConfig();
+  try {
+    const requests: string[] = [];
+    globalThis.fetch = async (input) => {
+      requests.push(String(input));
+      if (String(input) === "https://api.github.com/user") return Response.json({ login: "editor", name: "Editor" });
+      throw new Error(`Unexpected GitHub upstream: ${String(input)}`);
+    };
+    const response = await sessionGet(new Request(`${baseUrl}/api/editor/session`, { headers: { cookie: "__Secure-rukia_editor_session=editor-token" } }));
+    assert.equal(response.status, 200, await response.clone().text());
+    assert.deepEqual(await response.json(), { authenticated: true, configured: true, user: { login: "editor", name: "Editor" } });
+    assert.deepEqual(requests, ["https://api.github.com/user"]);
+  } finally {
+    globalThis.fetch = originalFetch;
+    for (const key of envKeys) { if (previousEnv[key] === undefined) delete process.env[key]; else process.env[key] = previousEnv[key]!; }
+  }
+});
+
 test("editor mutations require same-origin requests and reject invalid metadata or image data", async () => {
   const previousEnv = Object.fromEntries(envKeys.map((key) => [key, process.env[key]]));
   const originalFetch = globalThis.fetch;

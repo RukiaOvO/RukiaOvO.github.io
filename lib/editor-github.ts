@@ -5,6 +5,7 @@ import matter from "gray-matter";
 
 export const editorRepository = { owner: "RukiaOvO", name: "RukiaOvO.github.io", branch: "codex/vercel-site" } as const;
 const api = `https://api.github.com/repos/${editorRepository.owner}/${editorRepository.name}`;
+const githubApi = "https://api.github.com";
 const editorBranchPrefix = "cms-editor/";
 const legacyEditorBranchPrefix = "cms/posts/";
 
@@ -19,7 +20,7 @@ type GitHubPull = {
 type GitHubContent = { sha: string; content: string; encoding: string };
 type GitHubChangedFile = { filename: string; status: string };
 
-function apiUrl(endpoint: string) { return `${api}${endpoint}`; }
+function apiUrl(endpoint: string) { return endpoint === "/user" || endpoint.startsWith("/user?") ? `${githubApi}${endpoint}` : `${api}${endpoint}`; }
 function encodedPath(value: string) { return value.split("/").map(encodeURIComponent).join("/"); }
 
 export async function github<T>(token: string, endpoint: string, init: RequestInit = {}): Promise<T> {
