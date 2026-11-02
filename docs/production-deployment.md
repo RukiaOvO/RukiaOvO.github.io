@@ -22,20 +22,22 @@ Chrome 实际浏览器检查通过：搜索进入 AgentSpec 文章，canonical �
 
 验收产物保存在本机忽略目录 `test-results/vercel-smoke.json` 和 `test-results/vercel-*.png`，不提交测试产物或凭据。
 
-## OAuth 与最终上线待办
+## OAuth 与最终上线
 
-已配置 `SITE_URL`、`CMS_OAUTH_BASE_URL`、`CMS_OAUTH_REDIRECT_URI`；暂设 `SITE_NOINDEX=true`，待最终验收后关闭并重新部署。
+已配置 `SITE_URL`、`CMS_OAUTH_BASE_URL`、`CMS_OAUTH_REDIRECT_URI`；前台和 CMS 登录页线上验收通过后，已将 Production 的 `SITE_NOINDEX` 改为 `false`，随本次提交重新构建后生效。Preview 仍由平台环境标记自动禁止索引。
 
 GitHub OAuth App 参数：
 
 - 名称：`RukiaOvO Homepage CMS`。
 - Homepage URL：`https://rukiaovo-homepage.vercel.app`。
 - Authorization callback URL：`https://rukiaovo-homepage.vercel.app/api/auth/callback?provider=github`。
-- Vercel Production 还需配置 `GITHUB_OAUTH_CLIENT_ID` 和 `GITHUB_OAUTH_CLIENT_SECRET`；Secret 应设为 Sensitive。密钥不写入代码、文档或聊天。
+- 用户已创建 OAuth App，Vercel Production 的 `GITHUB_OAUTH_CLIENT_ID` 和 `GITHUB_OAUTH_CLIENT_SECRET` 均已保存为 Secret；部署工具仅核对变量名称和类型。密钥不写入代码、文档或聊天。
 
-变量配置后需重新部署，再检查 `/admin/config.yml`、OAuth 跳转与真实登录。文章编辑、草稿、图片上传、审核发布、自动部署和线上内容更新仍需实际验收，不能以页面返回 200 代替。
+完整 OAuth 配置已在部署 `dpl_7cB26zf7ifjsaoyMHGV9WWekW6i3`（提交 `9396f79`）验证：`/admin/config.yml` 返回 200 YAML，分支与图片目录正确；授权接口返回 302，回调和 `public_repo` 范围正确；无效 state 被拒绝；真实 Decap 脚本正常加载并显示中文 GitHub 登录按钮，浏览器无脚本异常。编辑器独立文档 `/admin/editor/` 嵌入 `/admin/`，避免 Decap 与 Next.js 的 React 初始化冲突。
 
-部署验收发现 `.vercelignore` 中未限定根目录的 `config` 规则误排除了 `app/api/cms/config`；已将规则限定为 `/config/`，仅排除旧 Hugo 配置目录。修复部署后必须确认 `/admin/config.yml` 在未配置 OAuth 时返回 503 JSON、配置完成后返回 200 YAML，而不是 404。
+真实用户登录、草稿保存、图片上传与审核发布仍待本人账号验收。Git 自动生产发布已通过本任务的后续提交验证，不代表 CMS 写作流程已经验收。
+
+部署验收发现 `.vercelignore` 中未限定根目录的 `config` 规则误排除了 `app/api/cms/config`；已将规则限定为 `/config/`，仅排除旧 Hugo 配置目录。修复已线上验证：未配置 OAuth 时返回 503 JSON，配置完成后返回 200 YAML。
 
 ## 后续运维
 
