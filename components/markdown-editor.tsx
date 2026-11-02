@@ -7,6 +7,7 @@ type Article = { file: string; title: string; date: string; draft: boolean; bran
 type ArticleData = { file: string; title: string; date: string; draft: boolean; summary: string; tags: string[]; categories: string[]; content: string };
 type Session = { authenticated: boolean; configured?: boolean; user?: { login: string; name: string | null } };
 type UploadedImage = { name: string; url: string };
+type ArticleList = { articles: Article[]; draftsWarning?: string };
 
 function localDate(value = new Date()) {
   return new Intl.DateTimeFormat("sv-SE", { timeZone: "Asia/Shanghai", year: "numeric", month: "2-digit", day: "2-digit" }).format(value);
@@ -28,6 +29,7 @@ async function jsonRequest<T>(url: string, init?: RequestInit): Promise<T> {
 export function MarkdownEditor() {
   const [session, setSession] = useState<Session | null>(null);
   const [articles, setArticles] = useState<Article[]>([]);
+  const [draftsWarning, setDraftsWarning] = useState("");
   const [selectedFile, setSelectedFile] = useState("");
   const [form, setForm] = useState<ArticleData | null>(null);
   const [branch, setBranch] = useState<string | null>(null);
@@ -45,7 +47,22 @@ export function MarkdownEditor() {
       const query = new URLSearchParams({ file: article.file, ...(article.branch ? { branch: article.branch } : {}) });
       const response = await jsonRequest<{ article: ArticleData }>(`/api/editor/articles?${query}`);
       setForm(response.article); setSelectedFile(response.article.file); setBranch(article.branch); setDirty(false);
-    } catch (error) { setPageError(messageFrom(error)); }
+    } catch (error) {
+      // A closed or deleted draft branch can remain visible briefly in the PR list.
+      // Fall back to the published file so the workbench remains usable.
+      if (article.branch) {
+        try {
+          const response = await jsonRequest<{ article: ArticleData }>(`/api/editor/articles?file=${encodeURIComponent(article.file)}`);
+          setForm(response.article); setSelectedFile(response.article.file); setBranch(null); setArticles((items) => items.map((item) => item.file === article.file ? { ...item, branch: null, pullNumber: null, pullUrl: null } : item)); setDirty(false); setPageError("该草稿分支已失效，已打开已发布版本。保存后会创建新的草稿 PR。"); return;
+        } catch {
+          setArticles((items) => items.filter((item) => item.file !== article.file));
+          setForm(null); setSelectedFile(""); setBranch(null);
+          setPageError("该草稿分支已失效，请刷新文章列表或新建文章。");
+          return;
+        }
+      }
+      setPageError(messageFrom(error));
+    }
     finally { setBusy(false); }
   }, []);
 
@@ -58,8 +75,9 @@ export function MarkdownEditor() {
   }, []);
 
   const loadArticles = useCallback(async () => {
-    const response = await jsonRequest<{ articles: Article[] }>("/api/editor/articles");
+    const response = await jsonRequest<ArticleList>("/api/editor/articles");
     setArticles(response.articles);
+    setDraftsWarning(response.draftsWarning || "");
     const target = response.articles[0];
     if (target) await openArticle(target);
     else startNewArticle();
@@ -150,6 +168,7 @@ export function MarkdownEditor() {
     <aside className="panel editor-sidebar">
       <div className="editor-sidebar-heading"><h2>文章</h2><button className="button button-outline" type="button" onClick={startNewArticle} disabled={busy}>新建</button></div>
       <label className="editor-user">已连接 @{session.user?.login}<button type="button" className="editor-logout" onClick={logout} disabled={busy}>退出</button></label>
+      {draftsWarning && <p className="editor-draft-warning" role="status">{draftsWarning}</p>}
       <div className="editor-article-list" role="listbox" aria-label="选择文章">
         {articles.map((article) => <button className="editor-article-option" type="button" key={article.file} aria-pressed={selectedFile === article.file} onClick={() => openArticle(article)} disabled={busy}>
           <strong>{article.title || article.file}</strong><span>{article.pullNumber ? `草稿 PR #${article.pullNumber}` : article.draft ? "草稿" : "已发布"}</span>

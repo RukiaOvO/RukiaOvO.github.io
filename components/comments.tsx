@@ -4,15 +4,15 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import type { CommentConfig } from "@/lib/site";
 
-export function Comments({ config }: { config: CommentConfig }) {
+export function Comments({ config, autoLoad = false }: { config: CommentConfig; autoLoad?: boolean }) {
   const pathname = usePathname();
-  return <CommentThread key={pathname} config={config} />;
+  return <CommentThread key={pathname} config={config} autoLoad={autoLoad} />;
 }
 
-function CommentThread({ config }: { config: CommentConfig }) {
+function CommentThread({ config, autoLoad }: { config: CommentConfig; autoLoad: boolean }) {
   const container = useRef<HTMLDivElement>(null);
-  const [attempt, setAttempt] = useState(0);
-  const [status, setStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
+  const [attempt, setAttempt] = useState(autoLoad ? 1 : 0);
+  const [status, setStatus] = useState<"idle" | "loading" | "ready" | "error">(autoLoad ? "loading" : "idle");
   useEffect(() => {
     if (!attempt || !container.current) return;
     const host = container.current;
@@ -51,9 +51,9 @@ function CommentThread({ config }: { config: CommentConfig }) {
     <p className="eyebrow">LET’S TALK</p><h2 id="comments-title">{config.title}</h2>
     <p className="muted">{config.description}</p>
     {status !== "ready" && <div className="comment-controls">
-      <p role="status">{status === "idle" ? "点击加载评论，使用 GitHub 账号参与交流。" : status === "loading" ? "正在加载评论…" : "评论暂时无法加载，请稍后重试。"}</p>
-      {status !== "loading" && <button className="button" onClick={() => { setStatus("loading"); setAttempt((value) => value + 1); }}>{status === "idle" ? "加载评论" : "重试"}</button>}
-      <a href={`https://github.com/${config.owner}/${config.repo}/discussions`} target="_blank" rel="noreferrer">前往 GitHub Discussions ↗</a>
+      <p role="status">{status === "idle" ? "评论会在这里显示。" : status === "loading" ? "正在加载评论…" : "评论暂时无法加载，请稍后重试。"}</p>
+      {status === "error" && <button className="button" onClick={() => { setStatus("loading"); setAttempt((value) => value + 1); }}>重试</button>}
+      {status === "error" && <a href={`https://github.com/${config.owner}/${config.repo}/discussions`} target="_blank" rel="noreferrer">前往 GitHub Discussions ↗</a>}
     </div>}
     <div ref={container} className="giscus" />
   </section>;

@@ -8,7 +8,7 @@ test.beforeEach(async ({ page }) => {
   await page.route(/https:\/\/(ghchart\.rshah\.org|giscus\.app)\//, (route) => route.abort());
   await page.route("**/api/activity/**", (route) => route.fulfill({ status: 503, json: { ok: false } }));
   await page.route("https://api.open-meteo.com/**", (route) => route.fulfill({ json: { current: { temperature_2m: 18, weather_code: 1, wind_speed_10m: 5 }, daily: { temperature_2m_max: [20], temperature_2m_min: [12] } } }));
-  await page.route("https://rukiaovo-github-io.1403555427.workers.dev/**", (route) => route.fulfill({ json: route.request().url().includes("/games") ? { ok: true, games: [] } : { ok: true, personaName: "Rukia", statusText: "在线", onlineState: "online", personaState: 1 } }));
+  await page.route("**/api/steam/**", (route) => route.fulfill({ json: route.request().url().includes("/games") ? { ok: true, games: [] } : { ok: true, personaName: "Rukia", statusText: "在线", onlineState: "online", personaState: 1 } }));
 });
 
 test("homepage remains readable when third parties fail; themes persist", async ({ page }) => {
@@ -19,6 +19,7 @@ test("homepage remains readable when third parties fail; themes persist", async 
   await expect(page.getByRole("heading", { name: /AgentSpec:/ })).toBeVisible();
   await expect(page.getByRole("heading", { name: "天气" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "最近游玩" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "加载评论" })).toHaveCount(0);
   await expect(page.getByRole("heading", { name: "精选项目" })).toHaveCount(0);
   await expect(page.getByText("QUICK ACCESS")).toHaveCount(0);
   await expect(page.getByText("最近的开发足迹")).toHaveCount(0);
@@ -146,6 +147,8 @@ test("activity filters, pagination, empty sources and partial failures", async (
   const items = Array.from({ length: 13 }, (_, i) => ({ id: String(i), title: `Fixture entry ${i}`, summary: "测试内容", url: `https://example.com/${i}`, date: "2026-11-01T12:00:00.000Z", sourceId: i < 10 ? "one" : "two", source: i < 10 ? "来源一" : "来源二", category: "工程" }));
   await page.route("**/api/activity/**", (route) => route.fulfill({ json: { ok: true, data: { items, sources: [{ id: "one", label: "来源一", state: "ok", updatedAt: "2026-11-01T12:00:00.000Z" }, { id: "two", label: "来源二", state: "ok", updatedAt: "2026-11-01T12:00:00.000Z" }, { id: "broken", label: "失效来源", state: "error", updatedAt: null }] } } }));
   await page.goto("/activity/");
+  expect(await page.locator(".activity-feed").first().evaluate((feed) => getComputedStyle(feed).overflowY)).toBe("auto");
+  expect(await page.locator(".activity-feed").first().evaluate((feed) => feed.clientHeight)).toBeLessThanOrEqual(620);
   const rss = page.locator("section").filter({ has: page.getByRole("heading", { name: "阅读雷达" }) });
   await rss.scrollIntoViewIfNeeded();
   await expect(rss.locator(".activity-list li")).toHaveCount(8);
@@ -163,8 +166,8 @@ test("activity retries a failed request and handles successful empty data", asyn
     requests++;
     return requests === 1 ? route.fulfill({ status: 503, json: { ok: false } }) : route.fulfill({ json: { ok: true, data: { items: [], sources: [{ id: "github", label: "GitHub", state: "ok", updatedAt: "2026-11-01T12:00:00Z" }] } } });
   });
-  await page.goto("/");
-  await page.locator(".dashboard-content").scrollIntoViewIfNeeded();
+  await page.goto("/activity/");
+  await page.locator(".activity-feed").first().scrollIntoViewIfNeeded();
   await page.getByRole("button", { name: "重新加载", exact: true }).click();
   await expect(page.getByText("近期暂无公开内容。")).toBeVisible();
 });

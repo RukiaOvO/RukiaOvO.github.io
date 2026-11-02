@@ -64,3 +64,27 @@ test("the integrated editor can list and open an existing Decap draft PR", async
     for (const key of envKeys) { if (previousEnv[key] === undefined) delete process.env[key]; else process.env[key] = previousEnv[key]!; }
   }
 });
+
+test("published articles remain available when GitHub draft listing returns 404", async () => {
+  const previousEnv = Object.fromEntries(envKeys.map((key) => [key, process.env[key]]));
+  const originalFetch = globalThis.fetch;
+  Object.assign(process.env, {
+    GITHUB_OAUTH_CLIENT_ID: "client",
+    GITHUB_OAUTH_CLIENT_SECRET: "secret",
+    CMS_OAUTH_BASE_URL: origin,
+    CMS_OAUTH_REDIRECT_URI: `${origin}/api/auth/callback?provider=github`,
+  });
+  globalThis.fetch = async () => Response.json({ message: "Not Found" }, { status: 404 });
+
+  try {
+    const response = await articlesGet(new Request(`${origin}/api/editor/articles/`, { headers: { cookie: "__Secure-rukia_editor_session=editor-token" } }));
+    assert.equal(response.status, 200, await response.clone().text());
+    const payload = await response.json() as { articles: Array<{ file: string; branch: string | null }>; draftsWarning?: string };
+    assert.ok(payload.articles.length > 0);
+    assert.ok(payload.articles.every((article) => article.branch === null));
+    assert.match(payload.draftsWarning || "", /404/);
+  } finally {
+    globalThis.fetch = originalFetch;
+    for (const key of envKeys) { if (previousEnv[key] === undefined) delete process.env[key]; else process.env[key] = previousEnv[key]!; }
+  }
+});

@@ -9,7 +9,7 @@ const editorBranchPrefix = "cms-editor/";
 const legacyEditorBranchPrefix = "cms/posts/";
 
 export class GitHubError extends Error {
-  constructor(readonly status: number, readonly code: string) { super(code); }
+  constructor(readonly status: number, readonly code: string, readonly endpoint?: string) { super(code); }
 }
 
 type GitHubPull = {
@@ -33,7 +33,7 @@ export async function github<T>(token: string, endpoint: string, init: RequestIn
     headers,
     cache: "no-store", signal: AbortSignal.timeout(12_000), redirect: "error",
   });
-  if (!response.ok) throw new GitHubError(response.status, response.status === 404 ? "NOT_FOUND" : response.status === 409 || response.status === 422 ? "CONFLICT" : response.status === 403 ? "FORBIDDEN" : "UPSTREAM");
+  if (!response.ok) throw new GitHubError(response.status, response.status === 404 ? "NOT_FOUND" : response.status === 409 || response.status === 422 ? "CONFLICT" : response.status === 403 ? "FORBIDDEN" : "UPSTREAM", endpoint.split("?")[0]);
   if (response.status === 204) return undefined as T;
   return await response.json() as T;
 }

@@ -30,7 +30,7 @@ export default async function Home() {
       <section className="dashboard-section" aria-labelledby="recent-posts"><div className="section-heading"><div><p className="eyebrow">RECENT POSTS</p><h2 id="recent-posts">近期文章</h2></div><Link href="/posts/">全部文章 ↗</Link></div>
         {posts.length ? posts.map((post) => <PostCard key={post.slug} post={post} />) : <p className="empty-state">文章正在整理中。</p>}
       </section>
-      <div className="dashboard-section dashboard-comments"><Comments config={site.comments} /></div>
+      <div className="dashboard-section dashboard-comments"><Comments config={site.comments} autoLoad /></div>
     </div>
   </div>;
 }
