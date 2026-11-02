@@ -68,6 +68,20 @@ test("CMS OAuth routes validate state and repository write permission", async ()
     assert.match(noWriteHtml, /does not have write access/);
     assert.doesNotMatch(noWriteHtml, /read-only-token/);
 
+    for (const error of ["incorrect_client_credentials", "redirect_uri_mismatch", "bad_verification_code", "unrecognized_upstream_error", "__proto__"]) {
+      let exchangeCalls = 0;
+      globalThis.fetch = async () => {
+        exchangeCalls++;
+        return Response.json({ error, error_description: "private-upstream-detail", access_token: "must-not-leak" });
+      };
+      const rejected = await callbackGet(new Request(`https://rukiaovo-homepage.vercel.app/api/auth/callback/?provider=github&code=temporary&state=${state}`, { headers: { cookie: `rukia_cms_oauth_state=${cookie}` } }));
+      const rejectedHtml = await rejected.text();
+      assert.match(rejectedHtml, /authorization:github:error:/);
+      assert.doesNotMatch(rejectedHtml, /private-upstream-detail|must-not-leak/);
+      assert.match(rejectedHtml, new RegExp(["unrecognized_upstream_error", "__proto__"].includes(error) ? "GitHub did not return an authorization token" : error));
+      assert.equal(exchangeCalls, 1);
+    }
+
     process.env.CMS_OAUTH_REDIRECT_URI = "https://attacker.example/api/auth/callback?provider=github";
     assert.equal((await configGet()).status, 503);
     assert.equal((await authGet(new Request("https://rukiaovo-homepage.vercel.app/api/auth/?provider=github"))).status, 503);

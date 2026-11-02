@@ -80,6 +80,17 @@ async function handleCallback(request: Request, settings: OAuthSettings) {
     });
     if (!tokenResponse.ok) return result("error", { message: "GitHub authorization could not be completed. Retry from the CMS." });
     const payload: unknown = await tokenResponse.json();
+    if (payload && typeof payload === "object" && "error" in payload) {
+      // Only return our own descriptions; upstream error text can contain sensitive data.
+      const messages: Record<string, string> = {
+        incorrect_client_credentials: "GitHub 拒绝了 Client ID 或 Client Secret。请确认来自同一个 GitHub OAuth App，并在更新 Vercel Production 变量后重新部署。（incorrect_client_credentials）",
+        redirect_uri_mismatch: "GitHub 回调地址不匹配。请核对 OAuth App 与 CMS_OAUTH_REDIRECT_URI 的完整地址。（redirect_uri_mismatch）",
+        bad_verification_code: "GitHub 授权码已失效或已被使用。请关闭旧弹窗，从编辑器重新登录。（bad_verification_code）",
+      };
+      const error = payload.error;
+      const message = typeof error === "string" && Object.hasOwn(messages, error) ? messages[error] : "GitHub did not return an authorization token.";
+      return result("error", { message });
+    }
     if (!payload || typeof payload !== "object" || !("access_token" in payload) || typeof payload.access_token !== "string" || !payload.access_token || ("error" in payload)) return result("error", { message: "GitHub did not return an authorization token." });
 
     const repository = await fetch(`https://api.github.com/repos/${encodeURIComponent(repositoryOwner)}/${encodeURIComponent(repositoryName)}`, {
