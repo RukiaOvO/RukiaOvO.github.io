@@ -38,7 +38,9 @@ function popupResponse(status: "success" | "error", data: { token: string } | { 
   const payload = JSON.stringify(data).replaceAll("<", "\\u003c");
   const script = `(()=>{const target=${JSON.stringify(targetOrigin)};const message=${JSON.stringify(`authorization:github:${status}:`)}+${JSON.stringify(payload)};function receive(event){if(event.source!==window.opener||event.origin!==target||event.data!=="authorizing:github")return;window.removeEventListener("message",receive);window.opener.postMessage(message,target);window.close()}window.addEventListener("message",receive);if(window.opener)window.opener.postMessage("authorizing:github",target)})();`;
   const nonce = randomBytes(18).toString("base64url");
-  const headers = new Headers({ "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": `default-src 'none'; script-src 'nonce-${nonce}'; base-uri 'none'; frame-ancestors 'none'`, "Cross-Origin-Opener-Policy": "same-origin-allow-popups", "Referrer-Policy": "no-referrer", "X-Content-Type-Options": "nosniff" });
+  // The popup returns from GitHub's origin. An isolating COOP policy here severs
+  // window.opener even when the editor uses same-origin-allow-popups.
+  const headers = new Headers({ "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": `default-src 'none'; script-src 'nonce-${nonce}'; base-uri 'none'; frame-ancestors 'none'`, "Cross-Origin-Opener-Policy": "unsafe-none", "Referrer-Policy": "no-referrer", "X-Content-Type-Options": "nosniff" });
   return new NextResponse(`<!doctype html><html lang="en"><meta charset="utf-8"><title>CMS authorization</title><body><p>Returning to Decap CMS…</p><script nonce="${nonce}">${script}</script></body></html>`, { headers });
 }
 

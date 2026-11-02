@@ -37,6 +37,8 @@ GitHub OAuth App 参数：
 
 真实用户登录、草稿保存、图片上传与审核发布仍待本人账号验收。Git 自动生产发布已通过本任务的后续提交验证，不代表 CMS 写作流程已经验收。
 
+首次真实授权反馈停留在 “Returning to Decap CMS…”：跨来源授权返回时，回调页的 COOP 隔离策略切断了 `window.opener`。Chrome 跨来源弹窗对照实测复现；回调页改为 `unsafe-none` 后成功交还消息并关闭弹窗。编辑器保留 `same-origin-allow-popups`，state、目标 origin、消息来源和仓库写权限校验不变。修复发布后仍需本人重新授权验证。
+
 部署验收发现 `.vercelignore` 中未限定根目录的 `config` 规则误排除了 `app/api/cms/config`；已将规则限定为 `/config/`，仅排除旧 Hugo 配置目录。修复已线上验证：未配置 OAuth 时返回 503 JSON，配置完成后返回 200 YAML。
 
 ## 后续运维

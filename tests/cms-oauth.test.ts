@@ -34,6 +34,7 @@ test("CMS OAuth routes validate state and repository write permission", async ()
 
     const denied = await callbackGet(new Request("https://rukiaovo-homepage.vercel.app/api/auth/callback/?provider=github&error=access_denied"));
     assert.equal(denied.status, 200);
+    assert.equal(denied.headers.get("cross-origin-opener-policy"), "unsafe-none");
     assert.match(await denied.text(), /authorization:github:error:/);
     assert.match(denied.headers.get("set-cookie") ?? "", /Max-Age=0/);
 
