@@ -54,7 +54,7 @@ test("CMS OAuth routes validate state and repository write permission", async ()
     const success = await callbackGet(new Request(`https://rukiaovo-homepage.vercel.app/api/auth/callback/?provider=github&code=temporary&state=${state}`, { headers: { cookie: `rukia_cms_oauth_state=${cookie}` } }));
     const successHtml = await success.text();
     assert.equal(success.status, 200);
-    assert.equal(success.headers.get("cross-origin-opener-policy"), "same-origin-allow-popups");
+    assert.equal(success.headers.get("cross-origin-opener-policy"), "unsafe-none");
     assert.match(successHtml, /authorization:github:success:/);
     assert.match(successHtml, /test-access-token/);
     assert.equal(upstreamCalls, 2);
