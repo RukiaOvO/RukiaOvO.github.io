@@ -2,21 +2,20 @@
 
 更新：2026-11-02。按当前本地代码核对；“旧站”表示仓库中的 Hugo 实现/配置，不代表本轮重新验证了所有旧外部服务。
 
-部署进度更新：`codex/vercel-site` 已推送，个人 Vercel 项目为 `rukiaovo-homepage`，生产地址为 https://rukiaovo-homepage.vercel.app，仓库生产集成与 OAuth App 已配置。用户已确认旧版能登录和保存草稿，但 Decap 图片库操作有重复条目和图片引用失效问题。站内 Markdown 编辑器替代方案目前完成本地实现和自动化检查；待推送部署及真实生产账号图片验收，部署状态以 [生产部署记录](production-deployment.md) 为准。
+部署进度更新：`codex/vercel-site` 已推送，个人 Vercel 项目为 `rukiaovo-homepage`，生产地址为 https://rukiaovo-homepage.vercel.app，仓库生产集成与 OAuth App 已配置。新版 Markdown 编辑器已部署；提交 `594afe1` 修复开放的旧 Decap 文章草稿无法在新版打开的问题。真实账号的生产文章读取、保存和图片显示仍待用户复核，详见[生产部署记录](production-deployment.md)。
 
 ## 当前交付边界
 
 - 新站当前是与旧主页相近的蓝灰色、半透明卡片、侧栏与主栏布局，已在本地构建并通过浏览器回归。
-- 新工程文件仍在本地工作区，尚未提交、推送到 GitHub。
-- 之前的 Vercel 匿名临时部署验证了上一轮视觉版本和真实接口；不是长期生产项目，也没有完成 Git 自动发布。最新布局尚未重新部署。
-- `/admin/` 已从 Decap CMS 切换到站内 Markdown 编辑器：图片直接上传并插入正文，文章和图片保存在同一文章草稿 PR。新版尚待生产部署和真实账号图片验收。
+- 新站源码已推送到 `codex/vercel-site`，并由 Vercel 生产项目自动部署；旧站仍使用 `main`。
+- `/admin/` 已从 Decap CMS 切换到站内 Markdown 编辑器：图片直接上传并插入正文，新文章和图片保存在同一文章草稿 PR。现存 `cms/posts/<slug>` 文章 PR 可在新版打开并继续更新；旧 PR 不会自动合并或删除。
 
 ## 新旧对比
 
 | 项目 | 旧站 Hugo / GitHub Pages | 新站 Next.js / Vercel 当前状态 |
 | --- | --- | --- |
-| 工程与托管 | Hugo + Blowfish；GitHub Actions 发布到 Pages | 独立 Next.js App Router / TypeScript / Tailwind；Vercel 配置已备好，长期项目待接通 |
-| 视觉与结构 | 蓝灰配色、玻璃卡片、顶部导航、个人资料侧栏、功能主栏 | 已按相同视觉方向调整；桌面双栏、手机单列；最新版本只在本地 |
+| 工程与托管 | Hugo + Blowfish；GitHub Actions 发布到 Pages | 独立 Next.js App Router / TypeScript / Tailwind；Vercel 生产项目已连接 `codex/vercel-site` |
+| 视觉与结构 | 蓝灰配色、玻璃卡片、顶部导航、个人资料侧栏、功能主栏 | 延续相同视觉方向；桌面双栏、手机单列；生产站已部署 |
 | 首页重点 | 头像资料、热力图、Steam/天气、近期文章、留言 | 头像资料、热力图、近期文章、精选项目、GitHub 活动、留言；主栏按内容分区 |
 | 导航与独立页 | 首页、帖子、动态 | 首页、文章、项目、动态、关于；页脚/侧栏有写作入口 |
 | 资料和配置 | `data/home.yaml` 与 Hugo TOML | `data/site.ts` 独立维护个人资料、社交链接、项目、主题相关配置 |
@@ -31,8 +30,8 @@
 | Steam | 在线状态、最近游玩，依赖旧 Worker | 尚未接入；保留个人 Steam 链接，链接不等于实时状态 |
 | 访问统计 | 访客徽章/Worker 累计 | 尚未实现统计、没有迁移历史计数；后续可评估 Vercel Analytics |
 | 留言与评论 | Giscus / GitHub Discussions | 配置与 pathname 映射沿用；点击加载、主题同步、超时/重试；真实登录发言待验收 |
-| 在线写作 | 旧站 Decap 配置和 main 分支 | 新站站内 Markdown 工作台；GitHub OAuth 会话只在服务端，文章/图片共用 `cms-editor/*` PR；新版待生产部署和实账号验收 |
-| 发布链路 | 推送 main 触发 Hugo / Pages | 已有 Next.js CI 文件，但未推送；Vercel Git 集成、长期生产分支和回滚待配置 |
+| 在线写作 | 旧站 Decap 配置和 main 分支 | 新站站内 Markdown 工作台；GitHub OAuth 会话只在服务端；新稿使用 `cms-editor/*` PR，既有 `cms/posts/*` 草稿可继续编辑；真实账号完整验收待完成 |
+| 发布链路 | 推送 main 触发 Hugo / Pages | 推送 `codex/vercel-site` 触发 Vercel 生产部署；尚未做回滚演练 |
 | 接口可靠性 | 旧 JS / Worker 实现，Worker 源码不在仓库 | 明确响应格式、参数白名单、7秒上游超时、响应大小限制、成功缓存、实例内限流；共享限流可选 |
 | 域名 | 当前 GitHub Pages 地址；平台也支持自定义域名 | 长期 vercel.app 或 ClouDNS 管理的自定义域名；不把 github.io 子域名迁到 Vercel |
 | SEO | Hugo 输出 metadata、RSS 等 | canonical、RSS、sitemap、robots；Preview 默认 noindex；正式域名需上线后复核 |

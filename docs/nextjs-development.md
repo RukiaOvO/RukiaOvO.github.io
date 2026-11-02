@@ -17,7 +17,7 @@ npm run dev
 
 ## 内容发布
 
-编辑 `content/posts/*.md` 和新站独立配置 `data/site.ts`。在 `/admin/` 使用 GitHub OAuth 登录后，可创建或编辑 Markdown 文章，上传图片并直接插入正文。每篇文章与其图片放在同一 `cms-editor/*` 草稿分支，保存时创建或更新指向 `codex/vercel-site` 的 Pull Request。合并后 Vercel 自动构建发布；旧 `static/admin/config.yml` 仅供 Hugo 保留，不会由新站加载。
+编辑 `content/posts/*.md` 和新站独立配置 `data/site.ts`。在 `/admin/` 使用 GitHub OAuth 登录后，可创建或编辑 Markdown 文章，上传图片并直接插入正文。每篇新文章与其图片放在同一 `cms-editor/*` 草稿分支，保存时创建或更新指向 `codex/vercel-site` 的 Pull Request；尚开放的旧 Decap 文章 PR（`cms/posts/<slug>`）也能在新编辑器中继续修改。合并后 Vercel 自动构建发布；旧 `static/admin/config.yml` 仅供 Hugo 保留，不会由新站加载。
 
 - Markdown frontmatter：`title`、`date` 必填；`draft` 为布尔值；`summary`、`description`、`tags`、`categories` 可选。
 - 默认以文件名生成 slug；可选显式 `slug` 仅接受字母、数字、下划线、连字符。不要重命名已有文章文件，避免断开 URL 与评论关联。
