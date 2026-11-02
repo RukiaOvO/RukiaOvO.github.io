@@ -6,6 +6,7 @@ import matter from "gray-matter";
 export const editorRepository = { owner: "RukiaOvO", name: "RukiaOvO.github.io", branch: "codex/vercel-site" } as const;
 const api = `https://api.github.com/repos/${editorRepository.owner}/${editorRepository.name}`;
 const editorBranchPrefix = "cms-editor/";
+const legacyEditorBranchPrefix = "cms/posts/";
 
 export class GitHubError extends Error {
   constructor(readonly status: number, readonly code: string) { super(code); }
@@ -42,7 +43,10 @@ export function validArticleFile(file: string) {
 }
 export function postPath(file: string) { return `content/posts/${file}`; }
 export function branchForNewArticle(file: string) { return `${editorBranchPrefix}${createHash("sha256").update(file).digest("hex").slice(0, 12)}-${randomBytes(4).toString("hex")}`; }
-export function validEditorBranch(branch: string) { return /^cms-editor\/[a-f0-9]{12}-[a-f0-9]{8}$/.test(branch); }
+export function validEditorBranch(branch: string) {
+  return /^cms-editor\/[a-f0-9]{12}-[a-f0-9]{8}$/.test(branch)
+    || (branch.startsWith(legacyEditorBranchPrefix) && /^cms\/posts\/[\p{L}\p{N}][\p{L}\p{N}-]{0,180}$/u.test(branch));
+}
 
 export async function getEditorArticles() {
   const directory = path.join(process.cwd(), "content/posts");
@@ -64,7 +68,7 @@ export async function getEditorArticles() {
 
 export async function getEditorPullRequests(token: string): Promise<GitHubPull[]> {
   const pulls = await github<GitHubPull[]>(token, `/pulls?state=open&base=${encodeURIComponent(editorRepository.branch)}&per_page=100`);
-  return pulls.filter((pull) => pull.head.ref.startsWith(editorBranchPrefix) && pull.base.ref === editorRepository.branch);
+  return pulls.filter((pull) => validEditorBranch(pull.head.ref) && pull.base.ref === editorRepository.branch);
 }
 
 export async function getEditorDrafts(token: string) {
