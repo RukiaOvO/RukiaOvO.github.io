@@ -35,6 +35,8 @@ GitHub OAuth App 参数：
 
 变量配置后需重新部署，再检查 `/admin/config.yml`、OAuth 跳转与真实登录。文章编辑、草稿、图片上传、审核发布、自动部署和线上内容更新仍需实际验收，不能以页面返回 200 代替。
 
+部署验收发现 `.vercelignore` 中未限定根目录的 `config` 规则误排除了 `app/api/cms/config`；已将规则限定为 `/config/`，仅排除旧 Hugo 配置目录。修复部署后必须确认 `/admin/config.yml` 在未配置 OAuth 时返回 503 JSON、配置完成后返回 200 YAML，而不是 404。
+
 ## 后续运维
 
 - 内容由 Decap CMS 写回 `codex/vercel-site`，图片保存到 `static/img/posts`，通过 Git 集成发布。

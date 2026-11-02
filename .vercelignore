@@ -8,7 +8,7 @@ tests
 docs
 themes
 layouts
-config
+/config/
 archetypes
 assets/css
 assets/js
