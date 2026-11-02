@@ -88,3 +88,47 @@ test("published articles remain available when GitHub draft listing returns 404"
     for (const key of envKeys) { if (previousEnv[key] === undefined) delete process.env[key]; else process.env[key] = previousEnv[key]!; }
   }
 });
+
+test("missing draft content reports the exact GitHub resource instead of a generic not-found message", async () => {
+  const previousEnv = Object.fromEntries(envKeys.map((key) => [key, process.env[key]]));
+  const originalFetch = globalThis.fetch;
+  Object.assign(process.env, {
+    GITHUB_OAUTH_CLIENT_ID: "client",
+    GITHUB_OAUTH_CLIENT_SECRET: "secret",
+    CMS_OAUTH_BASE_URL: origin,
+    CMS_OAUTH_REDIRECT_URI: `${origin}/api/auth/callback?provider=github`,
+  });
+
+  const file = "2026-11-02-agentracer-who-is-inducing-failure-in-the-llm-agentic-systems.md";
+  const branch = "cms/posts/2026-11-02-agentracer-who-is-inducing-failure-in-the-llm-agentic-systems";
+  globalThis.fetch = async (input) => {
+    const url = new URL(String(input));
+    const pathname = decodeURIComponent(url.pathname.replace(/^\/repos\/RukiaOvO\/RukiaOvO\.github\.io/, ""));
+    if (pathname === "/pulls") return Response.json([{
+      number: 5,
+      title: "Create article",
+      html_url: "https://github.com/RukiaOvO/RukiaOvO.github.io/pull/5",
+      created_at: "2026-11-02T00:00:00Z",
+      state: "open",
+      head: { ref: branch, sha: "draft-sha" },
+      base: { ref: "codex/vercel-site" },
+    }]);
+    if (pathname === `/pulls/5/files`) return Response.json([{ filename: `content/posts/${file}`, status: "added" }]);
+    if (pathname === `/contents/content/posts/${file}`) return Response.json({ message: "Not Found" }, { status: 404 });
+    throw new Error(`Unexpected GitHub request: ${pathname}${url.search}`);
+  };
+
+  try {
+    const response = await articlesGet(new Request(`${origin}/api/editor/articles/?file=${encodeURIComponent(file)}&branch=${encodeURIComponent(branch)}`, {
+      headers: { cookie: "__Secure-rukia_editor_session=editor-token" },
+    }));
+    const payload = await response.json() as { error: string; code: string; endpoint: string };
+    assert.equal(response.status, 404);
+    assert.equal(payload.code, "GITHUB_NOT_FOUND");
+    assert.equal(payload.endpoint, `/contents/content/posts/${file}`);
+    assert.match(payload.error, /contents\/content\/posts/);
+  } finally {
+    globalThis.fetch = originalFetch;
+    for (const key of envKeys) { if (previousEnv[key] === undefined) delete process.env[key]; else process.env[key] = previousEnv[key]!; }
+  }
+});

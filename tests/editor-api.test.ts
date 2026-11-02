@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import matter from "gray-matter";
+import { GET as listArticles } from "../app/api/editor/articles/route";
 import { POST as savePost } from "../app/api/editor/articles/save/route";
 import { POST as imagePost } from "../app/api/editor/images/route";
 
@@ -77,7 +78,8 @@ test("article and uploaded image are committed to the same branch and one draft 
 
     const secondSave = await savePost(new Request(`${origin}/api/editor/articles/save`, { method: "POST", headers: { cookie, origin, "content-type": "application/json" }, body: JSON.stringify({ ...payload, branch: first.branch, content: `Initial body\n\n${uploaded.markdown}` }) }));
     assert.equal(secondSave.status, 200, await secondSave.clone().text());
-    assert.equal((await secondSave.json()).pullNumber, 42);
+    const secondResult = await secondSave.json() as { branch: string; pullNumber: number; article: { file: string; title: string; content: string } };
+    assert.equal(secondResult.pullNumber, 42);
     assert.equal(branches.size, 1);
     const files = branches.get(first.branch)!;
     assert.deepEqual([...files.keys()].sort(), [`content/posts/${articleFile}`, `static/img/posts/${uploaded.name}`].sort());
@@ -86,6 +88,19 @@ test("article and uploaded image are committed to the same branch and one draft 
     assert.match(savedArticle.content, new RegExp(`/img/posts/${uploaded.name.replaceAll(".", "\\.")}`));
     assert.equal(lastPullNumber, 42);
     assert.ok(calls >= 10);
+
+    const listResponse = await listArticles(new Request(`${origin}/api/editor/articles/`, { headers: { cookie } }));
+    assert.equal(listResponse.status, 200, await listResponse.clone().text());
+    const listing = await listResponse.json() as { articles: Array<{ file: string; branch: string | null; pullNumber: number | null }> };
+    const listedDraft = listing.articles.find((article) => article.file === secondResult.article.file);
+    assert.equal(listedDraft?.branch, secondResult.branch);
+    assert.equal(listedDraft?.pullNumber, 42);
+
+    const openResponse = await listArticles(new Request(`${origin}/api/editor/articles/?file=${encodeURIComponent(secondResult.article.file)}&branch=${encodeURIComponent(secondResult.branch)}`, { headers: { cookie } }));
+    assert.equal(openResponse.status, 200, await openResponse.clone().text());
+    const opened = await openResponse.json() as { article: { title: string; content: string } };
+    assert.equal(opened.article.title, payload.title);
+    assert.match(opened.article.content, /Initial body/);
   } finally {
     globalThis.fetch = originalFetch;
     for (const key of envKeys) { if (previousEnv[key] === undefined) delete process.env[key]; else process.env[key] = previousEnv[key]!; }

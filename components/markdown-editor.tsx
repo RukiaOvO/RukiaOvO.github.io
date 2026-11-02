@@ -18,11 +18,12 @@ function articleInputDate(value: string) {
   return Number.isNaN(date.valueOf()) ? localDate() : localDate(date);
 }
 function messageFrom(error: unknown) { return error instanceof Error ? error.message : "操作失败，请稍后重试。"; }
+class ApiRequestError extends Error { constructor(message: string, readonly status: number) { super(message); } }
 
 async function jsonRequest<T>(url: string, init?: RequestInit): Promise<T> {
   const response = await fetch(url, { ...init, credentials: "same-origin", cache: "no-store" });
   const result = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(typeof result.error === "string" ? result.error : `请求失败（${response.status}）。`);
+  if (!response.ok) throw new ApiRequestError(typeof result.error === "string" ? result.error : `请求失败（${response.status}）。`, response.status);
   return result as T;
 }
 
@@ -48,16 +49,15 @@ export function MarkdownEditor() {
       const response = await jsonRequest<{ article: ArticleData }>(`/api/editor/articles?${query}`);
       setForm(response.article); setSelectedFile(response.article.file); setBranch(article.branch); setDirty(false);
     } catch (error) {
-      // A closed or deleted draft branch can remain visible briefly in the PR list.
-      // Fall back to the published file so the workbench remains usable.
-      if (article.branch) {
+      // Only fall back to the published version when GitHub confirms the draft resource is missing.
+      // Keep the list entry and real upstream errors for permission or network failures.
+      if (article.branch && error instanceof ApiRequestError && error.status === 404) {
         try {
           const response = await jsonRequest<{ article: ArticleData }>(`/api/editor/articles?file=${encodeURIComponent(article.file)}`);
           setForm(response.article); setSelectedFile(response.article.file); setBranch(null); setArticles((items) => items.map((item) => item.file === article.file ? { ...item, branch: null, pullNumber: null, pullUrl: null } : item)); setDirty(false); setPageError("该草稿分支已失效，已打开已发布版本。保存后会创建新的草稿 PR。"); return;
-        } catch {
-          setArticles((items) => items.filter((item) => item.file !== article.file));
+        } catch (fallbackError) {
           setForm(null); setSelectedFile(""); setBranch(null);
-          setPageError("该草稿分支已失效，请刷新文章列表或新建文章。");
+          setPageError(`读取草稿失败：${messageFrom(error)}；读取已发布版本也失败：${messageFrom(fallbackError)}。可点“新建”另起草稿，或刷新列表重试。`);
           return;
         }
       }
@@ -82,6 +82,13 @@ export function MarkdownEditor() {
     if (target) await openArticle(target);
     else startNewArticle();
   }, [openArticle, startNewArticle]);
+
+  const refreshArticles = useCallback(async () => {
+    setBusy(true); setPageError("");
+    try { await loadArticles(); }
+    catch (error) { setPageError(messageFrom(error)); }
+    finally { setBusy(false); }
+  }, [loadArticles]);
 
   useEffect(() => {
     let alive = true;
@@ -166,9 +173,10 @@ export function MarkdownEditor() {
   const selected = articles.find((article) => article.file === selectedFile);
   return <section className="editor-workbench" aria-label="Markdown 内容工作台">
     <aside className="panel editor-sidebar">
-      <div className="editor-sidebar-heading"><h2>文章</h2><button className="button button-outline" type="button" onClick={startNewArticle} disabled={busy}>新建</button></div>
+      <div className="editor-sidebar-heading"><h2>文章</h2><div className="editor-sidebar-actions"><button className="button button-outline" type="button" onClick={() => void refreshArticles()} disabled={busy}>刷新列表</button><button className="button" type="button" onClick={startNewArticle} disabled={busy}>新建</button></div></div>
       <label className="editor-user">已连接 @{session.user?.login}<button type="button" className="editor-logout" onClick={logout} disabled={busy}>退出</button></label>
       {draftsWarning && <p className="editor-draft-warning" role="status">{draftsWarning}</p>}
+      {pageError && !form && <p className="editor-error" role="alert">{pageError}</p>}
       <div className="editor-article-list" role="listbox" aria-label="选择文章">
         {articles.map((article) => <button className="editor-article-option" type="button" key={article.file} aria-pressed={selectedFile === article.file} onClick={() => openArticle(article)} disabled={busy}>
           <strong>{article.title || article.file}</strong><span>{article.pullNumber ? `草稿 PR #${article.pullNumber}` : article.draft ? "草稿" : "已发布"}</span>

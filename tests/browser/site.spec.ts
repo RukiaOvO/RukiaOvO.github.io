@@ -23,10 +23,16 @@ test("homepage remains readable when third parties fail; themes persist", async 
   await expect(page.getByRole("heading", { name: "精选项目" })).toHaveCount(0);
   await expect(page.getByText("QUICK ACCESS")).toHaveCount(0);
   await expect(page.getByText("最近的开发足迹")).toHaveCount(0);
-  await page.getByLabel("外观主题").selectOption("dark");
+  await page.getByRole("button", { name: "深色模式" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  await expect(page.getByRole("button", { name: "深色模式" })).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator(".theme-control")).toHaveAttribute("data-mode", "dark");
   await page.reload();
-  await expect(page.getByLabel("外观主题")).toHaveValue("dark");
+  await expect(page.getByRole("button", { name: "深色模式" })).toHaveAttribute("aria-pressed", "true");
+  await page.getByRole("button", { name: "浅色模式" }).click();
+  await expect(page.locator(".theme-control")).toHaveAttribute("data-mode", "light");
+  await page.getByRole("button", { name: "自动模式" }).click();
+  await expect(page.locator(".theme-control")).toHaveAttribute("data-mode", "auto");
   expect(errors).toEqual([]);
 });
 
@@ -136,8 +142,9 @@ test("mobile layouts fit the viewport and keyboard navigation reaches main conte
   await page.keyboard.press("Enter");
   await expect(page.locator("#main-content")).toBeFocused();
   await page.locator("#main-content").evaluate((main) => (main as HTMLElement).blur());
-  await page.getByLabel("外观主题").selectOption("light");
-  await page.getByLabel("外观主题").blur();
+  await page.getByRole("button", { name: "浅色模式" }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await page.getByRole("button", { name: "浅色模式" }).blur();
   await page.screenshot({ path: "test-results/home-mobile.png", fullPage: true });
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.screenshot({ path: "test-results/home-desktop.png", fullPage: true });
@@ -169,5 +176,5 @@ test("activity retries a failed request and handles successful empty data", asyn
   await page.goto("/activity/");
   await page.locator(".activity-feed").first().scrollIntoViewIfNeeded();
   await page.getByRole("button", { name: "重新加载", exact: true }).click();
-  await expect(page.getByText("近期暂无公开内容。")).toBeVisible();
+  await expect(page.getByText("近期暂无公开内容。").first()).toBeVisible();
 });
