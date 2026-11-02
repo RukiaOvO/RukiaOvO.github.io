@@ -2,6 +2,8 @@
 
 ## 2026-11-02 当前执行清单
 
+部署进度更新：Vercel 长期项目 `rukiaovo-homepage` 已建立并连接 `codex/vercel-site`，默认域名 https://rukiaovo-homepage.vercel.app 已在线，真实前台与 API 验收通过。OAuth、最终索引开关和发布链路验收的剩余工作见 [生产部署记录](production-deployment.md)。下表为本轮部署前的待办基线。
+
 最新追加：已将新站布局调整为接近旧站的个人资料侧栏与功能主栏；Decap CMS、GitHub OAuth 回调和文章/图片写入配置已实现，仍需 OAuth App、Vercel 生产环境变量及真实账号验收。Vercel 项目名预选 `rukiaovo-homepage`，默认 hostname `rukiaovo-homepage.vercel.app` 待账号确认可用。ClouDNS 自有域名可以后续绑定，DDNS 不用于 Vercel 站点记录。详见 [布局、在线写作与域名方案](layout-publishing-domain.md)。
 
 本节为当前任务，后文旧清单仅为历史盘点。产品方向已调整为独立设计新主页、改良原场景，部署平台为 Vercel；不要求复刻所有 Hugo/Worker 功能。
