@@ -13,8 +13,7 @@ profile:
   qq: "1403555427"
   bio: "无风去处是归宿"
   visitorBadge:
-    url: "https://visitor-badge.laobi.icu/badge?page_id=RukiaOvO.RukiaOvO.github.io&left_text=Views"
-    countUrl: "https://rukiaovo-github-io.1403555427.workers.dev/visitor"
+    countUrl: "/api/visitor"
 
 hero:
   title: "Hello, I am Ruk1a."

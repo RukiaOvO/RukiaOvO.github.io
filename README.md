@@ -145,7 +145,11 @@ npm run dev
 
 ### 市场收盘行情
 
-首页市场卡片展示上证指数、标普 500 收盘行情，以及 XAU/USD 黄金现货参考价。指数从腾讯行情接口读取，黄金来自无需 API Key 的 Gold API。服务端缓存一天；Vercel Cron 按 UTC 00:10（北京时间 08:10）触发缓存刷新，不向浏览器暴露上游接口。为了启用定时刷新，请在 Vercel Production 环境变量中设置随机 `CRON_SECRET`，Vercel Cron 会用它认证 `/api/markets/refresh`。数据源属于免费接口，可能限流或调整，卡片会在上游不可用时显示占位状态。
+首页“今日行情”展示上证指数、标普 500 收盘行情，以及 XAU/USD 黄金现货参考价。指数从腾讯行情接口读取，黄金来自无需 API Key 的 Gold API。服务端缓存一天；Vercel Cron 按 UTC 00:10（北京时间 08:10）触发缓存刷新，不向浏览器暴露上游接口。为了启用定时刷新，请在 Vercel Production 环境变量中设置随机 `CRON_SECRET`，Vercel Cron 会用它认证 `/api/markets/refresh`。数据源属于免费接口，可能限流或调整，卡片会在上游不可用时显示占位状态。
+
+### 访客统计
+
+页眉访客数由站内 `/api/visitor` 统计，并使用 Upstash Redis 持久保存唯一访客总数。首次访问通过 HttpOnly Cookie 识别浏览器，后续访问读取累计值，不使用第三方徽章；启用该统计需在 Vercel 配置 `UPSTASH_REDIS_REST_URL` 和 `UPSTASH_REDIS_REST_TOKEN`。该口径是浏览器去重访客，清除 Cookie 或更换浏览器后会被视为新访客。
 
 ### 配置 Giscus 评论
 

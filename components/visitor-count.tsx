@@ -1,11 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
-
-type Props = { badgeUrl: string };
-
-export function VisitorCount({ badgeUrl }: Props) {
+export function VisitorCount() {
   const [count, setCount] = useState<string | null>(null);
   const [fallback, setFallback] = useState(false);
 
@@ -16,7 +12,7 @@ export function VisitorCount({ badgeUrl }: Props) {
         if (cached) { setCount(cached); return; }
       } catch { /* Storage may be unavailable; the live counter still works. */ }
       try {
-        const response = await fetch(`/api/visitor?t=${Date.now()}`, { cache: "no-store" });
+        const response = await fetch("/api/visitor", { cache: "no-store" });
         const payload = await response.json() as { ok?: boolean; count?: unknown; visitors?: unknown; value?: unknown };
         const value = payload.count ?? payload.visitors ?? payload.value;
         if (!response.ok || (payload.ok === false) || value === undefined || value === null || value === "") throw new Error("visitor count unavailable");
@@ -31,8 +27,8 @@ export function VisitorCount({ badgeUrl }: Props) {
   }, []);
 
   return <span className="visitor-count" aria-label="访客数量">
-    <span aria-hidden="true">👁</span>
+    <span className="visitor-count-icon" aria-hidden="true">◉</span>
     <span>访客</span>
-    {count ? <strong>{count}</strong> : fallback ? <Image src={badgeUrl} alt="访客数量" width={100} height={20} unoptimized /> : <span className="visitor-count-loading" aria-label="加载中">…</span>}
+    {count ? <strong>{count}</strong> : fallback ? <strong>—</strong> : <span className="visitor-count-loading" aria-label="加载中">…</span>}
   </span>;
 }

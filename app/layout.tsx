@@ -22,7 +22,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <body>
       <a className="skip-link" href="#main-content">跳转到主要内容</a>
       <header className="site-header"><div className="header-inner">
-        <Link href="/" className="dock-brand" aria-label="Ruk1a 首页"><strong>Hello, I am {site.profile.romanName}. <VisitorCount badgeUrl={site.visitor.badgeUrl} /></strong><span>工程实践、公开动态与阶段性思考</span></Link>
+        <Link href="/" className="dock-brand" aria-label="Ruk1a 首页"><strong>Hello, I am {site.profile.romanName}. <VisitorCount /></strong><span>工程实践、公开动态与阶段性思考</span></Link>
         <Navigation links={site.navigation} /><ThemeControl />
       </div></header>
       <main id="main-content" className="site-main" tabIndex={-1}>{children}</main>

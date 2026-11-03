@@ -49,11 +49,6 @@ export const siteContent = {
     profileUrl: "https://steamcommunity.com/profiles/76561198417009401/",
     workerUrl: "https://rukiaovo-github-io.1403555427.workers.dev/steam",
     recentGamesUrl: "https://rukiaovo-github-io.1403555427.workers.dev/steam/games",
-    topGamesUrl: "https://rukiaovo-github-io.1403555427.workers.dev/steam/top-games",
-  },
-  visitor: {
-    countUrl: "https://rukiaovo-github-io.1403555427.workers.dev/visitor",
-    badgeUrl: "https://visitor-badge.laobi.icu/badge?page_id=RukiaOvO.RukiaOvO.github.io&left_text=Views",
   },
   comments: {
     owner: "RukiaOvO", repo: "RukiaOvO.github.io", title: "留下一点想法", description: "关于博客、项目，或任何想聊的话题。欢迎交流。",

@@ -110,9 +110,7 @@
     if (!badge) return;
 
     const countUrl = badge.dataset.visitorCountUrl;
-    const fallbackUrl = badge.dataset.visitorBadgeUrl;
     const countTarget = badge.querySelector("[data-visitor-count]");
-    const fallbackImage = badge.querySelector("[data-visitor-fallback]");
     if (!countUrl || !countTarget) return;
 
     const STORAGE_KEY = "profile-visitor-counted";
@@ -145,9 +143,8 @@
       // fall back to loading the original badge image below
     }
 
-    if (fallbackImage && fallbackUrl) {
-      fallbackImage.src = fallbackUrl;
-    }
+    countTarget.textContent = "—";
+    countTarget.hidden = false;
   };
 
   const readJsonScript = (id, fallback = []) => {

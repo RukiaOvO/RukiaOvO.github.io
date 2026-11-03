@@ -38,12 +38,10 @@
             <div
               class="profile-card__visitor"
               data-visitor-count-url="{{ .countUrl }}"
-              data-visitor-badge-url="{{ .url }}"
               aria-label="Visitor count">
               {{ partial "icon.html" "eye" }}
               <span class="profile-card__visitor-label">Views</span>
               <strong class="profile-card__visitor-count" data-visitor-count hidden></strong>
-              <img class="profile-card__visitor-source" data-visitor-fallback alt="" loading="lazy" referrerpolicy="no-referrer" aria-hidden="true">
             </div>
           {{ end }}
         </div>

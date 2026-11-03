@@ -1,27 +1,40 @@
-import { site } from "@/lib/site";
+import { randomUUID } from "node:crypto";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-function readCount(payload: unknown): string | null {
-  if (!payload || typeof payload !== "object") return null;
-  const record = payload as Record<string, unknown>;
-  const value = record.count ?? record.visitors ?? record.value;
-  if (typeof value === "number" && Number.isFinite(value)) return String(value);
-  if (typeof value === "string" && value.trim()) return value.trim();
-  return null;
+const cookieName = "site_visitor_id";
+const cookieMaxAge = 60 * 60 * 24 * 365;
+const counterKey = "rukia:site:unique-visitors";
+
+async function readCounter(increment: boolean): Promise<string> {
+  const url = process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+  if (!url || !token) throw new Error("Visitor counter storage is not configured");
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+    body: JSON.stringify(increment ? ["INCR", counterKey] : ["GET", counterKey]),
+    cache: "no-store",
+    signal: AbortSignal.timeout(2000),
+  });
+  if (!response.ok) throw new Error("Visitor counter storage is unavailable");
+  const payload = await response.json() as { result?: unknown };
+  const count = Number(payload.result);
+  if (!Number.isSafeInteger(count) || count < 0) throw new Error("Visitor counter response is invalid");
+  return String(count);
 }
 
 export async function GET(request: Request) {
+  const cookies = request.headers.get("cookie") || "";
+  const visitorId = cookies.split(";").map((part) => part.trim()).find((part) => part.startsWith(`${cookieName}=`))?.slice(cookieName.length + 1);
+  const isNewVisitor = !visitorId;
   try {
-    const url = new URL(site.visitor.countUrl);
-    url.searchParams.set("t", new URL(request.url).searchParams.get("t") || String(Date.now()));
-    const response = await fetch(url, { cache: "no-store", signal: AbortSignal.timeout(6000), redirect: "error" });
-    if (!response.ok) throw new Error("Visitor service failed");
-    const count = readCount(await response.json());
-    if (!count) throw new Error("Visitor response was invalid");
-    return Response.json({ ok: true, count }, { headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } });
+    const count = await readCounter(isNewVisitor);
+    const response = Response.json({ ok: true, count }, { headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } });
+    if (isNewVisitor) response.headers.append("Set-Cookie", `${cookieName}=${randomUUID()}; Path=/; Max-Age=${cookieMaxAge}; SameSite=Lax; HttpOnly${process.env.NODE_ENV === "production" ? "; Secure" : ""}`);
+    return response;
   } catch {
-    return Response.json({ ok: false, error: "Visitor service is temporarily unavailable." }, { status: 502, headers: { "Cache-Control": "no-store" } });
+    return Response.json({ ok: false, error: "Visitor counter is temporarily unavailable." }, { status: 503, headers: { "Cache-Control": "no-store" } });
   }
 }
