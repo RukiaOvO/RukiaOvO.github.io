@@ -61,7 +61,7 @@ test("article and uploaded image are committed to the same branch and one draft 
   try {
     const cookie = "__Secure-rukia_editor_session=editor-token";
     const articleFile = "article-20261102-010101.md";
-    const payload = { file: articleFile, title: "Image test article", date: "2026-11-02", draft: true, summary: "summary", tags: ["test"], categories: ["notes"], content: "Initial body" };
+    const payload = { file: articleFile, title: "Image test article", date: "2026-11-02", draft: true, summary: "summary", tags: ["test，frontend"], categories: ["notes, engineering"], content: "Initial body" };
     const firstSave = await savePost(new Request(`${origin}/api/editor/articles/save`, { method: "POST", headers: { cookie, origin, "content-type": "application/json" }, body: JSON.stringify(payload) }));
     assert.equal(firstSave.status, 200, `${await firstSave.clone().text()}\n${requests.join("\n")}`);
     const first = await firstSave.json() as { branch: string; pullNumber: number; pullUrl: string };
@@ -85,6 +85,8 @@ test("article and uploaded image are committed to the same branch and one draft 
     assert.deepEqual([...files.keys()].sort(), [`content/posts/${articleFile}`, `static/img/posts/${uploaded.name}`].sort());
     const savedArticle = matter(files.get(`content/posts/${articleFile}`)!.content);
     assert.equal(savedArticle.data.draft, true);
+    assert.deepEqual(savedArticle.data.tags, ["test", "frontend"]);
+    assert.deepEqual(savedArticle.data.categories, ["notes", "engineering"]);
     assert.match(savedArticle.content, new RegExp(`/img/posts/${uploaded.name.replaceAll(".", "\\.")}`));
     assert.equal(lastPullNumber, 42);
     assert.ok(calls >= 10);
