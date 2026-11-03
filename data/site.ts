@@ -6,7 +6,7 @@ export const siteContent = {
     github: "RukiaOvO", email: "1403555427@qq.com", bio: "无风去处是归宿",
     research: "Agent / AI4SE", introduction: "在复旦学习，关注软件工程、Agent 与 AI4SE。这里整理我的工程实践、论文阅读，以及沿途的思考。",
   },
-  navigation: [{ label: "首页", href: "/" }, { label: "文章", href: "/posts/" },
+  navigation: [{ label: "首页", href: "/" }, { label: "博客", href: "/posts/" },
     { label: "动态", href: "/activity/" }],
   social: [
     { label: "GitHub", href: "https://github.com/RukiaOvO" },
@@ -16,12 +16,11 @@ export const siteContent = {
     { label: "Steam", href: "https://steamcommunity.com/profiles/76561198417009401/" },
     { label: "QQ", href: "https://wpa.qq.com/msgrd?v=3&uin=1403555427&site=qq&menu=yes" },
   ],
-  skills: ["Java", "Go", "Web", "软件架构", "Agent", "AI4SE"],
+  skills: ["AI4SE", "Agent Trajectory", "RCA", "Agentic RL"],
   timeline: [
     { date: "2026.06", title: "整理工程实践与论文阅读，建设个人主页" },
-    { date: "2026.01", title: "持续关注 Agent / AI4SE 与软件工程结合" },
-    { date: "2025.09", title: "聚焦 Web、后端工程与软件架构" },
-    { date: "2024.09", title: "在 Fudan University 开始新的阶段" },
+    { date: "2026.07", title: "持续关注 Agent / AI4SE 与软件工程结合" },
+    { date: "2026.08", title: "在 Fudan University 开始新的阶段" },
   ],
   projects: [
     { slug: "kg4se", name: "Kg4se", eyebrow: "KNOWLEDGE × SOFTWARE ENGINEERING", number: "01",
@@ -50,13 +49,18 @@ export const siteContent = {
     profileUrl: "https://steamcommunity.com/profiles/76561198417009401/",
     workerUrl: "https://rukiaovo-github-io.1403555427.workers.dev/steam",
     recentGamesUrl: "https://rukiaovo-github-io.1403555427.workers.dev/steam/games",
+    topGamesUrl: "https://rukiaovo-github-io.1403555427.workers.dev/steam/top-games",
+  },
+  visitor: {
+    countUrl: "https://rukiaovo-github-io.1403555427.workers.dev/visitor",
+    badgeUrl: "https://visitor-badge.laobi.icu/badge?page_id=RukiaOvO.RukiaOvO.github.io&left_text=Views",
   },
   comments: {
-    owner: "RukiaOvO", repo: "RukiaOvO.github.io", title: "留下一点想法", description: "关于文章、项目，或任何想聊的话题。欢迎交流。",
+    owner: "RukiaOvO", repo: "RukiaOvO.github.io", title: "留下一点想法", description: "关于博客、项目，或任何想聊的话题。欢迎交流。",
     giscus: { enabled: true, repoId: "R_kgDOTIGanw", category: "General", categoryId: "DIC_kwDOTIGan84DAQuk",
       mapping: "pathname" as const, strict: "0", reactionsEnabled: "0", emitMetadata: "0", inputPosition: "bottom", lang: "zh-CN" },
   },
-  posts: { title: "文章", description: "论文阅读、工程实践，以及值得留下的思考。" },
+  posts: { title: "博客", description: "论文阅读、工程实践，以及值得留下的思考。" },
   activity: { title: "动态与阅读", description: "公开开发记录，与来自技术社区的阅读线索。" },
 };
 

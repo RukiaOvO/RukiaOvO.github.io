@@ -11,8 +11,8 @@ locale: "zh_Hans"
 
 collections:
   - name: "posts"
-    label: "帖子"
-    label_singular: "帖子"
+    label: "博客"
+    label_singular: "博客"
     folder: "content/posts"
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"

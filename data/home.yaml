@@ -23,7 +23,7 @@ hero:
 navigation:
   - label: "首页"
     href: "/"
-  - label: "帖子"
+  - label: "博客"
     href: "/posts/"
   - label: "动态"
     href: "/activity/"
@@ -111,41 +111,40 @@ comments:
     loading: "lazy"
 
 externalFeeds:
+  - label: "Bangumi 今日番组"
+    category: "动漫"
+    url: "https://rsshub.app/bangumi/calendar/today"
+    fallbackUrls:
+      - "https://rsshub.rssforever.com/bangumi/calendar/today"
   - label: "B站动态"
     category: "B站"
     url: "https://rsshub.app/bilibili/user/dynamic/102770566"
     fallbackUrls:
       - "https://rsshub.rssforever.com/bilibili/user/dynamic/102770566"
-  - label: "番剧更新"
-    category: "番剧"
-    url: "https://rsshub.app/bangumi/calendar/today"
-    fallbackUrls:
-      - "https://rsshub.rssforever.com/bangumi/calendar/today"
-  - label: "IT之家"
-    category: "科技"
-    url: "https://www.ithome.com/rss/"
-    fallbackUrls:
-      - "https://rsshub.app/ithome/ranking/24h"
-      - "https://rsshub.rssforever.com/ithome/ranking/24h"
-  - label: "36氪快讯"
-    category: "科技"
-    url: "https://rsshub.app/36kr/newsflashes"
-    fallbackUrls:
-      - "https://rsshub.rssforever.com/36kr/newsflashes"
+  - label: "arXiv AI"
+    category: "AI"
+    url: "https://rss.arxiv.org/rss/cs.AI"
+  - label: "Hugging Face Blog"
+    category: "AI"
+    url: "https://huggingface.co/blog/feed.xml"
   - label: "财联社电报"
     category: "股市"
     url: "https://rsshub.app/cls/telegraph"
     fallbackUrls:
       - "https://rsshub.rssforever.com/cls/telegraph"
+  - label: "GitHub Blog"
+    category: "工程"
+    url: "https://github.blog/feed/"
 
 rss:
   workerFeedUrl: "https://rukiaovo-github-io.1403555427.workers.dev/rss"
   categories:
     - "全部"
+    - "动漫"
     - "B站"
-    - "番剧"
-    - "科技"
+    - "AI"
     - "股市"
+    - "工程"
 activity:
   title: "动态中心"
   description: "聚合 GitHub 公开开发记录和外部 RSS / Stream。"
@@ -153,8 +152,8 @@ activity:
   rssDescription: "RSS 源可以接入新闻、B 站动态、番剧更新或其他外部 stream。"
 
 posts:
-  title: "帖子"
-  description: "技术帖子、论文研读与阶段总结"
+  title: "博客"
+  description: "技术博客、论文研读与阶段总结"
 
 footer:
   copyright: "© 2026 Hello, I am Ruk1a."

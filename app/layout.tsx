@@ -3,6 +3,7 @@ import Link from "next/link";
 import { site, siteUrl, isPreview, absoluteUrl } from "@/lib/site";
 import { ThemeControl, themeScript } from "@/components/theme-control";
 import { Navigation } from "@/components/navigation";
+import { VisitorCount } from "@/components/visitor-count";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -21,7 +22,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <body>
       <a className="skip-link" href="#main-content">跳转到主要内容</a>
       <header className="site-header"><div className="header-inner">
-        <Link href="/" className="dock-brand" aria-label="Ruk1a 首页"><strong>Hello, I am {site.profile.romanName}.</strong><span>工程实践、公开动态与阶段性思考</span></Link>
+        <Link href="/" className="dock-brand" aria-label="Ruk1a 首页"><strong>Hello, I am {site.profile.romanName}. <VisitorCount badgeUrl={site.visitor.badgeUrl} /></strong><span>工程实践、公开动态与阶段性思考</span></Link>
         <Navigation links={site.navigation} /><ThemeControl />
       </div></header>
       <main id="main-content" className="site-main" tabIndex={-1}>{children}</main>

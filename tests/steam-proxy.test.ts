@@ -53,3 +53,24 @@ test("Steam API key stays server-side when the direct Steam Web API option is en
     if (previousKey === undefined) delete process.env.STEAM_API_KEY; else process.env.STEAM_API_KEY = previousKey;
   }
 });
+
+test("Steam top games are ranked by lifetime playtime", async () => {
+  const previousKey = process.env.STEAM_API_KEY;
+  const originalFetch = globalThis.fetch;
+  process.env.STEAM_API_KEY = "test-secret-key";
+  globalThis.fetch = async () => Response.json({ response: { games: [
+    { appid: 1, name: "Second", playtime_forever: 600, img_icon_url: "second" },
+    { appid: 2, name: "First", playtime_forever: 1200, img_icon_url: "first" },
+    { appid: 3, name: "Third", playtime_forever: 300, img_icon_url: "third" },
+    { appid: 4, name: "Fourth", playtime_forever: 100 },
+  ] } });
+  try {
+    const response = await GET(new Request("https://site.example/api/steam/top-games"), { params: Promise.resolve({ kind: "top-games" }) });
+    const payload = await response.json() as { games: Array<{ name: string; playtimeForever: number }> };
+    assert.equal(response.status, 200);
+    assert.deepEqual(payload.games.map((game) => [game.name, game.playtimeForever]), [["First", 1200], ["Second", 600], ["Third", 300]]);
+  } finally {
+    globalThis.fetch = originalFetch;
+    if (previousKey === undefined) delete process.env.STEAM_API_KEY; else process.env.STEAM_API_KEY = previousKey;
+  }
+});

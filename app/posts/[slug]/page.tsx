@@ -32,13 +32,13 @@ export default async function PostPage({ params }: Props) {
     author: { "@type": "Person", name: site.profile.displayName, url: absoluteUrl("/") } };
   return <>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
-    <header className="article-header"><Link href="/posts/" className="back-link">← 返回帖子</Link><div className="meta"><time dateTime={post.date}>{formatDate(post.date)}</time><span>{post.minutes} 分钟阅读</span></div><h1>{post.title}</h1>
+    <header className="article-header"><Link href="/posts/" className="back-link">← 返回博客</Link><div className="meta"><time dateTime={post.date}>{formatDate(post.date)}</time><span>{post.minutes} 分钟阅读</span></div><h1>{post.title}</h1>
       <div className="tags">{post.categories.map((category) => <Link key={category} href={`/posts/?category=${encodeURIComponent(category)}`}>{category}</Link>)}{post.tags.map((tag) => <Link key={tag} href={`/posts/?tag=${encodeURIComponent(tag)}`}># {tag}</Link>)}</div>
     </header>
     <div className="article-layout"><article className="panel article-panel"><ArticleBody html={html} /></article>
-      {headings.length > 0 && <aside className="toc panel" aria-label="文章目录"><p className="eyebrow">ON THIS PAGE</p><h2>目录</h2><ol>{headings.map((heading) => <li key={heading.id} data-level={heading.level}><a href={`#${heading.id}`}>{heading.text}</a></li>)}</ol></aside>}
+      {headings.length > 0 && <aside className="toc panel" aria-label="博客目录"><p className="eyebrow">ON THIS PAGE</p><h2>目录</h2><ol>{headings.map((heading) => <li key={heading.id} data-level={heading.level}><a href={`#${heading.id}`}>{heading.text}</a></li>)}</ol></aside>}
     </div>
-    <nav className="post-pagination" aria-label="相邻文章">{older && <Link href={postUrl(older)}><span>← 上一篇</span><strong>{older.title}</strong></Link>}{newer && <Link href={postUrl(newer)}><span>下一篇 →</span><strong>{newer.title}</strong></Link>}</nav>
+    <nav className="post-pagination" aria-label="相邻博客">{older && <Link href={postUrl(older)}><span>← 上一篇</span><strong>{older.title}</strong></Link>}{newer && <Link href={postUrl(newer)}><span>下一篇 →</span><strong>{newer.title}</strong></Link>}</nav>
     <Comments config={site.comments} />
   </>;
 }

@@ -73,6 +73,8 @@ test("Markdown has safe HTML, unique heading anchors, GFM and highlighted code",
 
 test("every existing article and local Markdown image remains available", async () => {
   const posts = await getPosts();
+  const agentTracer = posts.find((post) => post.slug === "2026-11-02-agentracer-who-is-inducing-failure-in-the-llm-agentic-systems");
+  assert.deepEqual(agentTracer?.tags, ["ICLR", "AgenticRL", "FailureAttribution"]);
   assert.ok(posts.some((post) => post.slug === "2026-07-01-agentspec-customizable-runtime-enforcement-for-safe-and-reliable-llm-agents"));
   let images = 0;
   for (const post of posts) {

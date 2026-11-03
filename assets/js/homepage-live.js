@@ -538,7 +538,7 @@
         return;
       }
 
-      target.innerHTML = games.map((g) => {
+      target.innerHTML = games.map((g, index) => {
         const icon = g.imgIconUrl
           ? `https://media.steampowered.com/steamcommunity/public/images/apps/${g.appid}/${g.imgIconUrl}.jpg`
           : "";

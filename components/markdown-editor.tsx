@@ -118,7 +118,7 @@ export function MarkdownEditor() {
   }
 
   async function saveArticle(quiet = false): Promise<string | null> {
-    if (!form || !form.title.trim()) { setPageError("请先填写文章标题。"); return null; }
+    if (!form || !form.title.trim()) { setPageError("请先填写博客标题。"); return null; }
     setBusy(true); setPageError(""); setMessage("");
     try {
       const result = await jsonRequest<{ branch: string; pullNumber: number; pullUrl: string; article: ArticleData }>("/api/editor/articles/save", {
@@ -151,7 +151,7 @@ export function MarkdownEditor() {
       const content = form.content.slice(0, start) + insertion + form.content.slice(end);
       setForm((previous) => previous ? { ...previous, content } : previous); setDirty(true); setBranch(result.branch);
       setImages((previous) => [...previous, { name: result.name, url: URL.createObjectURL(file) }]);
-      setMessage(`图片已上传并插入正文：${result.name}。保存文章后会与文章一起出现在同一草稿 PR 中。`);
+      setMessage(`图片已上传并插入正文：${result.name}。保存博客后会与博客一起出现在同一草稿 PR 中。`);
       requestAnimationFrame(() => { input?.focus(); input?.setSelectionRange(start + insertion.length, start + insertion.length); });
     } catch (error) { setPageError(messageFrom(error)); }
     finally { setBusy(false); if (imageInputRef.current) imageInputRef.current.value = ""; }
@@ -171,29 +171,29 @@ export function MarkdownEditor() {
   }
 
   if (!session) return <section className="panel editor-state" aria-live="polite">{pageError || "正在连接内容工作台…"}</section>;
-  if (!session.authenticated) return <section className="panel editor-login"><h2>{session.configured ? "登录后开始写作" : "写作服务尚未配置"}</h2><p>使用有权写入网站仓库的 GitHub 账号。文章与图片保存在同一草稿分支，并通过 Pull Request 审核发布。</p>{pageError && <p className="editor-error" role="alert">{pageError}</p>}{session.configured ? <button className="button" type="button" onClick={beginGitHubLogin}>使用 GitHub 登录</button> : <p className="muted">请在 Vercel 配置现有 GitHub OAuth 环境变量后重新部署。</p>}</section>;
+  if (!session.authenticated) return <section className="panel editor-login"><h2>{session.configured ? "登录后开始写作" : "写作服务尚未配置"}</h2><p>使用有权写入网站仓库的 GitHub 账号。博客与图片保存在同一草稿分支，并通过 Pull Request 审核发布。</p>{pageError && <p className="editor-error" role="alert">{pageError}</p>}{session.configured ? <button className="button" type="button" onClick={beginGitHubLogin}>使用 GitHub 登录</button> : <p className="muted">请在 Vercel 配置现有 GitHub OAuth 环境变量后重新部署。</p>}</section>;
 
   const selected = articles.find((article) => article.file === selectedFile);
   return <section className="editor-workbench" aria-label="Markdown 内容工作台">
     <aside className="panel editor-sidebar">
-      <div className="editor-sidebar-heading"><h2>文章</h2><div className="editor-sidebar-actions"><button className="button button-outline" type="button" onClick={() => void refreshArticles()} disabled={busy}>刷新列表</button><button className="button" type="button" onClick={startNewArticle} disabled={busy}>新建</button></div></div>
+      <div className="editor-sidebar-heading"><h2>博客</h2><div className="editor-sidebar-actions"><button className="button button-outline" type="button" onClick={() => void refreshArticles()} disabled={busy}>刷新列表</button><button className="button" type="button" onClick={startNewArticle} disabled={busy}>新建</button></div></div>
       <label className="editor-user">已连接 @{session.user?.login}<button type="button" className="editor-logout" onClick={logout} disabled={busy}>退出</button></label>
       {draftsWarning && <p className="editor-draft-warning" role="status">{draftsWarning}</p>}
       {pageError && !form && <p className="editor-error" role="alert">{pageError}</p>}
-      <div className="editor-article-list" role="listbox" aria-label="选择文章">
+      <div className="editor-article-list" role="listbox" aria-label="选择博客">
         {articles.map((article) => <button className="editor-article-option" type="button" key={article.file} aria-pressed={selectedFile === article.file} onClick={() => openArticle(article)} disabled={busy}>
           <strong>{article.title || article.file}</strong><span>{article.pullNumber ? `草稿 PR #${article.pullNumber}` : article.draft ? "草稿" : "已发布"}</span>
         </button>)}
-        {articles.length === 0 && <p className="muted">还没有文章。点击“新建”开始写第一篇。</p>}
+        {articles.length === 0 && <p className="muted">还没有博客。点击“新建”开始写第一篇。</p>}
       </div>
-      <p className="editor-branch-note">保存会创建或更新文章专属草稿 PR。合并 PR 后，Vercel 会自动部署。</p>
+      <p className="editor-branch-note">保存会创建或更新博客专属草稿 PR。合并 PR 后，Vercel 会自动部署。</p>
       <a className="editor-branch-note" href="https://github.com/RukiaOvO/RukiaOvO.github.io/pulls?q=is%3Apr+is%3Aopen+base%3Acodex%2Fvercel-site" target="_blank" rel="noreferrer">查看所有草稿和发布中的 PR ↗</a>
     </aside>
 
     {form && <div className="panel editor-main">
-      <div className="editor-main-heading"><div><p className="eyebrow">MARKDOWN EDITOR</p><h2>{selected?.pullNumber ? `编辑草稿 PR #${selected.pullNumber}` : selected ? "编辑文章" : "新建文章"}</h2></div><span className={dirty ? "editor-dirty" : "editor-clean"}>{dirty ? "有未保存更改" : "已保存"}</span></div>
+      <div className="editor-main-heading"><div><p className="eyebrow">MARKDOWN EDITOR</p><h2>{selected?.pullNumber ? `编辑草稿 PR #${selected.pullNumber}` : selected ? "编辑博客" : "新建博客"}</h2></div><span className={dirty ? "editor-dirty" : "editor-clean"}>{dirty ? "有未保存更改" : "已保存"}</span></div>
       <div className="editor-meta-grid">
-        <label className="editor-field editor-title-field">标题<input value={form.title} maxLength={180} onChange={(event) => change("title", event.target.value)} placeholder="为文章起个标题" /></label>
+        <label className="editor-field editor-title-field">标题<input value={form.title} maxLength={180} onChange={(event) => change("title", event.target.value)} placeholder="为博客起个标题" /></label>
         <label className="editor-field">发布日期<input type="date" value={articleInputDate(form.date)} onChange={(event) => change("date", event.target.value)} /></label>
         <label className="editor-field">摘要<input value={form.summary} maxLength={1200} onChange={(event) => change("summary", event.target.value)} placeholder="可选，留空时自动截取正文" /></label>
         <label className="editor-field">标签<input value={form.tags.join(", ")} onChange={(event) => change("tags", parseCommaSeparated(event.target.value))} placeholder="支持中英文逗号分隔" /></label>
@@ -204,9 +204,9 @@ export function MarkdownEditor() {
       <textarea ref={bodyRef} id="article-markdown" className="editor-markdown" value={form.content} spellCheck={false} onChange={(event) => change("content", event.target.value)} placeholder={"从这里开始写作…\n\n支持标准 Markdown，例如标题、链接、列表、表格和代码块。"} />
       {images.length > 0 && <div className="editor-image-preview" aria-label="本次上传的图片">{images.map((image) => <figure key={image.name}><Image src={image.url} alt={image.name} width={56} height={48} unoptimized /><figcaption>{image.name}</figcaption></figure>)}</div>}
       <div className="editor-save-row"><div aria-live="polite">{pageError && <span className="editor-error" role="alert">{pageError}</span>}{message && <span className="editor-success">{message}</span>}{selected?.pullUrl && !message && <a href={selected.pullUrl} target="_blank" rel="noreferrer">查看草稿 PR ↗</a>}</div><button type="button" className="button" onClick={() => void saveArticle()} disabled={busy}>{busy ? "正在保存…" : "保存草稿 PR"}</button></div>
-      {form.draft && <p className="editor-hint">勾选“仅保存为草稿”时，合并后也不会公开显示文章；取消勾选并合并 PR 即可发布。</p>}
-      <p className="editor-file-note">文章路径：<code>content/posts/{form.file}</code>{branch && <> · 工作分支：<code>{branch}</code></>}</p>
+      {form.draft && <p className="editor-hint">勾选“仅保存为草稿”时，合并后也不会公开显示博客；取消勾选并合并 PR 即可发布。</p>}
+      <p className="editor-file-note">博客路径：<code>content/posts/{form.file}</code>{branch && <> · 工作分支：<code>{branch}</code></>}</p>
     </div>}
-    {!form && <div className="panel editor-state">{busy ? "正在读取文章…" : "选择一篇文章，或新建文章开始写作。"}</div>}
+    {!form && <div className="panel editor-state">{busy ? "正在读取博客…" : "选择一篇博客，或新建博客开始写作。"}</div>}
   </section>;
 }

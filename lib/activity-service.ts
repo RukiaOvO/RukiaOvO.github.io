@@ -6,13 +6,12 @@ import { fetchText, UpstreamError } from "./upstream";
 
 // Only these editorially selected upstreams can be fetched. Query parameters cannot add URLs.
 export const feeds: Feed[] = [
-  { id: "ithome", label: "IT之家", category: "科技", url: "https://www.ithome.com/rss/" },
+  { id: "bangumi-today", label: "Bangumi 今日番组", category: "动漫", url: "https://rsshub.app/bangumi/calendar/today" },
+  { id: "bilibili-dynamic", label: "B站动态", category: "B站", url: "https://rsshub.app/bilibili/user/dynamic/102770566" },
+  { id: "arxiv-ai", label: "arXiv AI", category: "AI", url: "https://rss.arxiv.org/rss/cs.AI" },
+  { id: "huggingface-blog", label: "Hugging Face Blog", category: "AI", url: "https://huggingface.co/blog/feed.xml" },
+  { id: "cls-telegraph", label: "财联社电报", category: "股市", url: "https://rsshub.app/cls/telegraph" },
   { id: "github-blog", label: "GitHub Blog", category: "工程", url: "https://github.blog/feed/" },
-  { id: "hacker-news", label: "Hacker News", category: "社区", url: "https://hnrss.org/frontpage" },
-  { id: "lobsters", label: "Lobsters", category: "社区", url: "https://lobste.rs/rss" },
-  { id: "mozilla-hacks", label: "Mozilla Hacks", category: "工程", url: "https://hacks.mozilla.org/feed/" },
-  { id: "schneier", label: "Schneier on Security", category: "安全", url: "https://www.schneier.com/feed/atom/" },
-  { id: "infoq", label: "InfoQ", category: "工程", url: "https://feed.infoq.com/" },
 ];
 type Snapshot = { items: ActivityItem[]; updatedAt: string };
 const github = unstable_cache(async (): Promise<Snapshot> => {

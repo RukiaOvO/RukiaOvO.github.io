@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     const file = form.get("image");
     const articleFile = form.get("file");
     const requestedBranch = form.get("branch");
-    if (!(file instanceof File) || typeof articleFile !== "string" || !validArticleFile(articleFile) || typeof requestedBranch !== "string" || !validEditorBranch(requestedBranch)) return noStore({ error: "图片或文章信息无效。" }, 400);
+    if (!(file instanceof File) || typeof articleFile !== "string" || !validArticleFile(articleFile) || typeof requestedBranch !== "string" || !validEditorBranch(requestedBranch)) return noStore({ error: "图片或博客信息无效。" }, 400);
     if (file.size === 0 || file.size > maxImageBytes) return noStore({ error: "图片必须小于 4 MB。" }, 413);
     const bytes = new Uint8Array(await file.arrayBuffer());
     const extension = imageExtension(file.type, bytes);
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
     const original = file.name.replace(/\.[^.]+$/, "").normalize("NFKD").replace(/[^a-zA-Z0-9-]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 48).toLowerCase() || "image";
     const name = `${Date.now()}-${randomBytes(4).toString("hex")}-${original}.${extension}`;
     const branch = requestedBranch;
-    if (!await getEditablePull(token, branch, articleFile)) return noStore({ error: "请先保存文章草稿，再上传图片。" }, 409);
+    if (!await getEditablePull(token, branch, articleFile)) return noStore({ error: "请先保存博客草稿，再上传图片。" }, 409);
     await writeRepositoryBytes(token, branch, `static/img/posts/${name}`, bytes, `Upload article image: ${name}`);
     return noStore({ ok: true, branch, name, markdown: `![](/img/posts/${name})`, path: `/img/posts/${name}` });
   } catch (error) { return safeError(error); }

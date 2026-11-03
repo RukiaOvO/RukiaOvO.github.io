@@ -7,7 +7,7 @@ import { isPreview, site } from "@/lib/site";
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   const params = await searchParams;
-  return { title: "帖子", description: site.posts.description, alternates: { canonical: "/posts/" },
+  return { title: "博客", description: site.posts.description, alternates: { canonical: "/posts/" },
     ...(isPreview ? { robots: { index: false, follow: false } } : Object.keys(params).length ? { robots: { index: false, follow: true } } : {}) };
 }
 export default async function Posts({ searchParams }: Props) {
@@ -31,15 +31,15 @@ export default async function Posts({ searchParams }: Props) {
     <header className="page-intro"><p className="eyebrow">THE NOTEBOOK</p><h1>{site.posts.title}</h1><p>{site.posts.description}</p></header>
     <section className="panel" aria-label="搜索与筛选">
       <form key={JSON.stringify(filters)} action="/posts/" method="get" className="filters">
-        <label className="search-field">搜索帖子<input type="search" name="q" placeholder="搜索标题、摘要或标签…" defaultValue={filters.q} /></label>
+        <label className="search-field">搜索博客<input type="search" name="q" placeholder="搜索标题、摘要或标签…" defaultValue={filters.q} /></label>
         <label>分类<select name="category" defaultValue={filters.category}><option value="">全部分类</option>{categories.map((value) => <option key={value}>{value}</option>)}</select></label>
         <label>标签<select name="tag" defaultValue={filters.tag}><option value="">全部标签</option>{tags.map((value) => <option key={value}>{value}</option>)}</select></label>
         <label>年份<select name="year" defaultValue={filters.year}><option value="">所有年份</option>{years.map((value) => <option key={value}>{value}</option>)}</select></label>
         <button type="submit" className="button">筛选</button><Link className="reset-link" href="/posts/">重置</Link>
       </form>
     </section>
-    <div className="results-heading"><p>共 {result.total} 篇帖子</p><a href="/posts/index.xml">订阅 RSS ↗</a></div>
-    <section className="panel posts-panel" aria-label="帖子列表">{result.posts.length ? result.posts.map((post) => <PostCard key={post.slug} post={post} />) : <div className="empty-state"><h2>没有找到匹配的帖子</h2><p>试试其他关键词，或清除筛选条件。</p><Link href="/posts/">查看全部帖子 →</Link></div>}</section>
-    <nav className="pagination" aria-label="帖子分页">{result.page > 1 && <Link href={pageHref(result.page - 1)}>← 上一页</Link>}<span>第 {result.page} / {result.totalPages} 页</span>{result.page < result.totalPages && <Link href={pageHref(result.page + 1)}>下一页 →</Link>}</nav>
+    <div className="results-heading"><p>共 {result.total} 篇博客</p><a href="/posts/index.xml">订阅 RSS ↗</a></div>
+    <section className="panel posts-panel" aria-label="博客列表">{result.posts.length ? result.posts.map((post) => <PostCard key={post.slug} post={post} />) : <div className="empty-state"><h2>没有找到匹配的博客</h2><p>试试其他关键词，或清除筛选条件。</p><Link href="/posts/">查看全部博客 →</Link></div>}</section>
+    <nav className="pagination" aria-label="博客分页">{result.page > 1 && <Link href={pageHref(result.page - 1)}>← 上一页</Link>}<span>第 {result.page} / {result.totalPages} 页</span>{result.page < result.totalPages && <Link href={pageHref(result.page + 1)}>下一页 →</Link>}</nav>
   </>;
 }

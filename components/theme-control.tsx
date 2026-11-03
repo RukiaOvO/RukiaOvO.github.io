@@ -40,7 +40,7 @@ export function ThemeControl() {
       window.removeEventListener("theme-preference", sync);
     };
   }, []);
-  return <div className="theme-control" role="group" aria-label="外观主题">
+  return <div className="theme-control" role="group" aria-label="外观主题" data-mode={mode}>
     {modes.map(([value, label]) => <button
       key={value}
       type="button"

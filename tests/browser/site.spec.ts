@@ -8,7 +8,21 @@ test.beforeEach(async ({ page }) => {
   await page.route(/https:\/\/(ghchart\.rshah\.org|giscus\.app)\//, (route) => route.abort());
   await page.route("**/api/activity/**", (route) => route.fulfill({ status: 503, json: { ok: false } }));
   await page.route("https://api.open-meteo.com/**", (route) => route.fulfill({ json: { current: { temperature_2m: 18, weather_code: 1, wind_speed_10m: 5 }, daily: { temperature_2m_max: [20], temperature_2m_min: [12] } } }));
-  await page.route("**/api/steam/**", (route) => route.fulfill({ json: route.request().url().includes("/games") ? { ok: true, games: [] } : { ok: true, personaName: "Rukia", statusText: "在线", onlineState: "online", personaState: 1 } }));
+  await page.route("**/api/visitor**", (route) => route.fulfill({ json: { ok: true, count: "1234" } }));
+  await page.route("**/api/markets", (route) => route.fulfill({ json: { ok: true, markets: [
+    { id: "shanghai", name: "上证指数", symbol: "000001.SS", currency: "CNY", unit: "点", price: 3380.5, change: 10.5, changePercent: 0.31, asOf: "2026-11-03" },
+    { id: "sp500", name: "标普 500", symbol: "^GSPC", currency: "USD", unit: "点", price: 6800.25, change: 20.25, changePercent: 0.3, asOf: "2026-11-03" },
+    { id: "gold", name: "黄金现货", symbol: "XAU/USD", currency: "USD", unit: "美元/盎司", price: 3900.12, change: null, changePercent: null, asOf: "2026-11-03" },
+  ] } }));
+  await page.route("**/api/steam/**", (route) => {
+    const url = route.request().url();
+    if (url.includes("top-games")) return route.fulfill({ json: { ok: true, games: [
+      { appid: 1, name: "Most played", playtimeForever: 1200 },
+      { appid: 2, name: "Second played", playtimeForever: 600 },
+      { appid: 3, name: "Third played", playtimeForever: 300 },
+    ] } });
+    return route.fulfill({ json: url.includes("/games") ? { ok: true, games: [] } : { ok: true, personaName: "Rukia", statusText: "在线", onlineState: "online", personaState: 1 } });
+  });
 });
 
 test("homepage remains readable when third parties fail; themes persist", async ({ page }) => {
@@ -16,9 +30,15 @@ test("homepage remains readable when third parties fail; themes persist", async 
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("露琪亚");
+  await expect(page.locator(".visitor-count")).toContainText("1234");
   await expect(page.getByRole("heading", { name: /AgentSpec:/ })).toBeVisible();
   await expect(page.getByRole("heading", { name: "天气" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "最近游玩" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "收盘行情" })).toBeVisible();
+  await expect(page.getByText("上证指数")).toBeVisible();
+  await expect(page.getByText("黄金现货")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "游戏时长前三" })).toBeVisible();
+  await expect(page.getByText("Most played")).toBeVisible();
   await expect(page.getByRole("button", { name: "加载评论" })).toHaveCount(0);
   await expect(page.getByRole("heading", { name: "精选项目" })).toHaveCount(0);
   await expect(page.getByText("QUICK ACCESS")).toHaveCount(0);
@@ -46,7 +66,7 @@ test("search, taxonomy redirects, article TOC, images and metadata", async ({ pa
   // App Router can briefly retain the previous page's metadata during navigation.
   await expect(page.locator('link[rel="canonical"]')).toHaveCount(1);
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", absoluteUrl(`/posts/${slug}/`));
-  await expect(page.getByRole("complementary", { name: "文章目录" })).toBeVisible();
+  await expect(page.getByRole("complementary", { name: "博客目录" })).toBeVisible();
   const imageUrls = await page.locator(".prose img").evaluateAll((images) => images.map((img) => (img as HTMLImageElement).src));
   for (const url of imageUrls) expect((await request.get(url)).status()).toBe(200);
   await page.goto("/tags/icse/");
@@ -58,7 +78,7 @@ test("search, taxonomy redirects, article TOC, images and metadata", async ({ pa
   await expect(page.locator(".post-card")).toHaveCount(tagged);
   await expect(page.locator('select[name="tag"]')).toHaveValue("ICSE");
   await page.goto("/posts/?q=no-such-post");
-  await expect(page.getByRole("heading", { name: "没有找到匹配的帖子" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "没有找到匹配的博客" })).toBeVisible();
 });
 
 test("content workbench, pages, resources, sitemap, RSS and 404 routes", async ({ request }) => {

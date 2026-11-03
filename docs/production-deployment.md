@@ -50,6 +50,10 @@ GitHub OAuth App 参数：
 - 回滚应选择经过验收的历史 Vercel 部署，并同步处理 Git 中引发故障的变更；目前尚未做回滚演练。
 - Giscus 登录与评论写入、共享限流、多浏览器性能评估仍按后续计划执行。
 
+## 市场收盘行情
+
+首页市场卡片从腾讯行情接口读取上证指数、标普 500 收盘行情，并从 Gold API 读取 XAU/USD 黄金现货参考价。上游响应在 Next.js 服务端缓存一天。Vercel Cron 在每天 UTC 00:10（北京时间 08:10）调用 `/api/markets/refresh`，以便在 A 股和美股收盘后刷新缓存。上线前需在 Vercel Production 环境变量设置随机 `CRON_SECRET`；Vercel 会自动附带 Bearer 认证头。接口无需行情 API Key 或付费套餐，但免费数据源没有稳定性保证。
+
 ## 2026-11-02：替换在线编辑器
 
 用户反馈旧 Decap 流程会把上传图片显示成重复媒体条目，插入后文章无法显示图片。新版轻量 Markdown 工作台已生产部署：OAuth 同页回调、HttpOnly 服务端会话、文章列表和 metadata 编辑、图片单次上传并插入 Markdown、每篇新文章单独的草稿分支和 PR。图片通过唯一文件名写入 `static/img/posts/`，文章和图片共享 PR，保存后 Vercel 通过仓库集成发布。

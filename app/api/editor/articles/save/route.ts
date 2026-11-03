@@ -17,10 +17,10 @@ export async function POST(request: Request) {
   if (!token) return authRequired();
   if (!hasSameOrigin(request)) return originRejected();
   const length = Number(request.headers.get("content-length") || 0);
-  if (length > 600_000) return noStore({ error: "文章超过 500 KB 限制。" }, 413);
+  if (length > 600_000) return noStore({ error: "博客超过 500 KB 限制。" }, 413);
   let input: Input;
   try { input = await request.json() as Input; }
-  catch { return noStore({ error: "文章内容格式无效。" }, 400); }
+  catch { return noStore({ error: "博客内容格式无效。" }, 400); }
   const { file, title, date, draft, summary, tags, categories, content, branch: requestedBranch } = input;
   if (typeof file !== "string" || !validArticleFile(file) || typeof title !== "string" || !title.trim() || title.length > 180 || typeof date !== "string" || !/^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}(?::\d{2})?(?:\.\d{1,3})?(?:Z|[+-]\d{2}:?\d{2})?)?$/.test(date) || !Number.isFinite(Date.parse(date)) || typeof draft !== "boolean" || typeof content !== "string" || content.length > 500_000 || typeof summary !== "string" || summary.length > 1200 || !Array.isArray(tags) || tags.some((item) => typeof item !== "string" || item.length > 80) || !Array.isArray(categories) || categories.some((item) => typeof item !== "string" || item.length > 80)) {
     return noStore({ error: "请检查标题、日期、摘要、标签和正文格式。" }, 400);
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
   const normalizedTags = normalizeList(tags as string[]);
   const normalizedCategories = normalizeList(categories as string[]);
   if (normalizedTags.length > 30 || normalizedCategories.length > 20) return noStore({ error: "标签最多 30 个，分类最多 20 个。" }, 400);
-  if (requestedBranch !== undefined && (typeof requestedBranch !== "string" || !validEditorBranch(requestedBranch))) return noStore({ error: "草稿分支无效，请刷新文章列表。" }, 400);
+  if (requestedBranch !== undefined && (typeof requestedBranch !== "string" || !validEditorBranch(requestedBranch))) return noStore({ error: "草稿分支无效，请刷新博客列表。" }, 400);
 
   try {
     const branch = typeof requestedBranch === "string" ? requestedBranch : branchForNewArticle(file);

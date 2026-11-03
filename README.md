@@ -122,12 +122,14 @@ npm run dev
 
 ### 修改个人信息
 
-编辑 [data/home.yaml](data/home.yaml) 中的 `profile` 部分：
+新版 Next.js 网站的个人信息与标签配置在 [data/site.ts](data/site.ts)：修改 `siteContent.profile` 中的姓名、学校、城市、研究方向和简介，以及 `siteContent.skills` 中的技能标签。旧 Hugo 主题使用 [data/home.yaml](data/home.yaml) 中的 `profile`、`skills` 和 `timeline`。
+
+新版个人信息字段包括：
 
 - `displayName`、`bio`、`role`、`location`
 - `github`（用户名）、`steam`（Steam ID）
 - `skills`（技能标签列表）
-- `timeline`（时间线条目）
+- `timeline`（时间线条目；旧 Hugo 主题）
 
 ### 修改社交链接
 
@@ -139,7 +141,11 @@ npm run dev
 
 ### 修改 RSS 订阅源
 
-编辑 [data/home.yaml](data/home.yaml) 中的 `externalFeeds` 列表，每条包含 `label`、`category`、`url` 和可选的 `fallbackUrls`。
+新版 Next.js 阅读雷达的允许订阅列表在 [lib/activity-service.ts](lib/activity-service.ts) 的 `feeds` 中维护。旧 Hugo 主题的列表在 [data/home.yaml](data/home.yaml) 的 `externalFeeds` 中维护。
+
+### 市场收盘行情
+
+首页市场卡片展示上证指数、标普 500 收盘行情，以及 XAU/USD 黄金现货参考价。指数从腾讯行情接口读取，黄金来自无需 API Key 的 Gold API。服务端缓存一天；Vercel Cron 按 UTC 00:10（北京时间 08:10）触发缓存刷新，不向浏览器暴露上游接口。为了启用定时刷新，请在 Vercel Production 环境变量中设置随机 `CRON_SECRET`，Vercel Cron 会用它认证 `/api/markets/refresh`。数据源属于免费接口，可能限流或调整，卡片会在上游不可用时显示占位状态。
 
 ### 配置 Giscus 评论
 
