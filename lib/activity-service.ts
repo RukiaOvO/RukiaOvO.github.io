@@ -9,6 +9,10 @@ export const feeds: Feed[] = [
   { id: "ithome", label: "IT之家", category: "科技", url: "https://www.ithome.com/rss/" },
   { id: "github-blog", label: "GitHub Blog", category: "工程", url: "https://github.blog/feed/" },
   { id: "hacker-news", label: "Hacker News", category: "社区", url: "https://hnrss.org/frontpage" },
+  { id: "lobsters", label: "Lobsters", category: "社区", url: "https://lobste.rs/rss" },
+  { id: "mozilla-hacks", label: "Mozilla Hacks", category: "工程", url: "https://hacks.mozilla.org/feed/" },
+  { id: "schneier", label: "Schneier on Security", category: "安全", url: "https://www.schneier.com/feed/atom/" },
+  { id: "infoq", label: "InfoQ", category: "工程", url: "https://feed.infoq.com/" },
 ];
 type Snapshot = { items: ActivityItem[]; updatedAt: string };
 const github = unstable_cache(async (): Promise<Snapshot> => {
