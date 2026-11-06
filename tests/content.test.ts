@@ -71,6 +71,17 @@ test("Markdown has safe HTML, unique heading anchors, GFM and highlighted code",
   assert.ok(!html.includes('href="javascript:'));
 });
 
+test("Markdown renders inline and display TeX delimiters as KaTeX", async () => {
+  const { html } = await renderMarkdown(String.raw`行内公式 \(\hat{p}_k = \langle \hat{i}_k, \hat{t}_k \rangle\)。
+
+\[
+R(\hat{p}_k) = \mathbb{I}_{\mathrm{format}} \cdot \left( \lambda \cdot r_{\mathrm{step}}(\hat{t}_k) + (1 - \lambda) \cdot r_{\mathrm{agent}}(\hat{i}_k) \right)
+\]`);
+  assert.ok((html.match(/class="katex"/g) || []).length >= 2);
+  assert.ok(html.includes('class="katex-display"'));
+  assert.ok(html.includes('class="katex-html"'));
+});
+
 test("every existing article and local Markdown image remains available", async () => {
   const posts = await getPosts();
   const agentTracer = posts.find((post) => post.slug === "2026-11-02-agentracer-who-is-inducing-failure-in-the-llm-agentic-systems");

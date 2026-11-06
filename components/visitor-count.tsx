@@ -8,7 +8,7 @@ export function VisitorCount() {
   useEffect(() => {
     const load = async () => {
       try {
-        const cached = sessionStorage.getItem("site-visitor-count");
+        const cached = sessionStorage.getItem("site-visitor-count-analytics-v1");
         if (cached) { setCount(cached); return; }
       } catch { /* Storage may be unavailable; the live counter still works. */ }
       try {
@@ -18,7 +18,7 @@ export function VisitorCount() {
         if (!response.ok || (payload.ok === false) || value === undefined || value === null || value === "") throw new Error("visitor count unavailable");
         const display = String(value);
         setCount(display);
-        try { sessionStorage.setItem("site-visitor-count", display); } catch { /* Ignore unavailable session storage. */ }
+        try { sessionStorage.setItem("site-visitor-count-analytics-v1", display); } catch { /* Ignore unavailable session storage. */ }
       } catch {
         setFallback(true);
       }
@@ -29,6 +29,6 @@ export function VisitorCount() {
   return <span className="visitor-count" aria-label="访客数量">
     <span className="visitor-count-icon" aria-hidden="true">◉</span>
     <span>访客</span>
-    {count ? <strong>{count}</strong> : fallback ? <strong>—</strong> : <span className="visitor-count-loading" aria-label="加载中">…</span>}
+    {count ? <strong>{count}</strong> : fallback ? <strong>暂不可用</strong> : <span className="visitor-count-loading" aria-label="加载中">…</span>}
   </span>;
 }

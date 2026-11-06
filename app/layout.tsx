@@ -5,6 +5,7 @@ import { ThemeControl, themeScript } from "@/components/theme-control";
 import { Navigation } from "@/components/navigation";
 import { VisitorCount } from "@/components/visitor-count";
 import "./globals.css";
+import "katex/dist/katex.min.css";
 
 export const metadata: Metadata = {
   metadataBase: siteUrl,

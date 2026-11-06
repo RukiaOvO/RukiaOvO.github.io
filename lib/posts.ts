@@ -5,8 +5,11 @@ import { z } from "zod";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
 import remarkRehype from "remark-rehype";
 import rehypeSanitize from "rehype-sanitize";
+import { defaultSchema } from "rehype-sanitize";
+import rehypeKatex from "rehype-katex";
 import rehypeSlug from "rehype-slug";
 import rehypeHighlight from "rehype-highlight";
 import rehypeStringify from "rehype-stringify";
@@ -59,9 +62,20 @@ export async function getPosts(): Promise<Post[]> {
 }
 
 export async function renderMarkdown(content: string) {
+  // remark-math recognizes $...$ and $$...$$. Older articles may use the
+  // equivalent TeX delimiters \(...\) and \[...\], so normalize those first.
+  const normalizedContent = content
+    .replace(/\\\[([\s\S]*?)\\\]/g, (_, formula: string) => `$$\n${formula}\n$$`)
+    .replace(/\\\(([\s\S]*?)\\\)/g, (_, formula: string) => `$${formula}$`);
   const headings: Heading[] = [];
-  const result = await unified().use(remarkParse).use(remarkGfm)
-    .use(remarkRehype).use(rehypeSanitize).use(rehypeSlug, { prefix: "heading-" })
+  const result = await unified().use(remarkParse).use(remarkGfm).use(remarkMath)
+    .use(remarkRehype).use(rehypeSanitize, {
+      ...defaultSchema,
+      attributes: {
+        ...defaultSchema.attributes,
+        code: [["className", /^language-./, "math-inline", "math-display"]],
+      },
+    }).use(rehypeKatex).use(rehypeSlug, { prefix: "heading-" })
     .use(() => (tree: Root) => {
       const ids = new Set<string>();
       visit(tree, "element", (node) => {
@@ -78,7 +92,7 @@ export async function renderMarkdown(content: string) {
         if (/^h[2-4]$/.test(node.tagName)) headings.push({ id: String(node.properties.id), text: toText(node), level: Number(node.tagName[1]) });
         if (node.tagName === "img") { node.properties.loading = "lazy"; node.properties.decoding = "async"; }
       });
-    }).use(rehypeHighlight, { detect: false }).use(rehypeStringify).process(content);
+    }).use(rehypeHighlight, { detect: false }).use(rehypeStringify).process(normalizedContent);
   return { html: String(result), headings };
 }
 

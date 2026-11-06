@@ -1,7 +1,7 @@
 export const MARKET_CACHE_TAG = "market-close-quotes";
 
 export type MarketQuote = {
-  id: "shanghai" | "sp500" | "gold";
+  id: "shanghai" | "star50" | "chinext" | "sp500" | "gold";
   name: string;
   symbol: string;
   currency: string;
@@ -14,6 +14,8 @@ export type MarketQuote = {
 
 const tencentMarkets = [
   { id: "shanghai", name: "上证指数", symbol: "sh000001", label: "000001", currency: "CNY", unit: "点" },
+  { id: "star50", name: "科创 50", symbol: "sh000688", label: "000688", currency: "CNY", unit: "点" },
+  { id: "chinext", name: "创业板指", symbol: "sz399006", label: "399006", currency: "CNY", unit: "点" },
   { id: "sp500", name: "标普 500", symbol: "usINX", label: "^GSPC", currency: "USD", unit: "点" },
 ] as const;
 
@@ -53,7 +55,7 @@ type GoldPayload = {
 };
 
 async function fetchTencentIndexes(): Promise<MarketQuote[]> {
-  const response = await fetch("https://qt.gtimg.cn/q=sh000001,usINX", {
+  const response = await fetch("https://qt.gtimg.cn/q=sh000001,sh000688,sz399006,usINX", {
     signal: AbortSignal.timeout(10_000),
     next: { revalidate: 86_400, tags: [MARKET_CACHE_TAG] },
   });

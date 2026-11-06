@@ -4,7 +4,6 @@ import { notFound } from "next/navigation";
 import { getPosts, postUrl, renderMarkdown, formatDate } from "@/lib/posts";
 import { absoluteUrl, site } from "@/lib/site";
 import { ArticleBody } from "@/components/article-body";
-import { Comments } from "@/components/comments";
 
 type Props = { params: Promise<{ slug: string }> };
 export const dynamicParams = false;
@@ -39,6 +38,5 @@ export default async function PostPage({ params }: Props) {
       {headings.length > 0 && <aside className="toc panel" aria-label="博客目录"><p className="eyebrow">ON THIS PAGE</p><h2>目录</h2><ol>{headings.map((heading) => <li key={heading.id} data-level={heading.level}><a href={`#${heading.id}`}>{heading.text}</a></li>)}</ol></aside>}
     </div>
     <nav className="post-pagination" aria-label="相邻博客">{older && <Link href={postUrl(older)}><span>← 上一篇</span><strong>{older.title}</strong></Link>}{newer && <Link href={postUrl(newer)}><span>下一篇 →</span><strong>{newer.title}</strong></Link>}</nav>
-    <Comments config={site.comments} />
   </>;
 }
