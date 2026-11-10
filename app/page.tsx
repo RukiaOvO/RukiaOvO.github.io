@@ -7,6 +7,7 @@ import { Heatmap } from "@/components/heatmap";
 import { Comments } from "@/components/comments";
 import { WeatherSteam } from "@/components/weather-steam";
 import { MarketQuotes } from "@/components/market-quotes";
+import { FishingConditions } from "@/components/fishing-conditions";
 
 export default async function Home() {
   const posts = (await getPosts()).slice(0, 3);
@@ -23,6 +24,7 @@ export default async function Home() {
         <div className="tags skills">{site.skills.map((skill) => <span key={skill}>{skill}</span>)}</div>
       </section>
       <MarketQuotes />
+      <FishingConditions />
       <WeatherSteam />
     </aside>
     <div className="dashboard-content">

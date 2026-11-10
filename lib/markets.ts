@@ -48,11 +48,23 @@ export function parseTencentIndexQuote(payload: string, market: (typeof tencentM
   };
 }
 
-type GoldPayload = {
-  currency?: unknown;
-  price?: unknown;
-  updatedAt?: unknown;
-};
+export function parseTencentGoldQuote(payload: string): MarketQuote {
+  const line = payload.split(";").map((entry) => entry.trim()).find((entry) => entry.startsWith("v_hf_XAU="));
+  const match = line?.match(/^v_hf_XAU="([^"]*)"$/);
+  const fields = match?.[1].split(",") ?? [];
+  const price = Number(fields[0]);
+  const changePercent = Number(fields[1]);
+  const valid = Number.isFinite(price) && price > 0;
+  const validChange = valid && Number.isFinite(changePercent);
+  const previousPrice = validChange && 1 + changePercent / 100 !== 0 ? price / (1 + changePercent / 100) : null;
+  return {
+    id: "gold", name: "黄金现货", symbol: "XAU/USD", currency: "USD", unit: "美元/盎司",
+    price: valid ? price : null,
+    change: previousPrice === null ? null : price - previousPrice,
+    changePercent: validChange ? changePercent : null,
+    asOf: /^\d{4}-\d{2}-\d{2}$/.test(fields[12] || "") ? fields[12]! : null,
+  };
+}
 
 async function fetchTencentIndexes(): Promise<MarketQuote[]> {
   const response = await fetch("https://qt.gtimg.cn/q=sh000001,sh000688,sz399006,usINX", {
@@ -65,27 +77,12 @@ async function fetchTencentIndexes(): Promise<MarketQuote[]> {
 }
 
 async function fetchGoldSpot(): Promise<MarketQuote> {
-  const response = await fetch("https://api.gold-api.com/price/XAU", {
+  const response = await fetch("https://qt.gtimg.cn/q=hf_XAU", {
     signal: AbortSignal.timeout(10_000),
     next: { revalidate: 86_400, tags: [MARKET_CACHE_TAG] },
   });
   if (!response.ok) throw new Error("Gold data provider returned an error");
-  const payload = await response.json() as GoldPayload;
-  const price = Number(payload.price);
-  const asOf = typeof payload.updatedAt === "string" && !Number.isNaN(Date.parse(payload.updatedAt))
-    ? new Date(payload.updatedAt).toISOString().slice(0, 10)
-    : null;
-  return {
-    id: "gold",
-    name: "黄金现货",
-    symbol: "XAU/USD",
-    currency: typeof payload.currency === "string" ? payload.currency : "USD",
-    unit: "美元/盎司",
-    price: Number.isFinite(price) ? price : null,
-    change: null,
-    changePercent: null,
-    asOf,
-  };
+  return parseTencentGoldQuote(await response.text());
 }
 
 const unavailableIndexes: MarketQuote[] = tencentMarkets.map((market) => ({

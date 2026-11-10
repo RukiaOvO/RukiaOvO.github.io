@@ -41,6 +41,6 @@ export function MarketQuotes() {
         </div>
       </div>)}
     </div>}
-    <p className="market-source-note">指数：<a href="https://gu.qq.com/" target="_blank" rel="noreferrer">腾讯行情</a>；黄金：<a href="https://gold-api.com/" target="_blank" rel="noreferrer">Gold API</a>。每日刷新。</p>
+    <p className="market-source-note">指数与黄金：<a href="https://gu.qq.com/" target="_blank" rel="noreferrer">腾讯行情</a>。每日刷新。</p>
   </section>;
 }

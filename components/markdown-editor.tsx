@@ -199,7 +199,16 @@ export function MarkdownEditor() {
         <label className="editor-field editor-title-field">标题<input value={form.title} maxLength={180} onChange={(event) => change("title", event.target.value)} placeholder="为博客起个标题" /></label>
         <label className="editor-field">发布日期<input type="date" value={articleInputDate(form.date)} onChange={(event) => change("date", event.target.value)} /></label>
         <label className="editor-field">摘要<input value={form.summary} maxLength={1200} onChange={(event) => change("summary", event.target.value)} placeholder="可选，留空时自动截取正文" /></label>
-        <label className="editor-field">标签<input value={tagText} onChange={(event) => { setTagText(event.target.value); setDirty(true); setMessage(""); }} placeholder="支持中英文逗号分隔" /></label>
+        <label className="editor-field">标签<input value={tagText} onKeyDown={(event) => {
+          if (event.key !== "," && event.key !== "，") return;
+          event.preventDefault();
+          const input = event.currentTarget;
+          const start = input.selectionStart ?? input.value.length;
+          const end = input.selectionEnd ?? start;
+          const next = input.value.slice(0, start) + event.key + input.value.slice(end);
+          setTagText(next); setDirty(true); setMessage("");
+          requestAnimationFrame(() => input.setSelectionRange(start + event.key.length, start + event.key.length));
+        }} onChange={(event) => { setTagText(event.target.value); setDirty(true); setMessage(""); }} placeholder="支持中英文逗号分隔" /></label>
         <label className="editor-field">分类<input value={categoryText} onChange={(event) => { setCategoryText(event.target.value); setDirty(true); setMessage(""); }} placeholder="支持中英文逗号分隔" /></label>
         <label className="editor-draft-toggle"><input type="checkbox" checked={form.draft} onChange={(event) => change("draft", event.target.checked)} /> 仅保存为草稿</label>
       </div>
