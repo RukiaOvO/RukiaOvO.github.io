@@ -20,13 +20,6 @@ function articleInputDate(value: string) {
 function parseCommaSeparated(value: string) {
   return value.split(/[,，]/u).map((item) => item.trim()).filter(Boolean);
 }
-function commitCommaSeparated<K extends "tags" | "categories">(
-  key: K,
-  value: string,
-  change: (key: K, value: string[]) => void,
-) {
-  change(key, parseCommaSeparated(value));
-}
 function messageFrom(error: unknown) { return error instanceof Error ? error.message : "操作失败，请稍后重试。"; }
 class ApiRequestError extends Error { constructor(message: string, readonly status: number) { super(message); } }
 
@@ -43,6 +36,8 @@ export function MarkdownEditor() {
   const [draftsWarning, setDraftsWarning] = useState("");
   const [selectedFile, setSelectedFile] = useState("");
   const [form, setForm] = useState<ArticleData | null>(null);
+  const [tagText, setTagText] = useState("");
+  const [categoryText, setCategoryText] = useState("");
   const [branch, setBranch] = useState<string | null>(null);
   const [images, setImages] = useState<UploadedImage[]>([]);
   const [busy, setBusy] = useState(false);
@@ -57,14 +52,14 @@ export function MarkdownEditor() {
     try {
       const query = new URLSearchParams({ file: article.file, ...(article.branch ? { branch: article.branch } : {}) });
       const response = await jsonRequest<{ article: ArticleData }>(`/api/editor/articles?${query}`);
-      setForm(response.article); setSelectedFile(response.article.file); setBranch(article.branch); setDirty(false);
+      setForm(response.article); setTagText(response.article.tags.join(", ")); setCategoryText(response.article.categories.join(", ")); setSelectedFile(response.article.file); setBranch(article.branch); setDirty(false);
     } catch (error) {
       // Only fall back to the published version when GitHub confirms the draft resource is missing.
       // Keep the list entry and real upstream errors for permission or network failures.
       if (article.branch && error instanceof ApiRequestError && error.status === 404) {
         try {
           const response = await jsonRequest<{ article: ArticleData }>(`/api/editor/articles?file=${encodeURIComponent(article.file)}`);
-          setForm(response.article); setSelectedFile(response.article.file); setBranch(null); setArticles((items) => items.map((item) => item.file === article.file ? { ...item, branch: null, pullNumber: null, pullUrl: null } : item)); setDirty(false); setPageError("该草稿分支已失效，已打开已发布版本。保存后会创建新的草稿 PR。"); return;
+          setForm(response.article); setTagText(response.article.tags.join(", ")); setCategoryText(response.article.categories.join(", ")); setSelectedFile(response.article.file); setBranch(null); setArticles((items) => items.map((item) => item.file === article.file ? { ...item, branch: null, pullNumber: null, pullUrl: null } : item)); setDirty(false); setPageError("该草稿分支已失效，已打开已发布版本。保存后会创建新的草稿 PR。"); return;
         } catch (fallbackError) {
           setForm(null); setSelectedFile(""); setBranch(null);
           setPageError(`读取草稿失败：${messageFrom(error)}；读取已发布版本也失败：${messageFrom(fallbackError)}。可点“新建”另起草稿，或刷新列表重试。`);
@@ -81,6 +76,7 @@ export function MarkdownEditor() {
     const suffix = new Date().toISOString().replace(/\D/g, "").slice(0, 14);
     const file = `article-${date.replaceAll("-", "")}-${suffix.slice(-6)}.md`;
     setForm({ file, title: "", date, draft: true, summary: "", tags: [], categories: [], content: "" });
+    setTagText(""); setCategoryText("");
     setSelectedFile(file); setBranch(null); setImages([]); setDirty(true); setMessage(""); setPageError("");
   }, []);
 
@@ -130,9 +126,9 @@ export function MarkdownEditor() {
     try {
       const result = await jsonRequest<{ branch: string; pullNumber: number; pullUrl: string; article: ArticleData }>("/api/editor/articles/save", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, branch: branch || undefined }),
+        body: JSON.stringify({ ...form, tags: parseCommaSeparated(tagText), categories: parseCommaSeparated(categoryText), branch: branch || undefined }),
       });
-      setForm(result.article); setBranch(result.branch); setDirty(false); if (!quiet) setMessage(`已保存到草稿 PR #${result.pullNumber}。`);
+      setForm(result.article); setTagText(result.article.tags.join(", ")); setCategoryText(result.article.categories.join(", ")); setBranch(result.branch); setDirty(false); if (!quiet) setMessage(`已保存到草稿 PR #${result.pullNumber}。`);
       setArticles((previous) => {
         const current: Article = { file: result.article.file, title: result.article.title, date: result.article.date, draft: result.article.draft, branch: result.branch, pullNumber: result.pullNumber, pullUrl: result.pullUrl };
         return [current, ...previous.filter((article) => article.file !== current.file)].sort((a, b) => b.date.localeCompare(a.date));
@@ -203,8 +199,8 @@ export function MarkdownEditor() {
         <label className="editor-field editor-title-field">标题<input value={form.title} maxLength={180} onChange={(event) => change("title", event.target.value)} placeholder="为博客起个标题" /></label>
         <label className="editor-field">发布日期<input type="date" value={articleInputDate(form.date)} onChange={(event) => change("date", event.target.value)} /></label>
         <label className="editor-field">摘要<input value={form.summary} maxLength={1200} onChange={(event) => change("summary", event.target.value)} placeholder="可选，留空时自动截取正文" /></label>
-        <label className="editor-field">标签<input value={form.tags.join(", ")} onChange={(event) => commitCommaSeparated("tags", event.target.value, change)} onCompositionEnd={(event) => commitCommaSeparated("tags", event.currentTarget.value, change)} placeholder="支持中英文逗号分隔" /></label>
-        <label className="editor-field">分类<input value={form.categories.join(", ")} onChange={(event) => commitCommaSeparated("categories", event.target.value, change)} onCompositionEnd={(event) => commitCommaSeparated("categories", event.currentTarget.value, change)} placeholder="支持中英文逗号分隔" /></label>
+        <label className="editor-field">标签<input value={tagText} onChange={(event) => { setTagText(event.target.value); setDirty(true); setMessage(""); }} placeholder="支持中英文逗号分隔" /></label>
+        <label className="editor-field">分类<input value={categoryText} onChange={(event) => { setCategoryText(event.target.value); setDirty(true); setMessage(""); }} placeholder="支持中英文逗号分隔" /></label>
         <label className="editor-draft-toggle"><input type="checkbox" checked={form.draft} onChange={(event) => change("draft", event.target.checked)} /> 仅保存为草稿</label>
       </div>
       <div className="editor-body-heading"><label htmlFor="article-markdown">正文 Markdown</label><div className="editor-image-actions"><input ref={imageInputRef} type="file" accept="image/png,image/jpeg,image/gif,image/webp" hidden onChange={(event) => uploadImage(event.target.files?.[0])} /><button type="button" className="button button-outline" onClick={() => imageInputRef.current?.click()} disabled={busy}>上传并插入图片</button><span>PNG / JPEG / GIF / WebP · 最大 4 MB</span></div></div>
