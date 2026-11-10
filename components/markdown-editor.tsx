@@ -20,6 +20,13 @@ function articleInputDate(value: string) {
 function parseCommaSeparated(value: string) {
   return value.split(/[,，]/u).map((item) => item.trim()).filter(Boolean);
 }
+function commitCommaSeparated<K extends "tags" | "categories">(
+  key: K,
+  value: string,
+  change: (key: K, value: string[]) => void,
+) {
+  change(key, parseCommaSeparated(value));
+}
 function messageFrom(error: unknown) { return error instanceof Error ? error.message : "操作失败，请稍后重试。"; }
 class ApiRequestError extends Error { constructor(message: string, readonly status: number) { super(message); } }
 
@@ -196,8 +203,8 @@ export function MarkdownEditor() {
         <label className="editor-field editor-title-field">标题<input value={form.title} maxLength={180} onChange={(event) => change("title", event.target.value)} placeholder="为博客起个标题" /></label>
         <label className="editor-field">发布日期<input type="date" value={articleInputDate(form.date)} onChange={(event) => change("date", event.target.value)} /></label>
         <label className="editor-field">摘要<input value={form.summary} maxLength={1200} onChange={(event) => change("summary", event.target.value)} placeholder="可选，留空时自动截取正文" /></label>
-        <label className="editor-field">标签<input value={form.tags.join(", ")} onChange={(event) => change("tags", parseCommaSeparated(event.target.value))} placeholder="支持中英文逗号分隔" /></label>
-        <label className="editor-field">分类<input value={form.categories.join(", ")} onChange={(event) => change("categories", parseCommaSeparated(event.target.value))} placeholder="支持中英文逗号分隔" /></label>
+        <label className="editor-field">标签<input value={form.tags.join(", ")} onChange={(event) => commitCommaSeparated("tags", event.target.value, change)} onCompositionEnd={(event) => commitCommaSeparated("tags", event.currentTarget.value, change)} placeholder="支持中英文逗号分隔" /></label>
+        <label className="editor-field">分类<input value={form.categories.join(", ")} onChange={(event) => commitCommaSeparated("categories", event.target.value, change)} onCompositionEnd={(event) => commitCommaSeparated("categories", event.currentTarget.value, change)} placeholder="支持中英文逗号分隔" /></label>
         <label className="editor-draft-toggle"><input type="checkbox" checked={form.draft} onChange={(event) => change("draft", event.target.checked)} /> 仅保存为草稿</label>
       </div>
       <div className="editor-body-heading"><label htmlFor="article-markdown">正文 Markdown</label><div className="editor-image-actions"><input ref={imageInputRef} type="file" accept="image/png,image/jpeg,image/gif,image/webp" hidden onChange={(event) => uploadImage(event.target.files?.[0])} /><button type="button" className="button button-outline" onClick={() => imageInputRef.current?.click()} disabled={busy}>上传并插入图片</button><span>PNG / JPEG / GIF / WebP · 最大 4 MB</span></div></div>

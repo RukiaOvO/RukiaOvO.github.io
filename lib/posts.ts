@@ -64,9 +64,14 @@ export async function getPosts(): Promise<Post[]> {
 export async function renderMarkdown(content: string) {
   // remark-math recognizes $...$ and $$...$$. Older articles may use the
   // equivalent TeX delimiters \(...\) and \[...\], so normalize those first.
+  const normalizeFormula = (formula: string) => formula
+    // Article Markdown often escapes TeX punctuation so it survives Markdown
+    // processing. Inside a math span those escapes would make `_` and `=`
+    // literal text, preventing subscripts and normal operators from rendering.
+    .replace(/\\([_=])/g, "$1");
   const normalizedContent = content
-    .replace(/\\\[([\s\S]*?)\\\]/g, (_, formula: string) => `$$\n${formula}\n$$`)
-    .replace(/\\\(([\s\S]*?)\\\)/g, (_, formula: string) => `$${formula}$`);
+    .replace(/\\\[([\s\S]*?)\\\]/g, (_, formula: string) => `$$\n${normalizeFormula(formula)}\n$$`)
+    .replace(/\\\(([\s\S]*?)\\\)/g, (_, formula: string) => `$${normalizeFormula(formula)}$`);
   const headings: Heading[] = [];
   const result = await unified().use(remarkParse).use(remarkGfm).use(remarkMath)
     .use(remarkRehype).use(rehypeSanitize, {
